@@ -4,7 +4,7 @@ import { createClient } from "@libsql/client";
 import * as schema from "./schema";
 
 const conn = createClient({
-  url: process.env.DATABASE_URL ?? "HELLO_THERE",
+  url: process.env.DATABASE_URL!,
   authToken: process.env.DATABASE_AUTH_TOKEN,
 });
 

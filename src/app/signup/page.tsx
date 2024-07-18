@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { SignupFormComponent as SignupForm } from "./SignupForm";
+import { SignupFormComponent as SignupForm } from "@/components/SignupForm";
 import { redirectLoggedInUserToHome } from "@/utils/redirectLoggedInUserToHome";
 
 export default async function Signup() {
