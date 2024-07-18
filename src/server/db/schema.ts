@@ -14,11 +14,10 @@ export const users = sqliteTable("user", {
     .primaryKey()
     .notNull()
     .$defaultFn(() => randomUUID()),
-  name: text("name", { length: 255 }),
+  name: text("name", { length: 255 }).notNull(),
   email: text("email", { length: 255 }).notNull().unique(),
-  emailVerified: integer("emailVerified", { mode: "boolean" })
-    .notNull()
-    .default(false),
+  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+  image: text("image", { length: 255 }).default(""),
 });
 
 export const usersRelations = relations(users, ({ one }) => ({

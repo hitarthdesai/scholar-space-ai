@@ -1,4 +1,4 @@
-import { EnumSignupResult, SignupResult } from "@/schemas/formSchema";
+import { EnumSignupResult, type SignupResult } from "@/schemas/formSchema";
 
 export const toastDescriptionSignup: Record<SignupResult, string> = {
   [EnumSignupResult.ExistsAndVerified]: "User with this email already exists.",

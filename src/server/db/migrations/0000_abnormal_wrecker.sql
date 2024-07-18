@@ -24,7 +24,8 @@ CREATE TABLE `user` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text(255),
 	`email` text(255) NOT NULL,
-	`emailVerified` integer DEFAULT false NOT NULL
+	`emailVerified` integer,
+	`image` text(255) DEFAULT ''
 );
 --> statement-breakpoint
 CREATE TABLE `verificationToken` (

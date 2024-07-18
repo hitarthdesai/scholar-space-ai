@@ -1,6 +1,9 @@
-import { type Config } from "drizzle-kit";
+import { defineConfig } from "drizzle-kit";
+import { configDotenv } from "@dotenvx/dotenvx";
 
-export default {
+configDotenv({ path: ".env.local", override: true });
+
+const drizzleConfig = defineConfig({
   schema: "./src/server/db/schema.ts",
   out: "./src/server/db/migrations",
   dialect: "sqlite",
@@ -12,4 +15,6 @@ export default {
   },
   strict: true,
   verbose: true,
-} satisfies Config;
+});
+
+export default drizzleConfig;

@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "63e95978-df1c-4b2c-88e3-e1c19e542a6c",
+  "id": "d9243547-9042-4583-a352-c41cfb8b03a2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "account": {
@@ -192,9 +192,16 @@
           "name": "emailVerified",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "image": {
+          "name": "image",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false,
-          "default": false
+          "default": "''"
         }
       },
       "indexes": {
