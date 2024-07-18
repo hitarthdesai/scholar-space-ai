@@ -7,20 +7,17 @@ export const signupFormSchema = z.object({
 
 export type SignupForm = z.infer<typeof signupFormSchema>;
 
-export const EnumSignupResult = {
-  ExistsAndVerified: "existsAndVerified",
-  ExistsNotVerified: "existsNotVerified",
+export const signinFormSchema = z.object({
+  email: z.string().email(),
+});
+
+export type SigninForm = z.infer<typeof signinFormSchema>;
+
+export const EnumAuthResult = {
   EmailSent: "registrationEmailSent",
   Error: "error",
 } as const;
 
-export const signupResultSchema = z.nativeEnum(EnumSignupResult);
+export const authResultSchema = z.nativeEnum(EnumAuthResult);
 
-export type SignupResult = z.infer<typeof signupResultSchema>;
-
-export const signupResponseSchema = z.object({
-  type: signupResultSchema,
-  message: z.string().optional(),
-});
-
-export type SignupResponse = z.infer<typeof signupResponseSchema>;
+export type AuthResult = z.infer<typeof authResultSchema>;

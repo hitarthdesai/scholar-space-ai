@@ -16,36 +16,34 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
 import {
-  type SignupForm,
-  signupFormSchema,
+  type SigninForm,
+  signinFormSchema,
   EnumAuthResult,
 } from "@/schemas/formSchema";
-import { signup } from "@/actions/signup";
 import { toast } from "@/components/ui/use-toast";
 import { toastDescriptionAuth } from "@/utils/constants/toast";
+import { signin } from "@/actions/signin";
 
-const signupFormDefaultValues: SignupForm = {
-  name: "",
+const signinFormDefaultValues: SigninForm = {
   email: "",
 };
 
-export const SignupFormComponent = () => {
-  const form = useForm<SignupForm>({
-    resolver: zodResolver(signupFormSchema),
-    defaultValues: signupFormDefaultValues,
+export const SigninFormComponent = () => {
+  const form = useForm<SigninForm>({
+    resolver: zodResolver(signinFormSchema),
+    defaultValues: signinFormDefaultValues,
   });
 
-  const { executeAsync } = useAction(signup, {
+  const { executeAsync } = useAction(signin, {
     onSuccess({ data }) {
       if (!data?.type) return;
       const isError = data.type !== EnumAuthResult.EmailSent;
 
       toast({
-        title: isError ? "Error during signup" : "No errors during signup",
+        title: isError ? "Error during signin" : "No errors during signin",
         description: toastDescriptionAuth[data.type],
         variant: isError ? "destructive" : "default",
       });
-      data?.type;
     },
   });
 
@@ -57,23 +55,6 @@ export const SignupFormComponent = () => {
       >
         <FormField
           control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input required type="text" {...field} />
-              </FormControl>
-              <FormDescription>
-                This will be your display name. Choose wisely.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -82,15 +63,14 @@ export const SignupFormComponent = () => {
                 <Input required type="email" {...field} />
               </FormControl>
               <FormDescription>
-                This is the email associated with your account. Keep it handy at
-                all times.
+                The email associated with your account
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit">Sign up</Button>
+        <Button type="submit">Sign in</Button>
         <Toaster />
       </form>
     </Form>

@@ -1,16 +1,15 @@
 "use server";
 
-import { EnumAuthResult, signupFormSchema } from "@/schemas/formSchema";
+import { EnumAuthResult, signinFormSchema } from "@/schemas/formSchema";
 import { signIn } from "@/utils/auth/config";
 import { createSafeActionClient } from "next-safe-action";
 import { z } from "zod";
 
-export const signup = createSafeActionClient()
-  .schema(signupFormSchema)
-  .action(async ({ parsedInput: form }) => {
+export const signin = createSafeActionClient()
+  .schema(signinFormSchema)
+  .action(async () => {
     try {
       const _redirectUrl = await signIn("resend", {
-        name: form.name,
         // TODO: Replace this with actual email once done with email tests
         email: "hitarthdesai306@gmail.com",
         redirect: false,
