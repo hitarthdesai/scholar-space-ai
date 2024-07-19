@@ -17,11 +17,19 @@ import { Button } from "@/components/ui/button";
 import {
   loginFormSchema,
   EnumLoginResult,
-  LoginForm,
+  type LoginForm,
 } from "@/schemas/formSchema";
 import { toast } from "@/components/ui/use-toast";
 import { toastDescriptionAuth } from "@/utils/constants/toast";
 import { login } from "@/actions/login";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const loginFormDefaultValues: LoginForm = {
   email: "",
@@ -47,30 +55,42 @@ export const LoginFormComponent = () => {
   });
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(executeAsync)}
-        className="flex w-96 flex-col gap-y-4 px-4"
-      >
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input required type="email" {...field} />
-              </FormControl>
-              <FormDescription>
-                We will send a magic link to this email to verify your identity.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit">Login</Button>
-      </form>
-    </Form>
+    <Card className="flex max-w-96 flex-col gap-y-4 px-4">
+      <CardHeader>
+        <CardTitle>Login to ScholarSpace AI</CardTitle>
+        <CardDescription>
+          Fill this form to login to the platform, or automatically create an
+          account with us if you haven&apos;t already.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form id="loginform" onSubmit={form.handleSubmit(executeAsync)}>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input required type="email" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    We will send a magic link to this email. Clicking on it will
+                    securely sign you in ✨
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </form>
+        </Form>
+      </CardContent>
+      <CardFooter>
+        <Button type="submit" form="loginform">
+          Login
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };

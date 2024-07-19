@@ -1,4 +1,4 @@
-# Capstone Project
+# ScholarSpace AI
 
 ## Local Setup (for Mac)
 

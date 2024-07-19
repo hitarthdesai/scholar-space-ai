@@ -7,8 +7,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Capstone Project",
-  description: "Capstone Project",
+  title: "ScholarSpace AI",
+  description: "AI Coding Tutor",
 };
 
 export default function RootLayout({
