@@ -11,11 +11,8 @@ async function LoggedOutHeader() {
       <Link href="/" className="mr-4 flex grow items-center space-x-2 lg:mr-6">
         <span className="font-bold lg:inline-block">Capstone Project</span>
       </Link>
-      <Link href="/signup" className="mr-4 flex items-center space-x-2 lg:mr-6">
-        <span className="lg:inline-block">Signup</span>
-      </Link>
-      <Link href="/signin" className="flex items-center space-x-2">
-        <span className="lg:inline-block">Signin</span>
+      <Link href="/login" className="mr-4 flex items-center space-x-2 lg:mr-6">
+        <span className="lg:inline-block">Login</span>
       </Link>
     </div>
   );

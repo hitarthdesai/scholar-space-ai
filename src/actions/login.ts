@@ -1,12 +1,12 @@
 "use server";
 
-import { EnumAuthResult, signinFormSchema } from "@/schemas/formSchema";
+import { EnumLoginResult, loginFormSchema } from "@/schemas/formSchema";
 import { signIn } from "@/utils/auth/config";
 import { createSafeActionClient } from "next-safe-action";
 import { z } from "zod";
 
-export const signin = createSafeActionClient()
-  .schema(signinFormSchema)
+export const login = createSafeActionClient()
+  .schema(loginFormSchema)
   .action(async () => {
     try {
       const _redirectUrl = await signIn("resend", {
@@ -21,9 +21,9 @@ export const signin = createSafeActionClient()
        */
       z.string().parse(_redirectUrl);
 
-      return { type: EnumAuthResult.EmailSent };
+      return { type: EnumLoginResult.EmailSent };
     } catch (e) {
       console.error(e);
-      return { type: EnumAuthResult.Error };
+      return { type: EnumLoginResult.Error };
     }
   });

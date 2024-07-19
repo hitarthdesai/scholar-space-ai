@@ -1,23 +1,15 @@
 import { z } from "zod";
 
-export const signupFormSchema = z.object({
-  name: z.string().min(1),
+export const loginFormSchema = z.object({
   email: z.string().email(),
 });
 
-export type SignupForm = z.infer<typeof signupFormSchema>;
+export type LoginForm = z.infer<typeof loginFormSchema>;
 
-export const signinFormSchema = z.object({
-  email: z.string().email(),
-});
-
-export type SigninForm = z.infer<typeof signinFormSchema>;
-
-export const EnumAuthResult = {
+export const EnumLoginResult = {
   EmailSent: "registrationEmailSent",
   Error: "error",
 } as const;
 
-export const authResultSchema = z.nativeEnum(EnumAuthResult);
-
-export type AuthResult = z.infer<typeof authResultSchema>;
+const authResultSchema = z.nativeEnum(EnumLoginResult);
+export type LoginResult = z.infer<typeof authResultSchema>;

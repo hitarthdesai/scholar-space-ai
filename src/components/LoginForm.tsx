@@ -14,38 +14,35 @@ import {
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Toaster } from "@/components/ui/toaster";
 import {
-  type SignupForm,
-  signupFormSchema,
-  EnumAuthResult,
+  loginFormSchema,
+  EnumLoginResult,
+  LoginForm,
 } from "@/schemas/formSchema";
-import { signup } from "@/actions/signup";
 import { toast } from "@/components/ui/use-toast";
 import { toastDescriptionAuth } from "@/utils/constants/toast";
+import { login } from "@/actions/login";
 
-const signupFormDefaultValues: SignupForm = {
-  name: "",
+const loginFormDefaultValues: LoginForm = {
   email: "",
 };
 
-export const SignupFormComponent = () => {
-  const form = useForm<SignupForm>({
-    resolver: zodResolver(signupFormSchema),
-    defaultValues: signupFormDefaultValues,
+export const LoginFormComponent = () => {
+  const form = useForm<LoginForm>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: loginFormDefaultValues,
   });
 
-  const { executeAsync } = useAction(signup, {
+  const { executeAsync } = useAction(login, {
     onSuccess({ data }) {
       if (!data?.type) return;
-      const isError = data.type !== EnumAuthResult.EmailSent;
+      const isError = data.type !== EnumLoginResult.EmailSent;
 
       toast({
-        title: isError ? "Error during signup" : "No errors during signup",
+        title: isError ? "Error during login" : "No errors during login",
         description: toastDescriptionAuth[data.type],
         variant: isError ? "destructive" : "default",
       });
-      data?.type;
     },
   });
 
@@ -53,25 +50,8 @@ export const SignupFormComponent = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(executeAsync)}
-        className="flex flex-col gap-y-4"
+        className="flex w-96 flex-col gap-y-4 px-4"
       >
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input required type="text" {...field} />
-              </FormControl>
-              <FormDescription>
-                This will be your display name. Choose wisely.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <FormField
           control={form.control}
           name="email"
@@ -82,16 +62,14 @@ export const SignupFormComponent = () => {
                 <Input required type="email" {...field} />
               </FormControl>
               <FormDescription>
-                This is the email associated with your account. Keep it handy at
-                all times.
+                We will send a magic link to this email to verify your identity.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit">Sign up</Button>
-        <Toaster />
+        <Button type="submit">Login</Button>
       </form>
     </Form>
   );

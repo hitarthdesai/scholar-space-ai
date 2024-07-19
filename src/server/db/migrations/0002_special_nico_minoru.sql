@@ -1,1 +1,0 @@
-ALTER TABLE `user` ADD `name` text(255) DEFAULT '' NOT NULL;

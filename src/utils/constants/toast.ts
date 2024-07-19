@@ -1,6 +1,6 @@
-import { EnumAuthResult, type AuthResult } from "@/schemas/formSchema";
+import { EnumLoginResult, type LoginResult } from "@/schemas/formSchema";
 
-export const toastDescriptionAuth: Record<AuthResult, string> = {
-  [EnumAuthResult.EmailSent]: "User registered successfully.",
-  [EnumAuthResult.Error]: "Failed to register user.",
+export const toastDescriptionAuth: Record<LoginResult, string> = {
+  [EnumLoginResult.EmailSent]: "User registered successfully.",
+  [EnumLoginResult.Error]: "Failed to register user.",
 };
