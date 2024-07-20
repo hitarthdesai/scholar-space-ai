@@ -8,6 +8,13 @@
       "when": 1721352972840,
       "tag": "0000_remarkable_quicksilver",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1721376281211,
+      "tag": "0001_wealthy_eddie_brock",
+      "breakpoints": true
     }
   ]
 }

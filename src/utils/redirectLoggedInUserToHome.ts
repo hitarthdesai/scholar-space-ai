@@ -2,8 +2,7 @@ import { redirect, RedirectType } from "next/navigation";
 import { auth } from "./auth/config";
 
 export async function redirectLoggedInUserToHome() {
-  const session = await auth();
-  const isValidSession = Boolean(session);
+  const isValidSession = Boolean(await auth());
   if (!isValidSession) return;
 
   redirect("/", RedirectType.replace);
