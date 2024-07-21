@@ -21,11 +21,14 @@ export async function LoggedInHeader() {
           >
             <span className="lg:inline-block">Dashboard</span>
           </Link>
-          <Link href="/" className="mr-4 flex items-center space-x-2 lg:mr-6">
-            <span className="lg:inline-block">Ask a Question</span>
+          <Link
+            href="/practice"
+            className="mr-4 flex items-center space-x-2 lg:mr-6"
+          >
+            <span className="lg:inline-block">Practice</span>
           </Link>
           <Link href="/" className="mr-4 flex items-center space-x-2 lg:mr-6">
-            <span className="lg:inline-block">Practice</span>
+            <span className="lg:inline-block">Ask a Question</span>
           </Link>
         </div>
         <LogoutButton />

@@ -1,5 +1,4 @@
 import { EnumRole } from "@/schemas/userSchema";
-import { randomUUID } from "crypto";
 import { relations } from "drizzle-orm";
 import {
   index,
@@ -11,10 +10,7 @@ import {
 import { type AdapterAccount } from "next-auth/adapters";
 
 export const users = sqliteTable("user", {
-  id: text("id")
-    .primaryKey()
-    .notNull()
-    .$defaultFn(() => randomUUID()),
+  id: text("id").primaryKey().notNull(),
   name: text("name", { length: 255 }),
   email: text("email", { length: 255 }).notNull().unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
