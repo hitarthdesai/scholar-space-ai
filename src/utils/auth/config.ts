@@ -12,7 +12,7 @@ import Resend from "next-auth/providers/resend";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Resend({
-      from: "onboarding@resend.dev",
+      from: "onboarding@scholarspaceai.tech",
     }),
   ],
   // TODO: Creating `teacher` accounts may not be functional. Need to test this.

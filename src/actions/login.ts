@@ -7,11 +7,20 @@ import { z } from "zod";
 
 export const login = createSafeActionClient()
   .schema(loginFormSchema)
-  .action(async () => {
+  .action(async ({ parsedInput }) => {
     try {
+      // There is some problem with the the workspace/user TS version
+      // that causes TS to not recognize the type of parsedInput
+      // TODO: Fix this TS issue so that parsedInput has proper typing
+      const { email } = parsedInput;
+
+      /**
+       * Sometimes signIn logs an error to the console silently.
+       * We may want to throw an error manually for these cases.
+       * May need to figure out how to intercept console.error?
+       */
       const _redirectUrl = await signIn("resend", {
-        // TODO: Replace this with actual email once done with email tests
-        email: "hitarthdesai306@gmail.com",
+        email,
         redirect: false,
       });
 
@@ -19,7 +28,12 @@ export const login = createSafeActionClient()
        * Ensure we have a valid redirect url
        * Otherwise, throw an error
        */
-      z.string().parse(_redirectUrl);
+      const redirectUrl = z.string().url().parse(_redirectUrl);
+
+      const isErroneous = new URL(redirectUrl).pathname === "/api/auth/error";
+      if (isErroneous) {
+        return { type: EnumLoginResult.Error };
+      }
 
       return { type: EnumLoginResult.EmailSent };
     } catch (e) {
