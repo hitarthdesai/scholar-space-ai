@@ -21,7 +21,7 @@ export default async function Home() {
   return (
     <main className="grid min-h-full w-screen grid-cols-2 grid-rows-2 flex-row gap-4 px-6">
       <Link href="/dashboard" className="col-span-2">
-        <Card className="flex h-full flex-col justify-between hover:bg-stone-300">
+        <Card className="flex h-full flex-col justify-between hover:bg-secondary">
           <CardHeader>
             <CardTitle className="">Dashboard</CardTitle>
             <CardDescription className="">
@@ -38,7 +38,7 @@ export default async function Home() {
         </Card>
       </Link>
       <Link href="/qa">
-        <Card className="flex h-full flex-col justify-between hover:bg-stone-300">
+        <Card className="flex h-full flex-col justify-between hover:bg-secondary">
           <CardHeader>
             <CardTitle className="">Q/A</CardTitle>
             <CardDescription className="">
@@ -54,7 +54,7 @@ export default async function Home() {
         </Card>
       </Link>
       <Link href="/practice">
-        <Card className="flex h-full flex-col justify-between hover:bg-stone-300">
+        <Card className="flex h-full flex-col justify-between hover:bg-secondary">
           <CardHeader>
             <CardTitle className="">Practice</CardTitle>
             <CardDescription className="">
