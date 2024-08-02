@@ -1,15 +1,10 @@
 "use client";
 
 import { useUIState } from "ai/rsc";
-import { type AI } from "./AiProvider";
-
-export interface Message {
-  role: "user" | "assistant";
-  content: string;
-}
+import { type TypeAI } from "./AiProvider";
 
 export function ChatMessages() {
-  const [messages] = useUIState<typeof AI>();
+  const [messages] = useUIState<TypeAI>();
 
   return (
     <div>

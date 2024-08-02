@@ -1,24 +1,22 @@
 "use server";
 
-import { type AI } from "@/components/AiProvider";
-import { type Message } from "@/components/ChatMessages";
-import { EnumMessageRole } from "@/schemas/chatSchema";
-import { getMutableAIState } from "ai/rsc";
+import { createStreamableValue, type StreamableValue } from "ai/rsc";
 
-export const sendMessage = async (input: string): Promise<Message> => {
-  const history = getMutableAIState<typeof AI>();
+// eslint-disable-next-line @typescript-eslint/require-await
+export const sendMessage = async (input: string): Promise<StreamableValue> => {
+  const stream = createStreamableValue("");
 
-  history.update([
-    ...history.get(),
-    { role: EnumMessageRole.User, content: input },
-  ]);
+  // This temporarily just streams the input back to the user, with some ms delay
+  // TODO: Remove this when we start querying the actual model
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  (async () => {
+    for await (const char of input) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      stream.update(char);
+    }
 
-  const response: Message = {
-    role: EnumMessageRole.Assistant,
-    content: "T'fuck should I know what's that",
-  };
+    stream.done();
+  })();
 
-  history.done([...history.get(), response]);
-
-  return response;
+  return stream.value;
 };

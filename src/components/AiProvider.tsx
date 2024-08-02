@@ -3,19 +3,20 @@ import { createAI } from "ai/rsc";
 import { type Message } from "@/schemas/chatSchema";
 import { sendMessage } from "@/actions/sendMessage";
 
-export type AIState = Message[];
-export type UIState = Message[];
+type AIState = Message[];
+type UIState = Message[];
+type Actions = {
+  sendMessage: typeof sendMessage;
+};
 
-// TODO: Remove this once done with dev work
-const initialMessages: Message[] = [
-  { role: "assistant", content: "Hello! How can I help you today?" },
-  { role: "user", content: "I need help with my studies." },
-];
+const initialMessages: Message[] = [];
 
-export const AI = createAI<AIState, UIState>({
+export const AI = createAI<AIState, UIState, Actions>({
   initialAIState: initialMessages,
   initialUIState: initialMessages,
   actions: {
     sendMessage,
   },
 });
+
+export type TypeAI = typeof AI;
