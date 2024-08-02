@@ -1,6 +1,6 @@
 "use server";
 
-import { EnumLoginResult, loginFormSchema } from "@/schemas/formSchema";
+import { EnumLoginResult, loginFormSchema } from "@/schemas/loginSchema";
 import { signIn } from "@/utils/auth/config";
 import { createSafeActionClient } from "next-safe-action";
 import { z } from "zod";
