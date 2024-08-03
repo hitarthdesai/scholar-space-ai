@@ -6,7 +6,8 @@ import Link from "next/link";
 
 export default async function ChatPage() {
   const session = await auth();
-  if (!session) {
+  const userId = session?.user?.id;
+  if (!userId) {
     return (
       <main className="flex h-full w-full flex-col items-center justify-center">
         <LockClosedIcon className="h-24 w-24 text-gray-400" aria-hidden />

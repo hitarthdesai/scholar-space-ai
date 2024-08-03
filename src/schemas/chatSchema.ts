@@ -1,8 +1,10 @@
+import { z } from "zod";
+
 import {
   CHAT_PROMPT_INPUT_MAX_LENGTH,
   CHAT_PROMPT_INPUT_MIN_LENGTH,
 } from "@/utils/constants/chat";
-import { z } from "zod";
+import { type continueConversation } from "@/actions/continueConversation";
 
 export const promptSchema = z.object({
   prompt: z
@@ -27,3 +29,9 @@ export const messageSchema = z.object({
 });
 
 export type Message = z.infer<typeof messageSchema>;
+
+export type AIState = Message[];
+export type UIState = Message[];
+export type Actions = {
+  continueConversation: typeof continueConversation;
+};

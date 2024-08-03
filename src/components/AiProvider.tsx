@@ -1,13 +1,12 @@
 import { createAI } from "ai/rsc";
 
-import { type Message } from "@/schemas/chatSchema";
+import {
+  type Actions,
+  type AIState,
+  type UIState,
+  type Message,
+} from "@/schemas/chatSchema";
 import { continueConversation } from "@/actions/continueConversation";
-
-type AIState = Message[];
-type UIState = Message[];
-type Actions = {
-  continueConversation: typeof continueConversation;
-};
 
 const initialMessages: Message[] = [];
 
