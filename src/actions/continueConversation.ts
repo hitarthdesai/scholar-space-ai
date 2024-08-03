@@ -1,9 +1,20 @@
 "use server";
 
+import { EnumMessageRole } from "@/schemas/chatSchema";
+import { saveMessageToDb } from "@/utils/chat/saveMessageToDb";
 import { createStreamableValue, type StreamableValue } from "ai/rsc";
 
 // eslint-disable-next-line @typescript-eslint/require-await
-export const sendMessage = async (input: string): Promise<StreamableValue> => {
+export const continueConversation = async (
+  input: string
+): Promise<StreamableValue> => {
+  const messageToSave = {
+    message: input,
+    by: EnumMessageRole.User,
+    conversationId: "",
+  };
+  await saveMessageToDb(messageToSave);
+
   const stream = createStreamableValue("");
 
   // This temporarily just streams the input back to the user, with some ms delay
@@ -16,6 +27,11 @@ export const sendMessage = async (input: string): Promise<StreamableValue> => {
     }
 
     stream.done();
+    await saveMessageToDb({
+      message: input,
+      by: EnumMessageRole.Assistant,
+      conversationId: "",
+    });
   })();
 
   return stream.value;
