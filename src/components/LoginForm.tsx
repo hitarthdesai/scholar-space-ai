@@ -18,7 +18,7 @@ import {
   loginFormSchema,
   EnumLoginResult,
   type LoginForm,
-} from "@/schemas/formSchema";
+} from "@/schemas/loginSchema";
 import { toast } from "@/components/ui/use-toast";
 import { toastDescriptionAuth } from "@/utils/constants/toast";
 import { login } from "@/actions/login";

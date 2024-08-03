@@ -37,7 +37,7 @@ export default async function Home() {
           </CardFooter>
         </Card>
       </Link>
-      <Link href="/qa">
+      <Link href="/chat">
         <Card className="flex h-full flex-col justify-between hover:bg-secondary">
           <CardHeader>
             <CardTitle className="">Q/A</CardTitle>
