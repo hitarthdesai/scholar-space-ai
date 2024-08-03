@@ -146,3 +146,26 @@ export const conversationMessagesRelations = relations(
     }),
   })
 );
+
+export const userConversations = sqliteTable("userConversation", {
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  conversationId: text("conversationId")
+    .notNull()
+    .references(() => conversations.id, { onDelete: "cascade" }),
+});
+
+export const userConversationsRelations = relations(
+  userConversations,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [userConversations.userId],
+      references: [users.id],
+    }),
+    conversation: one(conversations, {
+      fields: [userConversations.conversationId],
+      references: [conversations.id],
+    }),
+  })
+);

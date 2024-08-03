@@ -55,7 +55,7 @@ export const LoginFormComponent = () => {
   });
 
   return (
-    <Card className="flex max-w-96 flex-col gap-y-4 px-4">
+    <Card className="flex max-w-72 flex-col gap-y-4 px-4 sm:max-w-96">
       <CardHeader>
         <CardTitle>Login to ScholarSpace AI</CardTitle>
         <CardDescription>
