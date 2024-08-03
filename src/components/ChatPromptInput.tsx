@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
+import { Form, FormControl, FormField, FormItem } from "./ui/form";
 import {
   EnumMessageRole,
   type Message,
@@ -23,6 +23,7 @@ export function ChatPromptInput() {
   const form = useForm<PromptInput>({
     resolver: zodResolver(promptSchema),
     defaultValues: defaultPromptInputValues,
+    mode: "onChange",
   });
 
   const { sendMessage } = useActions<TypeAI>();
@@ -30,6 +31,8 @@ export function ChatPromptInput() {
   const setMessages = uiState[1];
 
   const handleSubmit = async ({ prompt }: PromptInput) => {
+    form.reset(defaultPromptInputValues);
+
     let initialMessages: Message[] = [];
     setMessages((messages) => {
       initialMessages = [
@@ -74,12 +77,16 @@ export function ChatPromptInput() {
                     autoComplete="off"
                   />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             );
           }}
         />
-        <Button type="submit" size="icon" className="rounded-full">
+        <Button
+          type="submit"
+          size="icon"
+          className="rounded-full"
+          disabled={!form.formState.isValid || form.formState.isSubmitting}
+        >
           <ArrowUpIcon />
         </Button>
       </form>

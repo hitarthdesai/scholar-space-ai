@@ -5,10 +5,6 @@ import { ChatPromptInput } from "@/components/ChatPromptInput";
 export default function Chat() {
   return (
     <main className="flex h-full flex-col justify-between">
-      <h1 className="text-xl font-semibold">
-        You&apos;re looking at the chat page.
-      </h1>
-
       <AI>
         <div className="flex h-full w-full justify-center">
           <div className="flex h-full w-full max-w-full flex-col justify-between py-2 sm:max-w-2xl">
