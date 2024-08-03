@@ -26,7 +26,7 @@ export function ChatPromptInput() {
     mode: "onChange",
   });
 
-  const { sendMessage } = useActions<TypeAI>();
+  const { continueConversation } = useActions<TypeAI>();
   const uiState = useUIState<TypeAI>();
   const setMessages = uiState[1];
 
@@ -43,7 +43,7 @@ export function ChatPromptInput() {
       return initialMessages;
     });
 
-    const response = await sendMessage(prompt);
+    const response = await continueConversation(prompt);
 
     let textContent = "";
     for await (const delta of readStreamableValue(response)) {

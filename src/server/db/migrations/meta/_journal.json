@@ -15,6 +15,27 @@
       "when": 1721376281211,
       "tag": "0001_wealthy_eddie_brock",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1722681407170,
+      "tag": "0002_dear_black_crow",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1722692827092,
+      "tag": "0003_red_human_torch",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1722695414129,
+      "tag": "0004_faithful_prodigy",
+      "breakpoints": true
     }
   ]
 }
