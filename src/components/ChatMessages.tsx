@@ -2,7 +2,7 @@
 
 import { useUIState } from "ai/rsc";
 import { type TypeAI } from "./AiProvider";
-import { Message } from "@/schemas/chatSchema";
+import { type Message } from "@/schemas/chatSchema";
 
 type ChatMessageProps = {
   message: Message;
