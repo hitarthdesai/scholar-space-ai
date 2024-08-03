@@ -2,6 +2,19 @@
 
 import { useUIState } from "ai/rsc";
 import { type TypeAI } from "./AiProvider";
+import { Message } from "@/schemas/chatSchema";
+
+type ChatMessageProps = {
+  message: Message;
+};
+
+function ChatMessage({ message }: ChatMessageProps) {
+  return (
+    <div>
+      {message.role}: {message.content}
+    </div>
+  );
+}
 
 export function ChatMessages() {
   const [messages] = useUIState<TypeAI>();
@@ -10,9 +23,7 @@ export function ChatMessages() {
     <div>
       <div>
         {messages.map((message, index) => (
-          <div key={index}>
-            {message.role}: {message.content}
-          </div>
+          <ChatMessage key={index} message={message} />
         ))}
       </div>
     </div>

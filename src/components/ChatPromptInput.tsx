@@ -55,35 +55,34 @@ export function ChatPromptInput() {
 
   return (
     <Form {...form}>
-      <div className="flex items-center justify-center">
-        <form
-          id="prompt"
-          className="flex w-full max-w-xl rounded-full border-[1px] border-primary p-2 sm:max-w-2xl"
-          onSubmit={form.handleSubmit(handleSubmit)}
-        >
-          <FormField
-            name="prompt"
-            control={form.control}
-            render={({ field }) => {
-              return (
-                <FormItem className="w-full">
-                  <FormControl>
-                    <Input
-                      {...field}
-                      className="border-none"
-                      placeholder="Ask a question"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <Button type="submit" size="icon" className="rounded-full">
-            <ArrowUpIcon />
-          </Button>
-        </form>
-      </div>
+      <form
+        id="prompt"
+        className="flex rounded-full border-[1px] border-primary p-1"
+        onSubmit={form.handleSubmit(handleSubmit)}
+      >
+        <FormField
+          name="prompt"
+          control={form.control}
+          render={({ field }) => {
+            return (
+              <FormItem className="w-full">
+                <FormControl>
+                  <Input
+                    {...field}
+                    className="border-none focus-visible:ring-0"
+                    placeholder="Ask a question"
+                    autoComplete="off"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
+        />
+        <Button type="submit" size="icon" className="rounded-full">
+          <ArrowUpIcon />
+        </Button>
+      </form>
     </Form>
   );
 }
