@@ -8,12 +8,10 @@ import { createStreamableValue, type StreamableValue } from "ai/rsc";
 export const continueConversation = async (
   input: string
 ): Promise<StreamableValue> => {
-  const messageToSave = {
+  const { conversationId } = await saveMessageToDb({
     message: input,
     by: EnumMessageRole.User,
-    conversationId: "",
-  };
-  await saveMessageToDb(messageToSave);
+  });
 
   const stream = createStreamableValue("");
 
@@ -30,7 +28,7 @@ export const continueConversation = async (
     await saveMessageToDb({
       message: input,
       by: EnumMessageRole.Assistant,
-      conversationId: "",
+      conversationId,
     });
   })();
 

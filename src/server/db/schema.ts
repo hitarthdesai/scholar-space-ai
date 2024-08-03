@@ -114,3 +114,35 @@ export const messages = sqliteTable("message", {
     enum: [EnumMessageRole.User, EnumMessageRole.Assistant],
   }).notNull(),
 });
+
+export const conversations = sqliteTable("conversation", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
+  createdAt: integer("createdAt", { mode: "timestamp_ms" })
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
+});
+
+export const conversationMessages = sqliteTable("conversationMessage", {
+  conversationId: text("conversationId")
+    .notNull()
+    .references(() => conversations.id, { onDelete: "cascade" }),
+  messageId: text("messageId")
+    .notNull()
+    .references(() => messages.id, { onDelete: "cascade" }),
+});
+
+export const conversationMessagesRelations = relations(
+  conversationMessages,
+  ({ one }) => ({
+    conversation: one(conversations, {
+      fields: [conversationMessages.conversationId],
+      references: [conversations.id],
+    }),
+    message: one(messages, {
+      fields: [conversationMessages.messageId],
+      references: [messages.id],
+    }),
+  })
+);

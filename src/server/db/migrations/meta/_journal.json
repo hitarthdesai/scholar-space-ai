@@ -22,6 +22,13 @@
       "when": 1722681407170,
       "tag": "0002_dear_black_crow",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1722692827092,
+      "tag": "0003_red_human_torch",
+      "breakpoints": true
     }
   ]
 }
