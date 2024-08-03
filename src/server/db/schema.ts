@@ -1,5 +1,7 @@
+import { EnumMessageRole } from "@/schemas/chatSchema";
 import { EnumRole } from "@/schemas/userSchema";
-import { relations } from "drizzle-orm";
+import { CHAT_PROMPT_INPUT_MAX_LENGTH } from "@/utils/constants/chat";
+import { relations, sql } from "drizzle-orm";
 import {
   index,
   integer,
@@ -8,6 +10,7 @@ import {
   text,
 } from "drizzle-orm/sqlite-core";
 import { type AdapterAccount } from "next-auth/adapters";
+import { randomUUID } from "crypto";
 
 export const users = sqliteTable("user", {
   id: text("id").primaryKey().notNull(),
@@ -96,3 +99,18 @@ export const verificationTokens = sqliteTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
+
+export const messages = sqliteTable("message", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
+  message: text("message", {
+    length: CHAT_PROMPT_INPUT_MAX_LENGTH,
+  }).notNull(),
+  createdAt: integer("createdAt", { mode: "timestamp_ms" })
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
+  by: text("by", {
+    enum: [EnumMessageRole.User, EnumMessageRole.Assistant],
+  }).notNull(),
+});

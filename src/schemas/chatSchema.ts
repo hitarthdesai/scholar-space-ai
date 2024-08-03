@@ -1,7 +1,14 @@
+import {
+  CHAT_PROMPT_INPUT_MAX_LENGTH,
+  CHAT_PROMPT_INPUT_MIN_LENGTH,
+} from "@/utils/constants/chat";
 import { z } from "zod";
 
 export const promptSchema = z.object({
-  prompt: z.string().min(5),
+  prompt: z
+    .string()
+    .min(CHAT_PROMPT_INPUT_MIN_LENGTH)
+    .max(CHAT_PROMPT_INPUT_MAX_LENGTH),
 });
 
 export type PromptInput = z.infer<typeof promptSchema>;
