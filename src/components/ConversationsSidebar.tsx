@@ -37,7 +37,7 @@ export function ConversationsSidebar({
     <aside
       className={cn(
         "z-20 h-full translate-x-0 border-r-4 bg-stone-900 transition-[width] duration-300 ease-in-out",
-        isOpen ? "w-64" : "w-0"
+        isOpen ? "min-w-64 max-w-64" : "min-w-0 max-w-0"
       )}
     >
       <div className="absolute left-0 top-0 z-20 ml-2 mt-2 flex items-center justify-center gap-4">
