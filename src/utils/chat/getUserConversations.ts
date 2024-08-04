@@ -1,4 +1,4 @@
-import { Conversation, conversationSchema } from "@/schemas/chatSchema";
+import { type Conversation, conversationSchema } from "@/schemas/chatSchema";
 import { db } from "@/server/db";
 import { conversations, userConversations } from "@/server/db/schema";
 import { eq } from "drizzle-orm";

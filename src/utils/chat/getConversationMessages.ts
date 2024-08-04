@@ -1,4 +1,4 @@
-import { Message, messageSchema } from "@/schemas/chatSchema";
+import { type Message, messageSchema } from "@/schemas/chatSchema";
 import { db } from "@/server/db";
 import { conversationMessages, messages } from "@/server/db/schema";
 import { eq } from "drizzle-orm";

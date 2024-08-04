@@ -14,6 +14,7 @@ import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
 import { readStreamableValue, useActions, useUIState } from "ai/rsc";
 import { type TypeAI } from "./AiProvider";
+import { useRouter } from "next/navigation";
 
 type ChatPromptInputProps = {
   conversationId?: string;
@@ -24,6 +25,7 @@ const defaultPromptInputValues: PromptInput = {
 };
 
 export function ChatPromptInput({ conversationId }: ChatPromptInputProps) {
+  const router = useRouter();
   const form = useForm<PromptInput>({
     resolver: zodResolver(promptSchema),
     defaultValues: defaultPromptInputValues,
@@ -47,10 +49,13 @@ export function ChatPromptInput({ conversationId }: ChatPromptInputProps) {
       return initialMessages;
     });
 
-    const response = await continueConversation({ prompt, conversationId });
+    const { stream, newConversationId } = await continueConversation({
+      prompt,
+      conversationId,
+    });
 
     let textContent = "";
-    for await (const delta of readStreamableValue(response)) {
+    for await (const delta of readStreamableValue(stream)) {
       textContent = `${textContent}${delta}`;
 
       setMessages([
@@ -58,6 +63,9 @@ export function ChatPromptInput({ conversationId }: ChatPromptInputProps) {
         { role: EnumMessageRole.Assistant, content: textContent },
       ]);
     }
+
+    router.push(`/chat/${newConversationId}`);
+    router.refresh();
   };
 
   return (

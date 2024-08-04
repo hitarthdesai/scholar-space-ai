@@ -16,9 +16,11 @@ export default async function ChatLayout({
   const conversations = await getUserConversations({ userId });
 
   return (
-    <div className="flex h-full">
+    <div id="hello" className="relative flex h-full">
       <ConversationsSidebar conversations={conversations} />
-      <div className="grow">{children}</div>
+      <div className="absolute left-0 top-0 z-10 h-full w-full sm:relative sm:grow">
+        {children}
+      </div>
     </div>
   );
 }

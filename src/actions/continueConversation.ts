@@ -9,11 +9,16 @@ type ContinueConversationInput = {
   conversationId?: string;
 };
 
+type ContinueConversationOutput = {
+  stream: StreamableValue;
+  newConversationId: string;
+};
+
 // eslint-disable-next-line @typescript-eslint/require-await
 export const continueConversation = async ({
   prompt,
   conversationId: _converationId,
-}: ContinueConversationInput): Promise<StreamableValue> => {
+}: ContinueConversationInput): Promise<ContinueConversationOutput> => {
   const { conversationId } = await saveMessageToDb({
     message: prompt,
     by: EnumMessageRole.User,
@@ -39,5 +44,5 @@ export const continueConversation = async ({
     });
   })();
 
-  return stream.value;
+  return { stream: stream.value, newConversationId: conversationId };
 };

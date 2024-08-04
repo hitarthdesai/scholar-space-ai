@@ -7,7 +7,7 @@ export function NotAuthorizedToViewConversation() {
     <main className="flex h-full w-full flex-col items-center justify-center">
       <EyeNoneIcon className="h-24 w-24 text-gray-400" aria-hidden />
       <p className="max-w-48 text-center">
-        You're not authorized to view this conversation.
+        You&apos;re not authorized to view this conversation.
       </p>
       <div className="mt-4 flex gap-1">
         <Button variant="outline">

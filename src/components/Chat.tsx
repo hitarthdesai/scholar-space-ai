@@ -1,14 +1,14 @@
 import { AI } from "@/components/AiProvider";
 import { ChatMessages } from "@/components/ChatMessages";
 import { ChatPromptInput } from "@/components/ChatPromptInput";
-import { Message } from "@/schemas/chatSchema";
+import { type Message } from "@/schemas/chatSchema";
 
 type ChatProps = {
   conversationId?: string;
   messages?: Message[];
 };
 
-export async function Chat({ conversationId, messages = [] }: ChatProps) {
+export function Chat({ conversationId, messages = [] }: ChatProps) {
   return (
     <AI initialAIState={messages} initialUIState={messages}>
       <div className="flex h-full w-full justify-center">
