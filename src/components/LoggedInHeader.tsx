@@ -10,25 +10,29 @@ export async function LoggedInHeader() {
     <div className="container flex h-14 max-w-screen-2xl items-center">
       <div className="min-w-fit">
         <Link href="/" className="mr-4 flex items-center space-x-2">
-          <span className="font-bold lg:inline-block">ScholarSpace AI</span>
+          <span className="font-bold">ScholarSpace AI</span>
         </Link>
       </div>
-      <div className="flex w-full grow justify-between">
-        <div className="flex">
+      {/* TODO: Bring back nav menu on mobile screens */}
+      <div className="hidden w-full grow flex-col justify-between sm:flex sm:flex-row">
+        <div className="flex flex-col sm:flex-row">
           <Link
             href="/dashboard"
             className="mr-4 flex items-center space-x-2 lg:mr-6"
           >
-            <span className="lg:inline-block">Dashboard</span>
+            <span>Dashboard</span>
           </Link>
           <Link
             href="/practice"
             className="mr-4 flex items-center space-x-2 lg:mr-6"
           >
-            <span className="lg:inline-block">Practice</span>
+            <span>Practice</span>
           </Link>
-          <Link href="/" className="mr-4 flex items-center space-x-2 lg:mr-6">
-            <span className="lg:inline-block">Ask a Question</span>
+          <Link
+            href="/chat"
+            className="mr-4 flex items-center space-x-2 lg:mr-6"
+          >
+            <span>Ask a Question</span>
           </Link>
         </div>
         <LogoutButton />

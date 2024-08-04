@@ -30,6 +30,13 @@ export const messageSchema = z.object({
 
 export type Message = z.infer<typeof messageSchema>;
 
+export const conversationSchema = z.object({
+  id: z.string().min(1),
+  createdAt: z.date(),
+});
+
+export type Conversation = z.infer<typeof conversationSchema>;
+
 export type AIState = Message[];
 export type UIState = Message[];
 export type Actions = {
