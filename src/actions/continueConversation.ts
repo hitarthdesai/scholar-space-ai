@@ -4,13 +4,20 @@ import { EnumMessageRole } from "@/schemas/chatSchema";
 import { saveMessageToDb } from "@/utils/chat/saveMessageToDb";
 import { createStreamableValue, type StreamableValue } from "ai/rsc";
 
+type ContinueConversationInput = {
+  prompt: string;
+  conversationId?: string;
+};
+
 // eslint-disable-next-line @typescript-eslint/require-await
-export const continueConversation = async (
-  input: string
-): Promise<StreamableValue> => {
+export const continueConversation = async ({
+  prompt,
+  conversationId: _converationId,
+}: ContinueConversationInput): Promise<StreamableValue> => {
   const { conversationId } = await saveMessageToDb({
-    message: input,
+    message: prompt,
     by: EnumMessageRole.User,
+    conversationId: _converationId,
   });
 
   const stream = createStreamableValue("");
@@ -19,14 +26,14 @@ export const continueConversation = async (
   // TODO: Remove this when we start querying the actual model
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   (async () => {
-    for await (const char of input) {
+    for await (const char of prompt) {
       await new Promise((resolve) => setTimeout(resolve, 100));
       stream.update(char);
     }
 
     stream.done();
     await saveMessageToDb({
-      message: input,
+      message: prompt,
       by: EnumMessageRole.Assistant,
       conversationId,
     });

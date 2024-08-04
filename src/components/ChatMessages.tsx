@@ -21,11 +21,9 @@ export function ChatMessages() {
 
   return (
     <div>
-      <div>
-        {messages.map((message, index) => (
-          <ChatMessage key={index} message={message} />
-        ))}
-      </div>
+      {messages.map((message, index) => (
+        <ChatMessage key={index} message={message} />
+      ))}
     </div>
   );
 }

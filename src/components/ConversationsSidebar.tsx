@@ -19,7 +19,7 @@ export function ConversationsSidebar({
   return (
     <aside
       className={cn(
-        "z-20 h-screen -translate-x-full border-r-4 transition-[width] duration-300 ease-in-out lg:translate-x-0",
+        "z-20 h-full -translate-x-full border-r-4 transition-[width] duration-300 ease-in-out lg:translate-x-0",
         isOpen ? "w-64" : "w-0"
       )}
     >

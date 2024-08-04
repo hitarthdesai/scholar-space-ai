@@ -15,11 +15,15 @@ import { Button } from "./ui/button";
 import { readStreamableValue, useActions, useUIState } from "ai/rsc";
 import { type TypeAI } from "./AiProvider";
 
+type ChatPromptInputProps = {
+  conversationId?: string;
+};
+
 const defaultPromptInputValues: PromptInput = {
   prompt: "",
 };
 
-export function ChatPromptInput() {
+export function ChatPromptInput({ conversationId }: ChatPromptInputProps) {
   const form = useForm<PromptInput>({
     resolver: zodResolver(promptSchema),
     defaultValues: defaultPromptInputValues,
@@ -43,7 +47,7 @@ export function ChatPromptInput() {
       return initialMessages;
     });
 
-    const response = await continueConversation(prompt);
+    const response = await continueConversation({ prompt, conversationId });
 
     let textContent = "";
     for await (const delta of readStreamableValue(response)) {

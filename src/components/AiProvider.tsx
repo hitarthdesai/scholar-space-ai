@@ -8,11 +8,7 @@ import {
 } from "@/schemas/chatSchema";
 import { continueConversation } from "@/actions/continueConversation";
 
-const initialMessages: Message[] = [];
-
 export const AI = createAI<AIState, UIState, Actions>({
-  initialAIState: initialMessages,
-  initialUIState: initialMessages,
   actions: {
     continueConversation,
   },
