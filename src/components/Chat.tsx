@@ -12,7 +12,7 @@ export function Chat({ conversationId, messages = [] }: ChatProps) {
   return (
     <AI initialAIState={messages} initialUIState={messages}>
       <div className="flex h-full w-full justify-center">
-        <div className="flex h-full w-full max-w-full flex-col justify-between py-2 sm:max-w-2xl">
+        <div className="flex h-full w-full max-w-full flex-col justify-between p-2 pb-0 sm:max-w-2xl">
           <ChatMessages />
           <ChatPromptInput conversationId={conversationId} />
         </div>
