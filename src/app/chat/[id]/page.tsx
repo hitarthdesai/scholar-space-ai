@@ -1,6 +1,6 @@
 import { Chat } from "@/components/Chat";
-import { ChatForLoggedInUsersOnly } from "@/components/ChatForLoggedInUsersOnly";
-import { NotAuthorizedToViewConversation } from "@/components/NotAuthorizedToViewConversation";
+import { PageForLoggedInUsersOnly } from "@/components/PageForLoggedInUsersOnly";
+import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { auth } from "@/utils/auth/config";
 import { doesConversationBelongToUser } from "@/utils/chat/doesConversationBelongToUser";
 import { getConversationMessages } from "@/utils/chat/getConversationMessages";
@@ -17,14 +17,14 @@ export default async function ChatPage({
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) {
-    return <ChatForLoggedInUsersOnly />;
+    return <PageForLoggedInUsersOnly />;
   }
 
   const isUserAuthorizedToViewConversation = await doesConversationBelongToUser(
     { userId, conversationId }
   );
   if (!isUserAuthorizedToViewConversation) {
-    return <NotAuthorizedToViewConversation />;
+    return <NotAuthorizedToViewPage />;
   }
 
   const messages = await getConversationMessages({ conversationId });
