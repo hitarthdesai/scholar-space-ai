@@ -4,7 +4,7 @@ import { configDotenv } from "@dotenvx/dotenvx";
 configDotenv({ path: ".env.local", override: true });
 
 const drizzleConfig = defineConfig({
-  schema: "./src/server/db/schema.ts",
+  schema: "./src/server/db/schema/index.ts",
   out: "./src/server/db/migrations",
   dialect: "sqlite",
   driver: "turso",
