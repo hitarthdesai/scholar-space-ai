@@ -1,7 +1,7 @@
 import { type Conversation, conversationSchema } from "@/schemas/chatSchema";
 import { db } from "@/server/db";
 import { conversations, userConversations } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 
 type GetUserConversationsProps = {
@@ -18,7 +18,8 @@ export async function getUserConversations({
       userConversations,
       eq(conversations.id, userConversations.conversationId)
     )
-    .where(eq(userConversations.userId, userId));
+    .where(eq(userConversations.userId, userId))
+    .orderBy(desc(conversations.createdAt));
 
   return z.array(conversationSchema).parse(_conversations);
 }
