@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   createClassroomFormSchema,
-  EnumCreateClassroomResult,
   type CreateClassroomForm,
 } from "@/schemas/classroomSchema";
 import { toast } from "@/components/ui/use-toast";
@@ -44,14 +43,11 @@ export const CreateClassroomFormComponent = () => {
   const { executeAsync } = useAction(createClassroom, {
     onSuccess({ data }) {
       if (!data?.type) return;
-      const isError = data.type !== EnumCreateClassroomResult.ClassroomCreated;
 
       toast({
-        title: isError
-          ? "Error in creating classroom"
-          : "Classroom created successfully",
+        title: "Error in creating classroom",
         description: toastDescriptionCreateClassroom[data.type],
-        variant: isError ? "destructive" : "default",
+        variant: "destructive",
       });
     },
   });

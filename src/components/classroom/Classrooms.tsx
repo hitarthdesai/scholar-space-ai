@@ -1,4 +1,8 @@
 import { type Classroom } from "@/schemas/classroomSchema";
+import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import Link from "next/link";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { Button } from "../ui/button";
 
 type ClassroomsProps = {
   classrooms: Classroom[];
@@ -6,11 +10,20 @@ type ClassroomsProps = {
 
 export function Classrooms({ classrooms }: ClassroomsProps) {
   return (
-    <div>
+    <div className="flex flex-row flex-wrap justify-center gap-4 sm:justify-start">
       {classrooms.map((classroom) => (
-        <div key={classroom.id}>
-          <h2>{classroom.name}</h2>
-        </div>
+        <Card key={classroom.id} className="min-w-72 max-w-72">
+          <CardHeader>
+            <CardTitle>{classroom.name}</CardTitle>
+          </CardHeader>
+          <CardFooter>
+            <Link href={`/classrooms/${classroom.id}`} className="w-full">
+              <Button className="flex w-full items-center">
+                View <MagnifyingGlassIcon />
+              </Button>
+            </Link>
+          </CardFooter>
+        </Card>
       ))}
     </div>
   );

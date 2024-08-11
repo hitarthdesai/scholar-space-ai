@@ -5,15 +5,15 @@ import { auth } from "@/utils/auth/config";
 import { doesConversationBelongToUser } from "@/utils/chat/doesConversationBelongToUser";
 import { getConversationMessages } from "@/utils/chat/getConversationMessages";
 
-type RouteParams = {
-  id: string;
+type PageProps = {
+  params: {
+    id: string;
+  };
 };
 
 export default async function ChatPage({
   params: { id: conversationId },
-}: {
-  params: RouteParams;
-}) {
+}: PageProps) {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) {

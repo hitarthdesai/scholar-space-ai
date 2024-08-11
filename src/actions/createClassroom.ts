@@ -6,7 +6,9 @@ import {
 } from "@/schemas/classroomSchema";
 import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
+import { createClassroomInDb } from "@/utils/classroom/createClassroomInDb";
 import { createSafeActionClient } from "next-safe-action";
+import { redirect } from "next/navigation";
 
 export const createClassroom = createSafeActionClient()
   .schema(createClassroomFormSchema)
@@ -23,12 +25,12 @@ export const createClassroom = createSafeActionClient()
         return { type: EnumCreateClassroomResult.NotAuthorized };
       }
 
-      await createClassroom({
+      const classroomId = await createClassroomInDb({
         name,
         teacherId: userId,
       });
 
-      return { type: EnumCreateClassroomResult.ClassroomCreated };
+      redirect(`/classrooms/${classroomId}?created=true`);
     } catch (e) {
       console.error(e);
       return { type: EnumCreateClassroomResult.Error };

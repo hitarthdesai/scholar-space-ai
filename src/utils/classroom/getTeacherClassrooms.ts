@@ -12,7 +12,7 @@ export async function getTeacherClassrooms({
   teacherId,
 }: GetTeacherClassroomsProps): Promise<Classroom[]> {
   const _classrooms = await db
-    .select({ id: classrooms, name: classrooms.name })
+    .select({ id: classrooms.id, name: classrooms.name })
     .from(classrooms)
     .where(eq(classrooms.teacherId, teacherId))
     .orderBy(desc(classrooms.created_at));
