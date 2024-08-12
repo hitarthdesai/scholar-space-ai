@@ -18,7 +18,7 @@ export function Classrooms({ classrooms }: ClassroomsProps) {
           </CardHeader>
           <CardFooter>
             <Link href={`/classrooms/${classroom.id}`} className="w-full">
-              <Button className="flex w-full items-center">
+              <Button className="flex w-full items-center gap-1">
                 View <MagnifyingGlassIcon />
               </Button>
             </Link>

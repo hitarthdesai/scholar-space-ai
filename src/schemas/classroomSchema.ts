@@ -28,3 +28,16 @@ export const EnumCreateClassroomResult = {
 
 const createClassroomResultSchema = z.nativeEnum(EnumCreateClassroomResult);
 export type CreateClassroomResult = z.infer<typeof createClassroomResultSchema>;
+
+export const classroomDetailsSchema = classroomSchema.extend({
+  students: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        name: z.string().min(1),
+      })
+    )
+    .nullable(),
+});
+
+export type ClassroomDetails = z.infer<typeof classroomDetailsSchema>;
