@@ -15,7 +15,6 @@ export const addStudent = createSafeActionClient()
   .schema(addStudentFormSchema)
   .action(async ({ parsedInput }) => {
     try {
-      console.log("HERE");
       const session = await auth();
       const userId = session?.user?.id;
       if (!userId || session?.user?.role !== EnumRole.Teacher) {

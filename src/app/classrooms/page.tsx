@@ -1,4 +1,5 @@
 import { Classrooms } from "@/components/classroom/Classrooms";
+import { CreateClassroomDialog } from "@/components/classroom/CreateClassroomDialog";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { PageForLoggedInUsersOnly } from "@/components/PageForLoggedInUsersOnly";
 import { Button } from "@/components/ui/button";
@@ -28,11 +29,13 @@ export default async function ClassroomsPage() {
           You don&apos;t have any classrooms yet.
         </p>
 
-        <Link href="/classrooms/create">
-          <Button className="flex items-center justify-center gap-2">
-            Create a classroom now <Pencil1Icon />
-          </Button>
-        </Link>
+        <CreateClassroomDialog
+          trigger={
+            <Button className="flex items-center justify-center gap-2">
+              Create a classroom now <Pencil1Icon />
+            </Button>
+          }
+        />
       </main>
     );
   }

@@ -1,6 +1,8 @@
 import {
   type CreateClassroomResult,
+  DeleteClassroomResult,
   EnumCreateClassroomResult,
+  EnumDeleteClassroomResult,
 } from "@/schemas/classroomSchema";
 import { EnumLoginResult, type LoginResult } from "@/schemas/loginSchema";
 import {
@@ -31,4 +33,16 @@ export const toastDescriptionAddStudent: Record<AddStudentResult, string> = {
     "You are not authorized to add a student.",
   [EnumAddStudentResult.Error]:
     "Unable to add a student. Please try again later.",
+};
+
+export const toastDescriptionDeleteClassroom: Record<
+  DeleteClassroomResult,
+  string
+> = {
+  [EnumDeleteClassroomResult.ClassroomDeleted]:
+    "The classroom was deleted successfully.",
+  [EnumDeleteClassroomResult.NotAuthorized]:
+    "You are not authorized to delete a classroom.",
+  [EnumDeleteClassroomResult.Error]:
+    "Unable to delete a classroom. Please try again later.",
 };

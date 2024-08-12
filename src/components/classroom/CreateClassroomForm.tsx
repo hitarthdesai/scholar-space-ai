@@ -13,28 +13,31 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   createClassroomFormSchema,
+  EnumCreateClassroomResult,
   type CreateClassroomForm,
 } from "@/schemas/classroomSchema";
 import { toast } from "@/components/ui/use-toast";
 import { toastDescriptionCreateClassroom } from "@/utils/constants/toast";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+
 import { createClassroom } from "@/actions/createClassroom";
+import { FormIds } from "@/utils/constants/form";
+import { type Dispatch, type SetStateAction } from "react";
+import { useRouter } from "next/navigation";
+
+type CreateClassroomFormProps = {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+};
 
 const createClassroomFormDefaultValues: CreateClassroomForm = {
   name: "",
 };
 
-export const CreateClassroomFormComponent = () => {
+export const CreateClassroomFormComponent = ({
+  setIsOpen,
+}: CreateClassroomFormProps) => {
+  const router = useRouter();
   const form = useForm<CreateClassroomForm>({
     resolver: zodResolver(createClassroomFormSchema),
     defaultValues: createClassroomFormDefaultValues,
@@ -44,53 +47,48 @@ export const CreateClassroomFormComponent = () => {
     onSuccess({ data }) {
       if (!data?.type) return;
 
+      const isErroneous =
+        data.type !== EnumCreateClassroomResult.ClassroomCreated;
+
       toast({
-        title: "Error in creating classroom",
+        title: isErroneous
+          ? "Error in creating classroom"
+          : "Classroom created successfully",
         description: toastDescriptionCreateClassroom[data.type],
-        variant: "destructive",
+        variant: isErroneous ? "destructive" : "default",
       });
+
+      if (!isErroneous) {
+        form.reset();
+        setIsOpen(false);
+        router.refresh();
+      }
     },
   });
 
   return (
-    <Card className="flex max-w-72 flex-col gap-y-4 px-4 sm:max-w-96">
-      <CardHeader>
-        <CardTitle>Create your classroom</CardTitle>
-        <CardDescription>
-          Fill this form to create a classroom. You can then invite students to
-          join your classroom.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form
-            id="createClassroomForm"
-            onSubmit={form.handleSubmit(executeAsync)}
-          >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input required {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    How&apos;ll your students identify this classroom?
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </form>
-        </Form>
-      </CardContent>
-      <CardFooter>
-        <Button type="submit" form="createClassroomForm">
-          Create
-        </Button>
-      </CardFooter>
-    </Card>
+    <Form {...form}>
+      <form
+        id={FormIds.CreateClassroom}
+        onSubmit={form.handleSubmit(executeAsync)}
+      >
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input required {...field} />
+              </FormControl>
+              <FormDescription>
+                How&apos;ll your students identify this classroom?
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
   );
 };

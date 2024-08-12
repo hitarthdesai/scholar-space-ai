@@ -35,3 +35,18 @@ export const classroomDetailsSchema = classroomSchema.extend({
 });
 
 export type ClassroomDetails = z.infer<typeof classroomDetailsSchema>;
+
+export const deleteClassroomInputSchema = z.object({
+  classroomId: z.string().min(1),
+});
+
+export type DeleteClassroomInput = z.infer<typeof deleteClassroomInputSchema>;
+
+export const EnumDeleteClassroomResult = {
+  ClassroomDeleted: "classroomDeleted",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const deleteClassroomResultSchema = z.nativeEnum(EnumDeleteClassroomResult);
+export type DeleteClassroomResult = z.infer<typeof deleteClassroomResultSchema>;
