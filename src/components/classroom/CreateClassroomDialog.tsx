@@ -13,7 +13,7 @@ import {
 import { PlusIcon } from "lucide-react";
 import { FormIds } from "@/utils/constants/form";
 import { CreateClassroomFormComponent as CreateClassroomForm } from "./CreateClassroomForm";
-import { ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 
 type CreateClassroomDialogProps = {
   trigger?: ReactNode;

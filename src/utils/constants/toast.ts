@@ -1,6 +1,6 @@
 import {
   type CreateClassroomResult,
-  DeleteClassroomResult,
+  type DeleteClassroomResult,
   EnumCreateClassroomResult,
   EnumDeleteClassroomResult,
 } from "@/schemas/classroomSchema";

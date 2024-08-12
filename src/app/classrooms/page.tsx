@@ -7,7 +7,6 @@ import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
 import { getTeacherClassrooms } from "@/utils/classroom/getTeacherClassrooms";
 import { ComponentNoneIcon, Pencil1Icon } from "@radix-ui/react-icons";
-import Link from "next/link";
 
 export default async function ClassroomsPage() {
   const session = await auth();
