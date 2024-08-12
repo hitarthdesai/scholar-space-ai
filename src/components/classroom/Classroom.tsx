@@ -1,31 +1,13 @@
 import { type ClassroomDetails } from "@/schemas/classroomSchema";
 import { Separator } from "../ui/separator";
-import {
-  EnvelopeClosedIcon,
-  FileIcon,
-  FilePlusIcon,
-  PersonIcon,
-} from "@radix-ui/react-icons";
+import { FileIcon, FilePlusIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { AddStudentDialog } from "./AddStudentDialog";
 
 type ClassroomProps = {
   classroom: ClassroomDetails;
 };
-
-function NoStudentsContent({ id }: Pick<ClassroomDetails, "id">) {
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2">
-      <PersonIcon className="h-12 w-12" />
-      <p>There are no students in this classroom.</p>
-      <Link href={`/classrooms/${id}/invite`}>
-        <Button className="flex items-center gap-2">
-          Invite students <EnvelopeClosedIcon />
-        </Button>
-      </Link>
-    </div>
-  );
-}
 
 function NoAssignmentsContent({ id }: Pick<ClassroomDetails, "id">) {
   return (
@@ -51,15 +33,23 @@ export function Classroom({
   return (
     <div className="flex h-full w-full flex-col">
       <h1 className="text-xl font-semibold">{name}</h1>
-      <section className="grow">
+      <section className="p-4">
         {doesNotHaveStudents ? (
-          <NoStudentsContent id={id} />
+          <div className="flex">
+            <AddStudentDialog classroomId={id} />
+            <div className="flex grow items-center justify-center">
+              <p>There are no students in this classroom.</p>
+            </div>
+          </div>
         ) : (
-          <ul>
-            {students.map((student) => (
-              <li key={student.id}>{student.name}</li>
-            ))}
-          </ul>
+          <div className="flex">
+            <ul className="grow">
+              {students.map((student) => (
+                <li key={student.id}>{student.name}</li>
+              ))}
+            </ul>
+            <AddStudentDialog classroomId={id} />
+          </div>
         )}
       </section>
       <Separator />
