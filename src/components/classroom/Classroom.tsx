@@ -1,27 +1,13 @@
 import { type ClassroomDetails } from "@/schemas/classroomSchema";
 import { Separator } from "../ui/separator";
-import { FileIcon, FilePlusIcon } from "@radix-ui/react-icons";
-import { Button } from "../ui/button";
-import Link from "next/link";
 import { AddStudentDialog } from "./AddStudentDialog";
+import { AddAssignmentDialog } from "./AddAssignmentDialog";
+import { Button } from "../ui/button";
+import { BookPlusIcon } from "lucide-react";
 
 type ClassroomProps = {
   classroom: ClassroomDetails;
 };
-
-function NoAssignmentsContent({ id }: Pick<ClassroomDetails, "id">) {
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2">
-      <FileIcon className="h-12 w-12" />
-      <p>There are no assignments for this classroom.</p>
-      <Link href={`/classrooms/${id}/assignments/create`}>
-        <Button className="flex items-center gap-2">
-          Create assignment <FilePlusIcon />
-        </Button>
-      </Link>
-    </div>
-  );
-}
 
 export function Classroom({
   classroom: { id, name, students },
@@ -53,8 +39,24 @@ export function Classroom({
         )}
       </section>
       <Separator />
-      <section className="grow">
-        {doesNotHaveAssignments ? <NoAssignmentsContent id={id} /> : <ul></ul>}
+      <section className="grow p-4">
+        {doesNotHaveAssignments ? (
+          <div className="flex h-full flex-col items-center justify-center gap-3">
+            <BookPlusIcon className="h-16 w-16" />
+            <div className="flex items-center justify-center">
+              <p>There are no assignments for this classroom.</p>
+            </div>
+            <AddAssignmentDialog
+              classroomId={id}
+              trigger={<Button>Create an assignment</Button>}
+            />
+          </div>
+        ) : (
+          <>
+            <ul></ul>
+            <AddAssignmentDialog classroomId={id} />
+          </>
+        )}
       </section>
     </div>
   );
