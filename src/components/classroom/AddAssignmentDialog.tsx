@@ -23,10 +23,10 @@ type AddAssignmentDialogProps = {
 function DefaultAddAssignmentTrigger() {
   return (
     <Button
-      className="h-16 w-16 rounded-full border-dashed p-4 sm:h-24 sm:w-24"
-      variant="outline"
+      variant="ghost"
+      className="flex aspect-[10/16] h-full min-w-36 max-w-36 items-center justify-center border-[1px] border-dashed"
     >
-      <BookPlus className="h-full w-full" />
+      <BookPlus className="h-16 w-16" />
     </Button>
   );
 }
@@ -45,7 +45,7 @@ export function AddAssignmentDialog({
           <DialogTitle>Add assignment</DialogTitle>
           <DialogDescription>
             Give your assignment a name. Then, click add to make it available to
-            your s.
+            your students.
           </DialogDescription>
         </DialogHeader>
         <AddAssignmentForm classroomId={classroomId} setIsOpen={setIsOpen} />

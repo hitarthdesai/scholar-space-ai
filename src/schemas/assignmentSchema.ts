@@ -15,3 +15,10 @@ export const EnumAddAssignmentResult = {
 
 const addAssignmentResultSchema = z.nativeEnum(EnumAddAssignmentResult);
 export type AddAssignmentResult = z.infer<typeof addAssignmentResultSchema>;
+
+export const assignmentSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+});
+
+export type Assignment = z.infer<typeof assignmentSchema>;

@@ -3,19 +3,21 @@ import { Separator } from "../ui/separator";
 import { AddStudentDialog } from "./AddStudentDialog";
 import { AddAssignmentDialog } from "./AddAssignmentDialog";
 import { Button } from "../ui/button";
-import { BookPlusIcon } from "lucide-react";
+import { BookAIcon, BookPlusIcon } from "lucide-react";
+import Link from "next/link";
+import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
 
 type ClassroomProps = {
   classroom: ClassroomDetails;
 };
 
 export function Classroom({
-  classroom: { id, name, students },
+  classroom: { id, name, students, assignments },
 }: ClassroomProps) {
   const doesNotHaveStudents = students === null || students.length === 0;
+  const doesNotHaveAssignments =
+    assignments === null || assignments.length === 0;
 
-  // TODO: Change this after implementing assignments
-  const doesNotHaveAssignments = true;
   return (
     <div className="flex h-full w-full flex-col">
       <h1 className="text-xl font-semibold">{name}</h1>
@@ -53,8 +55,30 @@ export function Classroom({
           </div>
         ) : (
           <>
-            <ul></ul>
-            <AddAssignmentDialog classroomId={id} />
+            <ul className="flex grow gap-4">
+              {assignments.map((assignment) => (
+                <li
+                  key={assignment.id}
+                  className="aspect-[10/16] min-w-36 max-w-36"
+                >
+                  <Card className="flex h-full w-full flex-col justify-between">
+                    <CardHeader>
+                      <CardTitle>{assignment.name}</CardTitle>
+                    </CardHeader>
+                    <CardFooter>
+                      <Link href={`assignments/${assignment.id}`}>
+                        <Button className="flex items-center justify-center gap-2">
+                          View <BookAIcon />
+                        </Button>
+                      </Link>
+                    </CardFooter>
+                  </Card>
+                </li>
+              ))}
+              <li>
+                <AddAssignmentDialog classroomId={id} />
+              </li>
+            </ul>
           </>
         )}
       </section>

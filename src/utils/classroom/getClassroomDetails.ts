@@ -3,7 +3,13 @@ import {
   classroomDetailsSchema,
 } from "@/schemas/classroomSchema";
 import { db } from "@/server/db";
-import { classrooms, classroomStudents, users } from "@/server/db/schema";
+import {
+  assignments,
+  classroomAssignments,
+  classrooms,
+  classroomStudents,
+  users,
+} from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 
 type GetClassroomDetailsProps = {
@@ -34,8 +40,23 @@ export async function getClassroomDetails({
       and(eq(classrooms.id, classroomId), eq(classrooms.teacherId, userId))
     );
 
-  const { success, data: classroom } =
-    classroomDetailsSchema.safeParse(_classroom);
+  const _assignments = await db
+    .selectDistinct({
+      id: assignments.id,
+      name: assignments.name,
+    })
+    .from(assignments)
+    .innerJoin(
+      classroomAssignments,
+      eq(assignments.id, classroomAssignments.assignmentId)
+    )
+    .where(eq(classroomAssignments.classroomId, classroomId));
+
+  const { success, data: classroom } = classroomDetailsSchema.safeParse({
+    ..._classroom,
+    assignments: _assignments,
+  });
+
   if (!success) {
     return undefined;
   }
