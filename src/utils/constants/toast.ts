@@ -1,7 +1,9 @@
 import {
   type AddAssignmentResult,
+  AddQuestionResult,
   DeleteAssignmentResult,
   EnumAddAssignmentResult,
+  EnumAddQuestionResult,
   EnumDeleteAssignmentResult,
 } from "@/schemas/assignmentSchema";
 import {
@@ -75,4 +77,12 @@ export const toastDescriptionAddAssignment: Record<
     "You are not authorized to create an assignment.",
   [EnumAddAssignmentResult.Error]:
     "Unable to create an assignment. Please try again later.",
+};
+
+export const toastDescriptionAddQuestion: Record<AddQuestionResult, string> = {
+  [EnumAddQuestionResult.QuestionAdded]: "The question was added successfully.",
+  [EnumAddQuestionResult.NotAuthorized]:
+    "You are not authorized to add a question.",
+  [EnumAddQuestionResult.Error]:
+    "Unable to add a question. Please try again later.",
 };

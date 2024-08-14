@@ -39,3 +39,19 @@ const deleteAssignmentResultSchema = z.nativeEnum(EnumDeleteAssignmentResult);
 export type DeleteAssignmentResult = z.infer<
   typeof deleteAssignmentResultSchema
 >;
+
+export const addQuestionFormSchema = z.object({
+  assignmentId: z.string().min(1),
+  question: z.string().min(1),
+});
+
+export type AddQuestionForm = z.infer<typeof addQuestionFormSchema>;
+
+export const EnumAddQuestionResult = {
+  QuestionAdded: "QuestionAdded",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const addQuestionResultSchema = z.nativeEnum(EnumAddQuestionResult);
+export type AddQuestionResult = z.infer<typeof addQuestionResultSchema>;
