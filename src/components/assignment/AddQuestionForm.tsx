@@ -22,7 +22,7 @@ import {
 } from "@/schemas/assignmentSchema";
 import { FormIds } from "@/utils/constants/form";
 import { addQuestion } from "@/actions/addQuestion";
-import { Dispatch, SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 
 type AddQuestionFormComponentProps = {

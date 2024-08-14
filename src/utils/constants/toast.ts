@@ -1,7 +1,7 @@
 import {
   type AddAssignmentResult,
-  AddQuestionResult,
-  DeleteAssignmentResult,
+  type AddQuestionResult,
+  type DeleteAssignmentResult,
   EnumAddAssignmentResult,
   EnumAddQuestionResult,
   EnumDeleteAssignmentResult,

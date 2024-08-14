@@ -10,10 +10,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { BookPlus, UserPlus } from "lucide-react";
+import { BookPlus } from "lucide-react";
 import { AddQuestionFormComponent as AddQuestionForm } from "../assignment/AddQuestionForm";
 import { FormIds } from "@/utils/constants/form";
-import { ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 
 export type AddQuestionDialogProps = {
   assignmentId: string;

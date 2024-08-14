@@ -32,16 +32,28 @@ export async function AssignmentQuestions({
   }
 
   return (
-    <ul>
-      {questions.map((question, index) => (
-        <li>
-          <Link href={`/questions/${question.id}`}>
-            <Button variant="link" className="flex gap-2">
-              Question {index + 1}
+    <ul className="flex flex-col gap-4">
+      <div className="">
+        {questions.map((question, index) => (
+          <li key={question.id}>
+            <Link href={`/questions/${question.id}`}>
+              <Button variant="link" className="flex gap-2">
+                Question {index + 1}
+              </Button>
+            </Link>
+          </li>
+        ))}
+      </div>
+      <li>
+        <AddQuestionDialog
+          assignmentId={assignmentId}
+          trigger={
+            <Button className="flex gap-2">
+              Add another question <ShieldQuestionIcon />
             </Button>
-          </Link>
-        </li>
-      ))}
+          }
+        />
+      </li>
     </ul>
   );
 }
