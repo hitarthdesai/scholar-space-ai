@@ -24,7 +24,7 @@ function DefaultAddAssignmentTrigger() {
   return (
     <Button
       variant="ghost"
-      className="flex aspect-[10/16] h-full min-w-36 max-w-36 items-center justify-center border-[1px] border-dashed"
+      className="flex aspect-video h-full min-w-52 max-w-52 items-center justify-center border-[1px] border-dashed"
     >
       <BookPlus className="h-16 w-16" />
     </Button>

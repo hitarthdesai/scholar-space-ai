@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { BookAIcon, BookPlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import { DeleteAssignmentButton } from "./DeleteAssignmentButton";
 
 type ClassroomProps = {
   classroom: ClassroomDetails;
@@ -59,18 +60,22 @@ export function Classroom({
               {assignments.map((assignment) => (
                 <li
                   key={assignment.id}
-                  className="aspect-[10/16] min-w-36 max-w-36"
+                  className="aspect-video min-w-52 max-w-52"
                 >
                   <Card className="flex h-full w-full flex-col justify-between">
                     <CardHeader>
                       <CardTitle>{assignment.name}</CardTitle>
                     </CardHeader>
-                    <CardFooter>
-                      <Link href={`assignments/${assignment.id}`}>
+                    <CardFooter className="flex items-center gap-2">
+                      <Link
+                        href={`/assignments/${assignment.id}`}
+                        className="grow"
+                      >
                         <Button className="flex items-center justify-center gap-2">
                           View <BookAIcon />
                         </Button>
                       </Link>
+                      <DeleteAssignmentButton assignmentId={assignment.id} />
                     </CardFooter>
                   </Card>
                 </li>

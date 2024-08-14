@@ -1,6 +1,8 @@
 import {
   type AddAssignmentResult,
+  DeleteAssignmentResult,
   EnumAddAssignmentResult,
+  EnumDeleteAssignmentResult,
 } from "@/schemas/assignmentSchema";
 import {
   type CreateClassroomResult,
@@ -49,6 +51,18 @@ export const toastDescriptionDeleteClassroom: Record<
     "You are not authorized to delete a classroom.",
   [EnumDeleteClassroomResult.Error]:
     "Unable to delete a classroom. Please try again later.",
+};
+
+export const toastDescriptionDeleteAssignment: Record<
+  DeleteAssignmentResult,
+  string
+> = {
+  [EnumDeleteAssignmentResult.AssignmentDeleted]:
+    "The assignment was deleted successfully.",
+  [EnumDeleteAssignmentResult.NotAuthorized]:
+    "You are not authorized to delete an assignment.",
+  [EnumDeleteAssignmentResult.Error]:
+    "Unable to delete this assignment. Please try again later.",
 };
 
 export const toastDescriptionAddAssignment: Record<

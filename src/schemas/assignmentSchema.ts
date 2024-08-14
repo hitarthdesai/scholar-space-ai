@@ -22,3 +22,20 @@ export const assignmentSchema = z.object({
 });
 
 export type Assignment = z.infer<typeof assignmentSchema>;
+
+export const deleteAssignmentInputSchema = z.object({
+  assignmentId: z.string().min(1),
+});
+
+export type DeleteAssignmentInput = z.infer<typeof deleteAssignmentInputSchema>;
+
+export const EnumDeleteAssignmentResult = {
+  AssignmentDeleted: "assignmentDeleted",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const deleteAssignmentResultSchema = z.nativeEnum(EnumDeleteAssignmentResult);
+export type DeleteAssignmentResult = z.infer<
+  typeof deleteAssignmentResultSchema
+>;
