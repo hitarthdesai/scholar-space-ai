@@ -11,11 +11,9 @@ export async function deleteClassroomFromDb({
   classroomId,
   teacherId,
 }: DeleteClassroomFromDbProps) {
-  const stuff = await db
+  return db
     .delete(classrooms)
     .where(
       and(eq(classrooms.id, classroomId), eq(classrooms.teacherId, teacherId))
     );
-
-  console.log(stuff);
 }

@@ -1,4 +1,12 @@
 import {
+  type AddAssignmentResult,
+  type AddQuestionResult,
+  type DeleteAssignmentResult,
+  EnumAddAssignmentResult,
+  EnumAddQuestionResult,
+  EnumDeleteAssignmentResult,
+} from "@/schemas/assignmentSchema";
+import {
   type CreateClassroomResult,
   type DeleteClassroomResult,
   EnumCreateClassroomResult,
@@ -45,4 +53,36 @@ export const toastDescriptionDeleteClassroom: Record<
     "You are not authorized to delete a classroom.",
   [EnumDeleteClassroomResult.Error]:
     "Unable to delete a classroom. Please try again later.",
+};
+
+export const toastDescriptionDeleteAssignment: Record<
+  DeleteAssignmentResult,
+  string
+> = {
+  [EnumDeleteAssignmentResult.AssignmentDeleted]:
+    "The assignment was deleted successfully.",
+  [EnumDeleteAssignmentResult.NotAuthorized]:
+    "You are not authorized to delete an assignment.",
+  [EnumDeleteAssignmentResult.Error]:
+    "Unable to delete this assignment. Please try again later.",
+};
+
+export const toastDescriptionAddAssignment: Record<
+  AddAssignmentResult,
+  string
+> = {
+  [EnumAddAssignmentResult.AssignmentAdded]:
+    "The assignment was created successfully.",
+  [EnumAddAssignmentResult.NotAuthorized]:
+    "You are not authorized to create an assignment.",
+  [EnumAddAssignmentResult.Error]:
+    "Unable to create an assignment. Please try again later.",
+};
+
+export const toastDescriptionAddQuestion: Record<AddQuestionResult, string> = {
+  [EnumAddQuestionResult.QuestionAdded]: "The question was added successfully.",
+  [EnumAddQuestionResult.NotAuthorized]:
+    "You are not authorized to add a question.",
+  [EnumAddQuestionResult.Error]:
+    "Unable to add a question. Please try again later.",
 };
