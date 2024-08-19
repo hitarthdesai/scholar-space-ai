@@ -1,10 +1,7 @@
 import Head from "next/head";
 import { LoginFormComponent as LoginForm } from "@/components/LoginForm";
-import { redirectLoggedInUserToHome } from "@/utils/redirectLoggedInUserToHome";
 
-export default async function Login() {
-  await redirectLoggedInUserToHome();
-
+export default function Login() {
   return (
     <>
       <Head>
