@@ -1,19 +1,17 @@
 import { Classrooms } from "@/components/classroom/Classrooms";
 import { CreateClassroomDialog } from "@/components/classroom/CreateClassroomDialog";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
-import { PageForLoggedInUsersOnly } from "@/components/PageForLoggedInUsersOnly";
 import { Button } from "@/components/ui/button";
 import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
 import { getTeacherClassrooms } from "@/utils/classroom/getTeacherClassrooms";
 import { ComponentNoneIcon, Pencil1Icon } from "@radix-ui/react-icons";
+import assert from "assert";
 
 export default async function ClassroomsPage() {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) {
-    return <PageForLoggedInUsersOnly />;
-  }
+  assert(!!userId, "User must be logged in to view this page");
 
   if (session?.user?.role !== EnumRole.Teacher) {
     return <NotAuthorizedToViewPage />;

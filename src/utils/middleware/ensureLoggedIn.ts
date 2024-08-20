@@ -1,5 +1,6 @@
 import { auth } from "../auth/config";
 import { type NextRequest, NextResponse } from "next/server";
+import { EnumPageErrorType } from "../constants/error";
 
 /**
  * Redirects the user to a 404 page if they are not logged in
@@ -14,7 +15,8 @@ export async function ensureLoggedIn(req: NextRequest) {
   }
 
   const url = req.nextUrl.clone();
-  url.pathname = "/";
+  url.pathname = `/err/${EnumPageErrorType.UserNotLoggedIn}`;
+  url.searchParams.set("redirect", req.nextUrl.pathname);
 
   return NextResponse.redirect(url);
 }

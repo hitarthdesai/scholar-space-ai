@@ -16,7 +16,7 @@ export const config = {
 
 export async function middleware(req: NextRequest) {
   for (const [regex, actions] of actionsMap.entries()) {
-    if (!regex.test(req.nextUrl.pathname)) return;
+    if (!regex.test(req.nextUrl.pathname)) continue;
 
     for (const action of actions) {
       const response = await action(req);

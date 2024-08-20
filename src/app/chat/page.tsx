@@ -1,13 +1,11 @@
 import { Chat } from "@/components/Chat";
-import { PageForLoggedInUsersOnly } from "@/components/PageForLoggedInUsersOnly";
 import { auth } from "@/utils/auth/config";
+import assert from "assert";
 
 export default async function ChatPage() {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) {
-    return <PageForLoggedInUsersOnly />;
-  }
+  assert(!!userId, "User must be logged in to view this page");
 
   return (
     <main className="flex h-full flex-col justify-between">
