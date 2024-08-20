@@ -72,7 +72,7 @@ export function ChatPromptInput({ conversationId }: ChatPromptInputProps) {
     <Form {...form}>
       <form
         id="prompt"
-        className="flex rounded-full border-[1px] border-primary p-1"
+        className="flex rounded-full border border-primary p-1"
         onSubmit={form.handleSubmit(handleSubmit)}
       >
         <FormField

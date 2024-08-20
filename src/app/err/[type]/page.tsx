@@ -15,7 +15,7 @@ function getErrorComponent({ type, redirect }: GetErrorComponentProps) {
   }
 }
 
-type ErrorPageProps = {
+type PageProps = {
   params: {
     type: PageError;
   };
@@ -27,7 +27,7 @@ type ErrorPageProps = {
 export default function ErrorPage({
   params: { type },
   searchParams: { redirect },
-}: ErrorPageProps) {
+}: PageProps) {
   const errorComponent = getErrorComponent({ type, redirect });
 
   return errorComponent;
