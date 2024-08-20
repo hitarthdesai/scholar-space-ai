@@ -1,6 +1,5 @@
 import { AssignmentQuestions } from "@/components/assignment/AssignmentQuestions";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
-import { PageForLoggedInUsersOnly } from "@/components/PageForLoggedInUsersOnly";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,6 +11,7 @@ import {
 import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
 import { getAssignmentFromDb } from "@/utils/classroom/getAssignmentFromDb";
+import assert from "assert";
 import { SchoolIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -25,13 +25,17 @@ export default async function AssignmentPage({
   params: { id: assignmentId },
 }: PageProps) {
   const session = await auth();
-  if (!session?.user?.id) {
-    return <PageForLoggedInUsersOnly />;
+
+  const role = session?.user?.role;
+  if (role === EnumRole.Student) {
+    return <h1>Student Assignment Page</h1>;
   }
 
+  const userId = session?.user?.id;
+  assert(!!userId, "User must be logged in to view this page");
   const _assignments = await getAssignmentFromDb({
     assignmentId,
-    userId: session.user.id,
+    userId,
   });
 
   if (!_assignments || _assignments.length === 0) {
@@ -39,10 +43,6 @@ export default async function AssignmentPage({
   }
 
   const assignment = _assignments[0];
-
-  if (session.user.role === EnumRole.Student) {
-    return <h1>Student Assignment Page</h1>;
-  }
 
   return (
     <main className="flex h-full flex-col items-center p-4">

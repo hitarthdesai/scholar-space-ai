@@ -7,6 +7,7 @@ import Link from "next/link";
 type AssignmentQuestionsProps = {
   assignmentId: string;
 };
+
 export async function AssignmentQuestions({
   assignmentId,
 }: AssignmentQuestionsProps) {
