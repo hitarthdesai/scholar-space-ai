@@ -1,5 +1,5 @@
 import { PageForLoggedInUsersOnly } from "@/components/PageForLoggedInUsersOnly";
-import { EnumPageErrorType, PageError } from "@/utils/constants/error";
+import { EnumPageErrorType, type PageError } from "@/utils/constants/error";
 
 type GetErrorComponentProps = {
   type: PageError;
