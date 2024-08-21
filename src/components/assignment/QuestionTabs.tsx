@@ -1,4 +1,4 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { EnumTabsContentType, tabsDetails } from "@/utils/constants/question";
 import { Chat } from "../Chat";
 
