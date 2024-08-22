@@ -27,6 +27,7 @@ export const conversations = sqliteTable("conversation", {
   createdAt: integer("createdAt", { mode: "timestamp_ms" })
     .notNull()
     .default(sql`(CURRENT_TIMESTAMP)`),
+  name: text("name").notNull(),
 });
 
 export const conversationMessages = sqliteTable("conversationMessage", {
