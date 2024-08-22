@@ -11,6 +11,7 @@ import {
 import { type Conversation } from "@/schemas/chatSchema";
 import Link from "next/link";
 import { RenameConversationDialog } from "./RenameConversationDialog";
+import { RenameConversationButton } from "./RenameConversationButton";
 
 type ConversationItemProps = {
   conversation: Conversation;
@@ -26,20 +27,15 @@ export function ConversationItem({ conversation }: ConversationItemProps) {
       key={conversation.id}
       className="flex items-center justify-between overflow-hidden text-ellipsis py-2 pl-4 pr-4 hover:bg-stone-800"
     >
-      <Link
-        href={`/chat/${conversation.id}`}
-        className="overflow-hidden text-ellipsis whitespace-nowrap"
-      >
-        {conversation.name}
-      </Link>
-      <RenameConversationDialog
-        conversationId={conversation.id}
-        trigger={
-          <button className="ml-4 text-gray-400 hover:text-gray-200">
-            <Pencil2Icon />
-          </button>
-        }
-      />
+      <div className="flex-1 overflow-hidden">
+        <Link
+          href={`/chat/${conversation.id}`}
+          className="block overflow-hidden text-ellipsis whitespace-nowrap"
+        >
+          {conversation.name}
+        </Link>
+      </div>
+      <RenameConversationButton conversationId={conversation.id} />
     </div>
   );
 }

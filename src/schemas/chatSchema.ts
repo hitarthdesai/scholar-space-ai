@@ -35,7 +35,10 @@ export type Message = z.infer<typeof messageSchema>;
 export const conversationSchema = z.object({
   id: z.string().min(1),
   createdAt: z.date(),
-  name: z.string().min(1).max(50),
+  name: z
+    .string()
+    .min(CONVERSATION_NAME_MIN_LENGTH)
+    .max(CONVERSATION_NAME_MAX_LENGTH),
 });
 
 export type Conversation = z.infer<typeof conversationSchema>;
