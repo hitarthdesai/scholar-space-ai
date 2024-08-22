@@ -1,0 +1,1 @@
+ALTER TABLE `conversation` ADD `name` text DEFAULT "Conversation" NOT NULL;
