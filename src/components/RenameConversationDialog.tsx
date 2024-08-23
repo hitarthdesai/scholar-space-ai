@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { BookPlus } from "lucide-react";
+import { PencilIcon } from "lucide-react";
 import { RenameConversationFormComponent as RenameConversationForm } from "./RenameConversationForm";
 import { FormIds } from "@/utils/constants/form";
 import { type ReactNode, useState } from "react";
@@ -26,7 +26,7 @@ function DefaultRenameConversationTrigger() {
       variant="ghost"
       className="flex aspect-video h-full min-w-52 max-w-52 items-center justify-center border-[1px] border-dashed"
     >
-      <BookPlus className="h-16 w-16" />
+      <PencilIcon className="h-16 w-16" />
     </Button>
   );
 }
@@ -52,7 +52,7 @@ export function RenameConversationDialog({
           setIsOpen={setIsOpen}
         />
         <DialogFooter>
-          <Button type="submit" form={FormIds.AddAssignment}>
+          <Button type="submit" form={FormIds.RenameConversation}>
             Rename
           </Button>
         </DialogFooter>

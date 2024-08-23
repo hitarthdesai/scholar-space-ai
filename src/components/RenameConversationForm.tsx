@@ -73,7 +73,7 @@ export const RenameConversationFormComponent = ({
   return (
     <Form {...form}>
       <form
-        id={FormIds.CreateClassroom}
+        id={FormIds.RenameConversation}
         onSubmit={form.handleSubmit(executeAsync)}
       >
         <FormField
