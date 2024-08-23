@@ -17,6 +17,10 @@ import {
   type AddStudentResult,
   EnumAddStudentResult,
 } from "@/schemas/studentSchema";
+import {
+  type RenameConversationResult,
+  EnumRenameConversationResult,
+} from "@/schemas/chatSchema";
 
 export const toastDescriptionAuth: Record<LoginResult, string> = {
   [EnumLoginResult.EmailSent]: "User registered successfully.",
@@ -85,4 +89,16 @@ export const toastDescriptionAddQuestion: Record<AddQuestionResult, string> = {
     "You are not authorized to add a question.",
   [EnumAddQuestionResult.Error]:
     "Unable to add a question. Please try again later.",
+};
+
+export const toastDescriptionRenameConversation: Record<
+  RenameConversationResult,
+  string
+> = {
+  [EnumRenameConversationResult.ConversationRenamed]:
+    "Your conversation was renamed successfully.",
+  [EnumRenameConversationResult.NotAuthorized]:
+    "You are not authorized to rename this conversation.",
+  [EnumRenameConversationResult.Error]:
+    "Unable to rename this conversation. Please try again later.",
 };

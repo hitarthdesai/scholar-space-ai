@@ -3,9 +3,15 @@
 import { cn } from "@/utils/cn";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { ChevronLeftIcon, Pencil1Icon } from "@radix-ui/react-icons";
+import {
+  ChevronLeftIcon,
+  Pencil1Icon,
+  Pencil2Icon,
+} from "@radix-ui/react-icons";
 import { type Conversation } from "@/schemas/chatSchema";
 import Link from "next/link";
+import { RenameConversationDialog } from "./RenameConversationDialog";
+import { RenameConversationButton } from "./RenameConversationButton";
 
 type ConversationItemProps = {
   conversation: Conversation;
@@ -19,11 +25,17 @@ export function ConversationItem({ conversation }: ConversationItemProps) {
   return (
     <div
       key={conversation.id}
-      className="overflow-hidden text-ellipsis py-2 pl-4 hover:bg-stone-800"
+      className="flex items-center justify-between overflow-hidden text-ellipsis py-2 pl-4 pr-4 hover:bg-stone-800"
     >
-      <Link href={`/chat/${conversation.id}`} className="text-nowrap">
-        {conversation.id}
-      </Link>
+      <div className="flex-1 overflow-hidden">
+        <Link
+          href={`/chat/${conversation.id}`}
+          className="block overflow-hidden text-ellipsis whitespace-nowrap"
+        >
+          {conversation.name}
+        </Link>
+      </div>
+      <RenameConversationButton conversationId={conversation.id} />
     </div>
   );
 }
