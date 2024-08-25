@@ -42,6 +42,7 @@ export function DeleteConversationDialog({
   const [isOpen, setIsOpen] = useState(false);
 
   const router = useRouter();
+
   const { executeAsync } = useAction(deleteConversation, {
     onSuccess({ data }) {
       if (!data?.type) return;
@@ -59,6 +60,7 @@ export function DeleteConversationDialog({
       if (!isErroneous) {
         setIsOpen(false);
       }
+      router.push(`/chat`);
       router.refresh();
     },
   });
