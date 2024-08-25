@@ -12,6 +12,7 @@ import { type Conversation } from "@/schemas/chatSchema";
 import Link from "next/link";
 import { RenameConversationDialog } from "./RenameConversationDialog";
 import { RenameConversationButton } from "./RenameConversationButton";
+import { DeleteConversationButton } from "./DeleteConversationButton";
 
 type ConversationItemProps = {
   conversation: Conversation;
@@ -25,7 +26,7 @@ export function ConversationItem({ conversation }: ConversationItemProps) {
   return (
     <div
       key={conversation.id}
-      className="flex items-center justify-between overflow-hidden text-ellipsis py-2 pl-4 pr-4 hover:bg-stone-800"
+      className="flex items-center justify-between overflow-hidden text-ellipsis py-2 pl-4 pr-2 hover:bg-stone-800"
     >
       <div className="flex-1 overflow-hidden">
         <Link
@@ -36,6 +37,7 @@ export function ConversationItem({ conversation }: ConversationItemProps) {
         </Link>
       </div>
       <RenameConversationButton conversationId={conversation.id} />
+      <DeleteConversationButton conversationId={conversation.id} />
     </div>
   );
 }
