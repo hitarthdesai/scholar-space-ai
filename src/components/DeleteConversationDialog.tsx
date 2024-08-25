@@ -12,6 +12,12 @@ import {
 } from "@/components/ui/dialog";
 import { DeleteIcon } from "lucide-react";
 import { type ReactNode, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
+import { deleteConversation } from "@/actions/deleteConversation";
+import { EnumDeleteConversationResult } from "@/schemas/chatSchema";
+import { toastDescriptionDeleteConversation } from "@/utils/constants/toast";
+import { toast } from "./ui/use-toast";
 
 type DeleteConversationDialogProps = {
   conversationId: string;
@@ -35,6 +41,28 @@ export function DeleteConversationDialog({
 }: DeleteConversationDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const router = useRouter();
+  const { executeAsync } = useAction(deleteConversation, {
+    onSuccess({ data }) {
+      if (!data?.type) return;
+
+      const isErroneous =
+        data.type !== EnumDeleteConversationResult.ConversationDeleted;
+
+      toast({
+        title: isErroneous
+          ? "Error in deleting classroom"
+          : "Conversation deleted successfully",
+        description: toastDescriptionDeleteConversation[data.type],
+        variant: isErroneous ? "destructive" : "default",
+      });
+      if (!isErroneous) {
+        setIsOpen(false);
+      }
+      router.refresh();
+    },
+  });
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -53,6 +81,7 @@ export function DeleteConversationDialog({
           <Button
             type="submit"
             className="bg-red-700 text-white hover:bg-red-800 focus:ring-2 focus:ring-red-500"
+            onClick={() => executeAsync({ conversationId })}
           >
             Delete
           </Button>
