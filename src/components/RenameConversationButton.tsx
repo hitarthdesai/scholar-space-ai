@@ -14,7 +14,7 @@ export function RenameConversationButton({
       conversationId={conversationId}
       trigger={
         <Button
-          className="h-8 w-8 flex-shrink-0 rounded-md"
+          className="h-6 w-6 flex-shrink-0 rounded-md"
           variant="outline"
           size="icon"
           name="Rename Conversation"
