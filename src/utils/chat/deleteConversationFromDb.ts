@@ -6,7 +6,7 @@ type DeleteConversationProps = {
   conversationId: string;
 };
 
-export async function deleteConversation({
+export async function deleteConversationFromDb({
   conversationId,
 }: DeleteConversationProps): Promise<boolean> {
   const result = await db
