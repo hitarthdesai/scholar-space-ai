@@ -2,7 +2,7 @@ import { AI } from "@/components/AiProvider";
 import { ChatMessages } from "@/components/ChatMessages";
 import {
   ChatPromptInput,
-  ChatPromptInputProps,
+  type ChatPromptInputProps,
 } from "@/components/ChatPromptInput";
 import { type Message } from "@/schemas/chatSchema";
 

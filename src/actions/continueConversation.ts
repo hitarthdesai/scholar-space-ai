@@ -1,4 +1,5 @@
-// eslint-disable-file @typescript-eslint/no-unsafe-member-access
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 "use server";
 
 import {
