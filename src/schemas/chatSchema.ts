@@ -68,6 +68,27 @@ export type RenameConversationResult = z.infer<
   typeof renameConversationResultSchema
 >;
 
+export const deleteConversationInputSchema = z.object({
+  conversationId: z.string().min(1),
+});
+
+export type DeleteConversationInput = z.infer<
+  typeof deleteConversationInputSchema
+>;
+
+export const EnumDeleteConversationResult = {
+  ConversationDeleted: "conversationDeleted",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const deleteConversationResultSchema = z.nativeEnum(
+  EnumDeleteConversationResult
+);
+export type DeleteConversationResult = z.infer<
+  typeof deleteConversationResultSchema
+>;
+
 export type AIState = Message[];
 export type UIState = Message[];
 export type Actions = {

@@ -19,7 +19,9 @@ import {
 } from "@/schemas/studentSchema";
 import {
   type RenameConversationResult,
+  type DeleteConversationResult,
   EnumRenameConversationResult,
+  EnumDeleteConversationResult,
 } from "@/schemas/chatSchema";
 
 export const toastDescriptionAuth: Record<LoginResult, string> = {
@@ -101,4 +103,16 @@ export const toastDescriptionRenameConversation: Record<
     "You are not authorized to rename this conversation.",
   [EnumRenameConversationResult.Error]:
     "Unable to rename this conversation. Please try again later.",
+};
+
+export const toastDescriptionDeleteConversation: Record<
+  DeleteConversationResult,
+  string
+> = {
+  [EnumDeleteConversationResult.ConversationDeleted]:
+    "The conversation was deleted successfully.",
+  [EnumDeleteConversationResult.NotAuthorized]:
+    "You are not authorized to delete this conversation.",
+  [EnumDeleteConversationResult.Error]:
+    "Unable to delete conversation. Please try again later.",
 };
