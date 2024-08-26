@@ -16,6 +16,7 @@ export async function getUserConversations({
       id: conversations.id,
       createdAt: conversations.createdAt,
       name: conversations.name,
+      type: conversations.type,
     })
     .from(conversations)
     .innerJoin(

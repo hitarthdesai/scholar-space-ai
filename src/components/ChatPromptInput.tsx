@@ -3,10 +3,7 @@
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem } from "./ui/form";
 import {
-  type ConversationType as ChatType,
   continueConversationInputSchema,
-  EnumMessageRole,
-  type Message,
   type ContinueConversationInput,
   EnumConversationType,
 } from "@/schemas/chatSchema";
@@ -14,25 +11,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
-import { readStreamableValue, useActions, useUIState } from "ai/rsc";
+import { readStreamableValue, useActions } from "ai/rsc";
 import { type TypeAI } from "./AiProvider";
 import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
 
-type ChatPromptInputProps = {
-  conversationId?: string;
-  type: ChatType;
-  questionId?: string;
-};
+export type ChatPromptInputProps =
+  | {
+      type: "free";
+      conversationId?: string;
+    }
+  | {
+      type: "ques";
+      questionId: string;
+    };
 
-export function ChatPromptInput({
-  conversationId,
-  type,
-  questionId,
-}: ChatPromptInputProps) {
+export function ChatPromptInput({ type, ...props }: ChatPromptInputProps) {
   const defaultPromptInputValues: ContinueConversationInput = {
     prompt: "",
     type,
-    questionId,
+    ...props,
   };
 
   const router = useRouter();
@@ -43,43 +41,27 @@ export function ChatPromptInput({
   });
 
   const { continueConversation } = useActions<TypeAI>();
-  const uiState = useUIState<TypeAI>();
-  const setMessages = uiState[1];
+  const { executeAsync } = useAction(continueConversation, {
+    onSuccess: async ({ data }) => {
+      // TODO: Show an error toast or smth here?
+      if (!data) return;
 
-  const handleSubmit = async ({ prompt }: ContinueConversationInput) => {
+      let textContent = "";
+      const { stream, newConversationId } = data;
+      for await (const delta of readStreamableValue(stream)) {
+        textContent = `${textContent}${delta}`;
+      }
+
+      if (type === EnumConversationType.Free) {
+        router.push(`/chat/${newConversationId}`);
+      }
+      router.refresh();
+    },
+  });
+
+  const handleSubmit = async (formData: ContinueConversationInput) => {
     form.reset(defaultPromptInputValues);
-
-    let initialMessages: Message[] = [];
-    setMessages((messages) => {
-      initialMessages = [
-        ...messages,
-        { role: EnumMessageRole.User, content: prompt },
-      ];
-
-      return initialMessages;
-    });
-
-    const { stream, newConversationId } = await continueConversation({
-      prompt,
-      type,
-      conversationId,
-      questionId,
-    });
-
-    let textContent = "";
-    for await (const delta of readStreamableValue(stream)) {
-      textContent = `${textContent}${delta}`;
-
-      setMessages([
-        ...initialMessages,
-        { role: EnumMessageRole.Assistant, content: textContent },
-      ]);
-    }
-
-    if (type === EnumConversationType.Free) {
-      router.push(`/chat/${newConversationId}`);
-    }
-    router.refresh();
+    await executeAsync(formData);
   };
 
   return (
