@@ -1,28 +1,48 @@
 "use server";
 
-import { EnumMessageRole } from "@/schemas/chatSchema";
+import {
+  type ContinueConversationInput,
+  continueConversationInputSchema,
+  EnumConversationType,
+  EnumMessageRole,
+} from "@/schemas/chatSchema";
+import { auth } from "@/utils/auth/config";
 import { saveMessageToDb } from "@/utils/chat/saveMessageToDb";
 import { createStreamableValue, type StreamableValue } from "ai/rsc";
-
-type ContinueConversationInput = {
-  prompt: string;
-  conversationId?: string;
-};
 
 type ContinueConversationOutput = {
   stream: StreamableValue;
   newConversationId: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export const continueConversation = async ({
-  prompt,
-  conversationId: _converationId,
-}: ContinueConversationInput): Promise<ContinueConversationOutput> => {
+export const continueConversation = async (
+  _input: ContinueConversationInput
+): Promise<ContinueConversationOutput> => {
+  const input = continueConversationInputSchema.parse(_input);
+
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User session does not exist");
+  }
+
+  if (input.type === EnumConversationType.Question) {
+    // TODO: check if user belongs in classroom that has the assignment that has this question
+    const canUserAttemptQuestion = true;
+    if (!canUserAttemptQuestion) {
+      throw new Error("User is not allowed to attempt this question");
+    }
+  }
+
   const { conversationId } = await saveMessageToDb({
-    message: prompt,
+    message: input.prompt,
     by: EnumMessageRole.User,
-    conversationId: _converationId,
+    userId,
+    conversationId: input.conversationId,
+    questionId:
+      input.type === EnumConversationType.Question
+        ? input.questionId
+        : undefined,
   });
 
   const stream = createStreamableValue("");
@@ -31,15 +51,16 @@ export const continueConversation = async ({
   // TODO: Remove this when we start querying the actual model
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   (async () => {
-    for await (const char of prompt) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
+    for await (const char of input.prompt) {
+      await new Promise((resolve) => setTimeout(resolve, 200));
       stream.update(char);
     }
 
     stream.done();
     await saveMessageToDb({
-      message: prompt,
+      message: input.prompt,
       by: EnumMessageRole.Assistant,
+      userId,
       conversationId,
     });
   })();

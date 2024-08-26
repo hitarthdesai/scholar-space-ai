@@ -1,5 +1,6 @@
 import { Chat } from "@/components/Chat";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
+import { EnumConversationType } from "@/schemas/chatSchema";
 import { auth } from "@/utils/auth/config";
 import { doesConversationBelongToUser } from "@/utils/chat/doesConversationBelongToUser";
 import { getConversationMessages } from "@/utils/chat/getConversationMessages";
@@ -29,7 +30,11 @@ export default async function ChatPage({
 
   return (
     <main className="flex h-full flex-col justify-between">
-      <Chat conversationId={conversationId} messages={messages} />
+      <Chat
+        type={EnumConversationType.Free}
+        conversationId={conversationId}
+        messages={messages}
+      />
     </main>
   );
 }

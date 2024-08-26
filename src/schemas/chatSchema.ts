@@ -8,14 +8,13 @@ import {
 } from "@/utils/constants/chat";
 import { type continueConversation } from "@/actions/continueConversation";
 
-export const promptSchema = z.object({
-  prompt: z
-    .string()
-    .min(CHAT_PROMPT_INPUT_MIN_LENGTH)
-    .max(CHAT_PROMPT_INPUT_MAX_LENGTH),
-});
+export const EnumConversationType = {
+  Free: "free",
+  Question: "ques",
+} as const;
 
-export type PromptInput = z.infer<typeof promptSchema>;
+const conversationTypeSchema = z.nativeEnum(EnumConversationType);
+export type ConversationType = z.infer<typeof conversationTypeSchema>;
 
 export const EnumMessageRole = {
   User: "user",
@@ -35,10 +34,12 @@ export type Message = z.infer<typeof messageSchema>;
 export const conversationSchema = z.object({
   id: z.string().min(1),
   createdAt: z.date(),
+  type: conversationTypeSchema,
   name: z
     .string()
     .min(CONVERSATION_NAME_MIN_LENGTH)
     .max(CONVERSATION_NAME_MAX_LENGTH),
+  questionId: z.string().nullable(),
 });
 
 export type Conversation = z.infer<typeof conversationSchema>;
@@ -87,6 +88,30 @@ const deleteConversationResultSchema = z.nativeEnum(
 );
 export type DeleteConversationResult = z.infer<
   typeof deleteConversationResultSchema
+>;
+
+export const continueConversationInputSchema = z.union([
+  z.object({
+    type: z.literal(EnumConversationType.Free),
+    prompt: z
+      .string()
+      .min(CHAT_PROMPT_INPUT_MIN_LENGTH)
+      .max(CHAT_PROMPT_INPUT_MAX_LENGTH),
+    conversationId: z.string().optional(),
+  }),
+  z.object({
+    type: z.literal(EnumConversationType.Question),
+    prompt: z
+      .string()
+      .min(CHAT_PROMPT_INPUT_MIN_LENGTH)
+      .max(CHAT_PROMPT_INPUT_MAX_LENGTH),
+    conversationId: z.string().optional(),
+    questionId: z.string().optional(),
+  }),
+]);
+
+export type ContinueConversationInput = z.infer<
+  typeof continueConversationInputSchema
 >;
 
 export type AIState = Message[];
