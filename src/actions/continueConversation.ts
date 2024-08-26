@@ -1,7 +1,7 @@
 "use server";
 
 import {
-  ContinueConversationInput,
+  type ContinueConversationInput,
   continueConversationInputSchema,
   EnumConversationType,
   EnumMessageRole,

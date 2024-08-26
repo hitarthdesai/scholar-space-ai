@@ -44,7 +44,7 @@ export function Question({ question }: QuestionProps) {
             >
               Save <SaveIcon aria-hidden />
             </Button> */}
-            <RunCodeButton questionId={question.id} />
+            <RunCodeButton />
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />

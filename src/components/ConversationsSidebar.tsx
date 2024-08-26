@@ -3,14 +3,9 @@
 import { cn } from "@/utils/cn";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import {
-  ChevronLeftIcon,
-  Pencil1Icon,
-  Pencil2Icon,
-} from "@radix-ui/react-icons";
+import { ChevronLeftIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { type Conversation } from "@/schemas/chatSchema";
 import Link from "next/link";
-import { RenameConversationDialog } from "./RenameConversationDialog";
 import { RenameConversationButton } from "./RenameConversationButton";
 import { DeleteConversationButton } from "./DeleteConversationButton";
 

@@ -7,12 +7,8 @@ import { useAction } from "next-safe-action/hooks";
 import { useCodeContext } from "@/contexts/CodeContext";
 import { useCallback } from "react";
 
-type RunCodeButtonProps = {
-  questionId: string;
-};
-
-export function RunCodeButton({ questionId }: RunCodeButtonProps) {
-  const { code, setOutput } = useCodeContext();
+export function RunCodeButton() {
+  const { code, setOutput, questionId } = useCodeContext();
   const { executeAsync } = useAction(runCode, {
     onSettled({ result: { data } }) {
       if (!data) return;

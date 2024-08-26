@@ -13,7 +13,7 @@ export const runCode = createSafeActionClient()
   .action(async ({ parsedInput }) => {
     try {
       // TODO: We will use this later on to get solutions, etc from the database
-      const { questionId, code } = parsedInput;
+      const { code } = parsedInput;
 
       const url = new URL(process.env.PISTON_URL ?? "");
       const res = await fetch(url, {
