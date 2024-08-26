@@ -12,7 +12,11 @@ export async function getUserConversations({
   userId,
 }: GetUserConversationsProps): Promise<Conversation[]> {
   const _conversations = await db
-    .select({ id: conversations.id, createdAt: conversations.createdAt })
+    .select({
+      id: conversations.id,
+      createdAt: conversations.createdAt,
+      name: conversations.name,
+    })
     .from(conversations)
     .innerJoin(
       userConversations,
