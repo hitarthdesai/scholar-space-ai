@@ -3,10 +3,12 @@
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem } from "./ui/form";
 import {
+  type ConversationType as ChatType,
+  continueConversationInputSchema,
   EnumMessageRole,
   type Message,
-  type PromptInput,
-  promptSchema,
+  type ContinueConversationInput,
+  EnumConversationType,
 } from "@/schemas/chatSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
@@ -18,16 +20,24 @@ import { useRouter } from "next/navigation";
 
 type ChatPromptInputProps = {
   conversationId?: string;
+  type: ChatType;
+  questionId?: string;
 };
 
-const defaultPromptInputValues: PromptInput = {
-  prompt: "",
-};
+export function ChatPromptInput({
+  conversationId,
+  type,
+  questionId,
+}: ChatPromptInputProps) {
+  const defaultPromptInputValues: ContinueConversationInput = {
+    prompt: "",
+    type,
+    questionId,
+  };
 
-export function ChatPromptInput({ conversationId }: ChatPromptInputProps) {
   const router = useRouter();
-  const form = useForm<PromptInput>({
-    resolver: zodResolver(promptSchema),
+  const form = useForm<ContinueConversationInput>({
+    resolver: zodResolver(continueConversationInputSchema),
     defaultValues: defaultPromptInputValues,
     mode: "onChange",
   });
@@ -36,7 +46,7 @@ export function ChatPromptInput({ conversationId }: ChatPromptInputProps) {
   const uiState = useUIState<TypeAI>();
   const setMessages = uiState[1];
 
-  const handleSubmit = async ({ prompt }: PromptInput) => {
+  const handleSubmit = async ({ prompt }: ContinueConversationInput) => {
     form.reset(defaultPromptInputValues);
 
     let initialMessages: Message[] = [];
@@ -51,7 +61,9 @@ export function ChatPromptInput({ conversationId }: ChatPromptInputProps) {
 
     const { stream, newConversationId } = await continueConversation({
       prompt,
+      type,
       conversationId,
+      questionId,
     });
 
     let textContent = "";
@@ -64,7 +76,9 @@ export function ChatPromptInput({ conversationId }: ChatPromptInputProps) {
       ]);
     }
 
-    router.push(`/chat/${newConversationId}`);
+    if (type === EnumConversationType.Free) {
+      router.push(`/chat/${newConversationId}`);
+    }
     router.refresh();
   };
 

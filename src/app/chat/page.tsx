@@ -1,4 +1,5 @@
 import { Chat } from "@/components/Chat";
+import { EnumConversationType } from "@/schemas/chatSchema";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
 
@@ -9,7 +10,7 @@ export default async function ChatPage() {
 
   return (
     <main className="flex h-full flex-col justify-between">
-      <Chat />
+      <Chat type={EnumConversationType.Free} />
     </main>
   );
 }

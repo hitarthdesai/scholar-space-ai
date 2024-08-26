@@ -42,6 +42,7 @@ export function CodeProvider({ children, questionId }: CodeProviderProps) {
 
     return () => {
       new Promise(async (resolve) => {
+        // TODO: Save file to the server, text to the database, etc.
         console.log("CodeProvider cleanup");
         await new Promise((resolve) => setTimeout(resolve, 1000));
         console.log("CodeProvider cleanup done");
@@ -59,7 +60,13 @@ export function CodeProvider({ children, questionId }: CodeProviderProps) {
   }, []);
 
   const codeContextValue = useMemo(
-    () => ({ code, updateCode, output, setOutput }),
+    () => ({
+      code,
+      updateCode,
+      output,
+      setOutput,
+      questionId,
+    }),
     [code, updateCode, output, setOutput]
   );
 

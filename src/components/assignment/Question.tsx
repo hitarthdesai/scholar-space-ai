@@ -62,7 +62,7 @@ export function Question({ question }: QuestionProps) {
             </ResizablePanel>
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={80} minSize={50}>
-              <QuestionTabs />
+              <QuestionTabs questionId={question.id} />
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>
