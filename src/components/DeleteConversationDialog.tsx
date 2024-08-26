@@ -59,9 +59,9 @@ export function DeleteConversationDialog({
       });
       if (!isErroneous) {
         setIsOpen(false);
+        router.push(`/chat`);
+        router.refresh();
       }
-      router.push(`/chat`);
-      router.refresh();
     },
   });
 
@@ -75,10 +75,6 @@ export function DeleteConversationDialog({
             Are you sure you want to delete this conversation?
           </DialogDescription>
         </DialogHeader>
-        {/* <RenameConversationForm
-          conversationId={conversationId}
-          setIsOpen={setIsOpen}
-        /> */}
         <DialogFooter>
           <Button
             type="submit"
