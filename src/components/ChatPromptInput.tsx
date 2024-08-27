@@ -6,7 +6,7 @@ import {
   continueConversationInputSchema,
   type ContinueConversationInput,
   EnumConversationType,
-  Message,
+  type Message,
   EnumMessageRole,
 } from "@/schemas/chatSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
