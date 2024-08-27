@@ -6,12 +6,14 @@ import {
   continueConversationInputSchema,
   type ContinueConversationInput,
   EnumConversationType,
+  Message,
+  EnumMessageRole,
 } from "@/schemas/chatSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
-import { readStreamableValue, useActions } from "ai/rsc";
+import { readStreamableValue, useActions, useUIState } from "ai/rsc";
 import { type TypeAI } from "./AiProvider";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
@@ -40,6 +42,7 @@ export function ChatPromptInput({ type, ...props }: ChatPromptInputProps) {
     mode: "onChange",
   });
 
+  const [, setUiMessages] = useUIState<TypeAI>();
   const { continueConversation } = useActions<TypeAI>();
   const { executeAsync } = useAction(continueConversation, {
     onSuccess: async ({ data }) => {
@@ -50,6 +53,19 @@ export function ChatPromptInput({ type, ...props }: ChatPromptInputProps) {
       const { stream, newConversationId } = data;
       for await (const delta of readStreamableValue(stream)) {
         textContent = `${textContent}${delta}`;
+        setUiMessages((messages) => {
+          if (messages.at(-1)?.role === EnumMessageRole.User) {
+            return [
+              ...messages,
+              { role: EnumMessageRole.Assistant, content: textContent },
+            ];
+          }
+
+          return [
+            ...messages.slice(0, -1),
+            { role: EnumMessageRole.Assistant, content: textContent },
+          ];
+        });
       }
 
       if (type === EnumConversationType.Free) {
@@ -61,6 +77,17 @@ export function ChatPromptInput({ type, ...props }: ChatPromptInputProps) {
 
   const handleSubmit = async (formData: ContinueConversationInput) => {
     form.reset(defaultPromptInputValues);
+
+    let initialMessages: Message[] = [];
+    setUiMessages((messages) => {
+      initialMessages = [
+        ...messages,
+        { role: EnumMessageRole.User, content: formData.prompt },
+      ];
+
+      return initialMessages;
+    });
+
     await executeAsync(formData);
   };
 
