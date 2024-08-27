@@ -2,6 +2,8 @@ import { randomUUID } from "crypto";
 import { relations, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { classrooms } from "./classroom";
+import { users } from "./auth";
+import { conversations } from "./chat";
 
 export const assignments = sqliteTable("assignment", {
   id: text("id")
@@ -47,3 +49,31 @@ export const classroomAssignmentsRelations = relations(
     }),
   })
 );
+
+export const userQuestions = sqliteTable("userQuestion", {
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  questionId: text("questionId")
+    .notNull()
+    .references(() => questions.id, { onDelete: "cascade" }),
+  conversationId: text("conversationId").references(() => conversations.id, {
+    onDelete: "set null",
+  }),
+  answer: text("answer", { length: 255 }).notNull(),
+});
+
+export const userQuestionsRelations = relations(userQuestions, ({ one }) => ({
+  user: one(users, {
+    fields: [userQuestions.userId],
+    references: [users.id],
+  }),
+  question: one(questions, {
+    fields: [userQuestions.questionId],
+    references: [questions.id],
+  }),
+  conversation: one(conversations, {
+    fields: [userQuestions.conversationId],
+    references: [conversations.id],
+  }),
+}));
