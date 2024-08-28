@@ -82,7 +82,6 @@ export const continueConversation = createSafeActionClient()
           { role: EnumMessageRole.Assistant, content: stream.value },
         ]);
 
-        console.log(fullResponse);
         await saveMessageToDb({
           message: fullResponse,
           by: EnumMessageRole.Assistant,
