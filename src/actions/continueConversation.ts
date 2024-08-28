@@ -66,6 +66,7 @@ export const continueConversation = createSafeActionClient()
         { role: EnumMessageRole.User, content: parsedInput.prompt },
       ]);
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       (async () => {
         const { textStream } = await streamText({
           model: groq("llama-3.1-70b-versatile"),
@@ -91,7 +92,6 @@ export const continueConversation = createSafeActionClient()
         stream.done();
       })();
 
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       return { stream: stream.value, newConversationId: conversationId };
     }
   });
