@@ -15,7 +15,7 @@ import {
   getMutableAIState,
 } from "ai/rsc";
 import { createOpenAI as createGroq } from "@ai-sdk/openai";
-import { generateText } from "ai";
+import { streamText } from "ai";
 import { SYSTEM_PROMPT } from "@/utils/constants/chat";
 import { createSafeActionClient } from "next-safe-action";
 
@@ -58,41 +58,43 @@ export const continueConversation = createSafeActionClient()
             : undefined,
       });
 
+      let fullResponse = "";
+      const stream = createStreamableValue("");
       const history = getMutableAIState();
       history.update([
         ...history.get(),
         { role: EnumMessageRole.User, content: parsedInput.prompt },
       ]);
 
-      const response = await generateText({
-        model: groq("llama-3.1-70b-versatile"),
-        messages: history.get(),
-        system: SYSTEM_PROMPT,
-      });
-
-      history.done([
-        ...history.get(),
-        { role: EnumMessageRole.Assistant, content: response },
-      ]);
-
-      const stream = createStreamableValue("");
-
-      // This temporarily just streams the input back to the user, with some ms delay
-      // TODO: Remove this when we start querying the actual model
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       (async () => {
-        for await (const char of response.text) {
-          stream.update(char);
-        }
+        const { textStream } = await streamText({
+          model: groq("llama-3.1-70b-versatile"),
+          messages: history.get(),
+          system: SYSTEM_PROMPT,
+        });
 
-        stream.done();
+        for await (const text of textStream) {
+          stream.update(text);
+          fullResponse += text;
+        }
+        history.done([
+          ...history.get(),
+          { role: EnumMessageRole.Assistant, content: stream.value },
+        ]);
+
+        console.log(fullResponse);
         await saveMessageToDb({
-          message: response.text,
+          message: fullResponse,
           by: EnumMessageRole.Assistant,
           userId,
           conversationId,
         });
+        stream.done();
       })();
+
+      // This temporarily just streams the input back to the user, with some ms delay
+      // TODO: Remove this when we start querying the actual model
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
 
       return { stream: stream.value, newConversationId: conversationId };
     }
