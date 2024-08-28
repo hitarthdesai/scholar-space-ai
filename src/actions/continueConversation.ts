@@ -8,12 +8,24 @@ import {
 } from "@/schemas/chatSchema";
 import { auth } from "@/utils/auth/config";
 import { saveMessageToDb } from "@/utils/chat/saveMessageToDb";
-import { createStreamableValue, type StreamableValue } from "ai/rsc";
+import {
+  createStreamableValue,
+  type StreamableValue,
+  getMutableAIState,
+} from "ai/rsc";
+import { createOpenAI as createGroq } from "@ai-sdk/openai";
+import { generateText } from "ai";
+import { SYSTEM_PROMPT } from "@/utils/constants/chat";
 
 type ContinueConversationOutput = {
   stream: StreamableValue;
   newConversationId: string;
 };
+
+const groq = createGroq({
+  baseURL: "https://api.groq.com/openai/v1",
+  apiKey: process.env.GROQ_API_KEY,
+});
 
 export const continueConversation = async (
   _input: ContinueConversationInput
@@ -45,20 +57,36 @@ export const continueConversation = async (
         : undefined,
   });
 
+  const history = getMutableAIState();
+  history.update([
+    ...history.get(),
+    { role: EnumMessageRole.User, content: input.prompt },
+  ]);
+
+  const response = await generateText({
+    model: groq("llama-3.1-70b-versatile"),
+    messages: history.get(),
+    system: SYSTEM_PROMPT,
+  });
+
+  history.done([
+    ...history.get(),
+    { role: EnumMessageRole.Assistant, content: response },
+  ]);
+
   const stream = createStreamableValue("");
 
   // This temporarily just streams the input back to the user, with some ms delay
   // TODO: Remove this when we start querying the actual model
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   (async () => {
-    for await (const char of input.prompt) {
-      await new Promise((resolve) => setTimeout(resolve, 200));
+    for await (const char of response.text) {
       stream.update(char);
     }
 
     stream.done();
     await saveMessageToDb({
-      message: input.prompt,
+      message: response.text,
       by: EnumMessageRole.Assistant,
       userId,
       conversationId,

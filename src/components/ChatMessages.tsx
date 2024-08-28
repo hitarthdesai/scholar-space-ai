@@ -10,7 +10,7 @@ import {
 import { cn } from "@/utils/cn";
 import { type ReactNode } from "react";
 import { MixIcon, PersonIcon } from "@radix-ui/react-icons";
-
+import MarkdownPreview from "@uiw/react-markdown-preview";
 type ChatMessageProps = {
   message: Message;
 };
@@ -31,12 +31,13 @@ function ChatMessage({ message: { role, content } }: ChatMessageProps) {
     >
       <div
         className={cn(
-          "flex max-w-xs items-center gap-2",
+          "flex max-w-xl items-center gap-2",
           role === EnumMessageRole.User ? "flex-row" : "",
           role === EnumMessageRole.Assistant ? "flex-row-reverse" : ""
         )}
       >
-        <p className="rounded-lg bg-stone-700 p-2">{content}</p>
+        {/* <p className="rounded-lg bg-stone-700 p-2">{content}</p> */}
+        <MarkdownPreview source={content} style={{ padding: 16 }} />
         <div className="">{chatMessageIcons[role]}</div>
       </div>
     </div>
