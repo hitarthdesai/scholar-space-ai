@@ -36,8 +36,10 @@ function ChatMessage({ message: { role, content } }: ChatMessageProps) {
           role === EnumMessageRole.Assistant ? "flex-row-reverse" : ""
         )}
       >
-        {/* <p className="rounded-lg bg-stone-700 p-2">{content}</p> */}
-        <MarkdownPreview source={content} style={{ padding: 16 }} />
+        <MarkdownPreview
+          className="rounded-lg bg-stone-700 p-2"
+          source={content}
+        />
         <div className="">{chatMessageIcons[role]}</div>
       </div>
     </div>
