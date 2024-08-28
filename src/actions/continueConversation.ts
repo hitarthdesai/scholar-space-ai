@@ -91,6 +91,7 @@ export const continueConversation = createSafeActionClient()
         stream.done();
       })();
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       return { stream: stream.value, newConversationId: conversationId };
     }
   });
