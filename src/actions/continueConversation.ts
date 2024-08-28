@@ -92,10 +92,6 @@ export const continueConversation = createSafeActionClient()
         stream.done();
       })();
 
-      // This temporarily just streams the input back to the user, with some ms delay
-      // TODO: Remove this when we start querying the actual model
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-
       return { stream: stream.value, newConversationId: conversationId };
     }
   });
