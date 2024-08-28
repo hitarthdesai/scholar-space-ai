@@ -1,6 +1,6 @@
 import { ConversationsSidebar } from "@/components/ConversationsSidebar";
 import { auth } from "@/utils/auth/config";
-import { getUserConversations } from "@/utils/chat/getUserConversations";
+import { getUserFreeConversations } from "@/utils/chat/getUserFreeConversations";
 
 export default async function ChatLayout({
   children,
@@ -13,7 +13,7 @@ export default async function ChatLayout({
     return <>{children}</>;
   }
 
-  const conversations = await getUserConversations({ userId });
+  const conversations = await getUserFreeConversations({ userId });
 
   return (
     <div id="hello" className="relative flex h-full">

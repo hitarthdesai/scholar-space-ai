@@ -5,6 +5,7 @@ import {
   conversations,
   messages,
   userConversations,
+  userQuestions,
 } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 
@@ -25,29 +26,54 @@ type SaveMessageToDbOutput = {
 export const saveMessageToDb = async ({
   message,
   by,
-  conversationId: convId,
+  conversationId: incomingConvId,
   userId,
   questionId,
 }: SaveMessageToDbInput): Promise<SaveMessageToDbOutput> => {
   return db.transaction(async (tx) => {
-    let conversationId = "";
-    const doesConversationExist = !!convId;
-    if (!doesConversationExist) {
+    let conversationId;
+    if (!!incomingConvId) {
+      conversationId = incomingConvId;
+    } else if (!!questionId) {
+      const [{ convId }] = await tx
+        .select({
+          convId: userQuestions.conversationId,
+        })
+        .from(userQuestions)
+        .where(
+          and(
+            eq(userQuestions.questionId, questionId),
+            eq(userQuestions.userId, userId)
+          )
+        );
+
+      conversationId = convId ?? undefined;
+    }
+    if (!conversationId) {
       const [{ id }] = await tx
         .insert(conversations)
         .values({
           type: !!questionId
             ? EnumConversationType.Question
             : EnumConversationType.Free,
-          questionId,
         })
         .returning({ id: conversations.id });
       conversationId = id;
 
+      if (!!questionId) {
+        await tx
+          .update(userQuestions)
+          .set({ conversationId })
+          .where(
+            and(
+              eq(userQuestions.questionId, questionId),
+              eq(userQuestions.userId, userId)
+            )
+          );
+      }
+
       await tx.insert(userConversations).values({ conversationId, userId });
     } else {
-      conversationId = convId;
-      // ensure this conversation is the same as the one in the userConversations table
       const doesConversationBelongToUser =
         (
           await tx
@@ -63,25 +89,6 @@ export const saveMessageToDb = async ({
 
       if (!doesConversationBelongToUser) {
         throw new Error("User does not have access to this conversation");
-      }
-
-      // ensure this conversation is attached to the same question
-      const doesConversationBelongToQuestion =
-        !!questionId &&
-        (
-          await tx
-            .select({ questionId: conversations.questionId })
-            .from(conversations)
-            .where(
-              and(
-                eq(conversations.id, conversationId),
-                eq(conversations.questionId, questionId)
-              )
-            )
-        ).length > 0;
-
-      if (!doesConversationBelongToQuestion) {
-        throw new Error("Conversation does not belong to the question");
       }
     }
 

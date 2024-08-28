@@ -39,7 +39,6 @@ export const conversationSchema = z.object({
     .string()
     .min(CONVERSATION_NAME_MIN_LENGTH)
     .max(CONVERSATION_NAME_MAX_LENGTH),
-  questionId: z.string().nullable(),
 });
 
 export type Conversation = z.infer<typeof conversationSchema>;
@@ -105,7 +104,6 @@ export const continueConversationInputSchema = z.union([
       .string()
       .min(CHAT_PROMPT_INPUT_MIN_LENGTH)
       .max(CHAT_PROMPT_INPUT_MAX_LENGTH),
-    conversationId: z.string().optional(),
     questionId: z.string().optional(),
   }),
 ]);
