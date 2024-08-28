@@ -9,13 +9,25 @@ import {
 } from "@/schemas/chatSchema";
 import { auth } from "@/utils/auth/config";
 import { saveMessageToDb } from "@/utils/chat/saveMessageToDb";
-import { createStreamableValue, type StreamableValue } from "ai/rsc";
+import {
+  createStreamableValue,
+  type StreamableValue,
+  getMutableAIState,
+} from "ai/rsc";
+import { createOpenAI as createGroq } from "@ai-sdk/openai";
+import { streamText } from "ai";
+import { SYSTEM_PROMPT } from "@/utils/constants/chat";
 import { createSafeActionClient } from "next-safe-action";
 
 type ContinueConversationOutput = {
   stream: StreamableValue;
   newConversationId: string;
 };
+
+const groq = createGroq({
+  baseURL: "https://api.groq.com/openai/v1",
+  apiKey: process.env.GROQ_API_KEY,
+});
 
 export const continueConversation = createSafeActionClient()
   .schema(continueConversationInputSchema)
@@ -46,24 +58,38 @@ export const continueConversation = createSafeActionClient()
             : undefined,
       });
 
+      let fullResponse = "";
       const stream = createStreamableValue("");
+      const history = getMutableAIState();
+      history.update([
+        ...history.get(),
+        { role: EnumMessageRole.User, content: parsedInput.prompt },
+      ]);
 
-      // This temporarily just streams the input back to the user, with some ms delay
-      // TODO: Remove this when we start querying the actual model
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       (async () => {
-        for await (const char of parsedInput.prompt) {
-          await new Promise((resolve) => setTimeout(resolve, 200));
-          stream.update(char);
-        }
+        const { textStream } = await streamText({
+          model: groq("llama-3.1-70b-versatile"),
+          messages: history.get(),
+          system: SYSTEM_PROMPT,
+        });
 
-        stream.done();
+        for await (const text of textStream) {
+          stream.update(text);
+          fullResponse += text;
+        }
+        history.done([
+          ...history.get(),
+          { role: EnumMessageRole.Assistant, content: stream.value },
+        ]);
+
         await saveMessageToDb({
-          message: parsedInput.prompt,
+          message: fullResponse,
           by: EnumMessageRole.Assistant,
           userId,
           conversationId,
         });
+        stream.done();
       })();
 
       return { stream: stream.value, newConversationId: conversationId };
