@@ -76,7 +76,6 @@ export function DeleteClassroomDialog({
         </DialogHeader>
         <DialogFooter>
           <Button
-            type="submit"
             className="bg-red-700 text-white hover:bg-red-800 focus:ring-2 focus:ring-red-500"
             onClick={() => executeAsync({ classroomId })}
           >
