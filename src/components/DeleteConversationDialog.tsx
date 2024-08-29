@@ -52,7 +52,7 @@ export function DeleteConversationDialog({
 
       toast({
         title: isErroneous
-          ? "Error in deleting classroom"
+          ? "Error in deleting conversation"
           : "Conversation deleted successfully",
         description: toastDescriptionDeleteConversation[data.type],
         variant: isErroneous ? "destructive" : "default",
