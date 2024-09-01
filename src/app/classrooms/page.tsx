@@ -38,7 +38,7 @@ export default async function ClassroomsPage() {
   }
 
   return (
-    <main className="flex h-full flex-col justify-between">
+    <main className="flex h-full flex-col justify-between p-4">
       <Classrooms classrooms={classrooms} />
     </main>
   );
