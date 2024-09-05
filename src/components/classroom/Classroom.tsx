@@ -26,7 +26,7 @@ export function Classroom({
         {doesNotHaveStudents ? (
           <div className="flex">
             <AddStudentDialog classroomId={id} />
-            <div className="flex grow items-center justify-center">
+            <div className="flex grow items-center justify-center text-center">
               <p>There are no students in this classroom.</p>
             </div>
           </div>
@@ -46,7 +46,7 @@ export function Classroom({
         {doesNotHaveAssignments ? (
           <div className="flex h-full flex-col items-center justify-center gap-3">
             <BookPlusIcon className="h-16 w-16" />
-            <div className="flex items-center justify-center">
+            <div className="flex max-w-60 text-center md:min-w-max">
               <p>There are no assignments for this classroom.</p>
             </div>
             <AddAssignmentDialog
@@ -56,7 +56,7 @@ export function Classroom({
           </div>
         ) : (
           <>
-            <ul className="flex grow gap-4">
+            <ul className="flex grow flex-wrap gap-4">
               {assignments.map((assignment) => (
                 <li
                   key={assignment.id}

@@ -19,22 +19,22 @@ type CreateClassroomDialogProps = {
   trigger?: ReactNode;
 };
 
-function DefaultCreateClassroomTrigger() {
-  return (
-    <Button className="h-full w-full border-none p-4" variant="outline">
-      <PlusIcon />
-    </Button>
-  );
-}
-
-export function CreateClassroomDialog({
-  trigger = <DefaultCreateClassroomTrigger />,
-}: CreateClassroomDialogProps) {
+export function CreateClassroomDialog({ trigger }: CreateClassroomDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogTrigger asChild>
+        {trigger ?? (
+          <Button
+            onClick={() => setIsOpen(true)}
+            className="h-full w-full border-dashed"
+            variant="outline"
+          >
+            <PlusIcon />
+          </Button>
+        )}
+      </DialogTrigger>
       <DialogContent className="max-w-72 sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create classroom</DialogTitle>

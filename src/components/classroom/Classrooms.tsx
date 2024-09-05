@@ -28,7 +28,7 @@ export function Classrooms({ classrooms }: ClassroomsProps) {
           </CardFooter>
         </Card>
       ))}
-      <Card className="flex min-w-72 max-w-72 items-center justify-center border-dashed">
+      <Card className="grid max-h-32 min-h-32 min-w-72 max-w-72 place-items-center border-none">
         <CreateClassroomDialog />
       </Card>
     </div>
