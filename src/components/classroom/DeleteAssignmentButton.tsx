@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "../ui/button";
 import { TrashIcon } from "lucide-react";
 import { DeleteAssignmentDialog } from "./DeleteAssignmentDialog";

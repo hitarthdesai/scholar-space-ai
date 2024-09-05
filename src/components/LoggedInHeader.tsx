@@ -2,6 +2,15 @@ import { auth } from "@/utils/auth/config";
 import Link from "next/link";
 import { ChevronDownIcon, GraduationCapIcon } from "lucide-react";
 import { navLinks } from "@/utils/constants/navLinks";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LogoutButton } from "./LogoutButton";
 
 export async function LoggedInHeader() {
   const session = await auth();
@@ -36,20 +45,37 @@ export async function LoggedInHeader() {
         ))}
       </div>
       {/* On small screens i.e. below lg, show another menu whose active item is the current page url, and remaining items are `linksToDisplay` */}
-      <div className="flex flex-row items-center justify-center gap-1">
-        {/* Contains an avatar showing user's profile photo */}
-        <div className="grid aspect-square h-6 place-items-center rounded-full bg-red-500 sm:h-8">
-          S
-        </div>
-        {/* Contains a chevron icon that opens a menu when clicked on */}
-        <ChevronDownIcon className="h-4 w-4" />
-        {/* Menu contains
+      {/* <div className="flex flex-row items-center justify-center gap-1"> */}
+      {/* Contains an avatar showing user's profile photo */}
+
+      {/* Menu contains
             1. View your profile link
             2. Logout button
           */}
-        {/* <Link href="/profile">View your profile</Link> */}
-        {/* <LogoutButton /> */}
-      </div>
+      {/* <Link href="/profile">View your profile</Link> */}
+      {/* <LogoutButton /> */}
+      {/* </div> */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className="flex flex-row items-center justify-center gap-1">
+            <div className="grid aspect-square h-6 place-items-center rounded-full bg-red-500 sm:h-8">
+              S
+            </div>
+            <ChevronDownIcon className="h-4 w-4" />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56">
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <Link href="/profile">Profile</Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <LogoutButton />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

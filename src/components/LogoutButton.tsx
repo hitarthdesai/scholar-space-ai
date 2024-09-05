@@ -9,7 +9,12 @@ export function LogoutButton() {
   };
 
   return (
-    <Button variant="destructive" onClick={handleSignOut}>
+    <Button
+      variant="destructive"
+      onClick={handleSignOut}
+      size="sm"
+      className="w-full"
+    >
       Logout
     </Button>
   );
