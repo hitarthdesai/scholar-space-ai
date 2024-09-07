@@ -1,28 +1,29 @@
-import { type ClassroomDetails } from "@/schemas/classroomSchema";
-import { Separator } from "../ui/separator";
-import { AddStudentDialog } from "./AddStudentDialog";
 import { AddAssignmentDialog } from "./AddAssignmentDialog";
 import { Button } from "../ui/button";
 import { BookAIcon, BookPlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { DeleteAssignmentButton } from "./DeleteAssignmentButton";
+import { getClassroomAssignments } from "@/utils/classroom/getClassroomAssignments";
+import { auth } from "@/utils/auth/config";
+import { EnumRole } from "@/schemas/userSchema";
 
 type ClassroomProps = {
-  classroom: ClassroomDetails;
+  id: string;
 };
 
-export function Classroom({
-  classroom: { id, name, students, assignments },
-}: ClassroomProps) {
-  const doesNotHaveStudents = students === null || students.length === 0;
+export async function Classroom({ id }: ClassroomProps) {
+  const assignments = await getClassroomAssignments({ classroomId: id });
   const doesNotHaveAssignments =
     assignments === null || assignments.length === 0;
 
+  const session = await auth();
+  const isAuthorizedToCreateOrDeleteAssignment =
+    session?.user?.role === EnumRole.Teacher;
+
   return (
     <div className="flex h-full w-full flex-col">
-      <h1 className="text-xl font-semibold">{name}</h1>
-      <section className="p-4">
+      {/* <section className="p-4">
         {doesNotHaveStudents ? (
           <div className="flex">
             <AddStudentDialog classroomId={id} />
@@ -41,7 +42,7 @@ export function Classroom({
           </div>
         )}
       </section>
-      <Separator />
+      <Separator /> */}
       <section className="grow p-4">
         {doesNotHaveAssignments ? (
           <div className="flex h-full flex-col items-center justify-center gap-3">
@@ -49,10 +50,12 @@ export function Classroom({
             <div className="flex max-w-60 text-center md:min-w-max">
               <p>There are no assignments for this classroom.</p>
             </div>
-            <AddAssignmentDialog
-              classroomId={id}
-              trigger={<Button>Create an assignment</Button>}
-            />
+            {isAuthorizedToCreateOrDeleteAssignment && (
+              <AddAssignmentDialog
+                classroomId={id}
+                trigger={<Button>Create an assignment</Button>}
+              />
+            )}
           </div>
         ) : (
           <>
@@ -71,18 +74,22 @@ export function Classroom({
                         href={`/assignments/${assignment.id}`}
                         className="grow"
                       >
-                        <Button className="flex items-center justify-center gap-2">
+                        <Button className="flex w-full items-center justify-center gap-2">
                           View <BookAIcon />
                         </Button>
                       </Link>
-                      <DeleteAssignmentButton assignmentId={assignment.id} />
+                      {isAuthorizedToCreateOrDeleteAssignment && (
+                        <DeleteAssignmentButton assignmentId={assignment.id} />
+                      )}
                     </CardFooter>
                   </Card>
                 </li>
               ))}
-              <li>
-                <AddAssignmentDialog classroomId={id} />
-              </li>
+              {isAuthorizedToCreateOrDeleteAssignment && (
+                <li>
+                  <AddAssignmentDialog classroomId={id} />
+                </li>
+              )}
             </ul>
           </>
         )}

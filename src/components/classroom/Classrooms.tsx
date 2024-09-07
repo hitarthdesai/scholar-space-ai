@@ -5,12 +5,18 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import { CreateClassroomDialog } from "./CreateClassroomDialog";
 import { DeleteClassroomButton } from "./DeleteClassroomButton";
+import { auth } from "@/utils/auth/config";
+import { EnumRole } from "@/schemas/userSchema";
 
 type ClassroomsProps = {
   classrooms: Classroom[];
 };
 
-export function Classrooms({ classrooms }: ClassroomsProps) {
+export async function Classrooms({ classrooms }: ClassroomsProps) {
+  const session = await auth();
+  const isAllowedToCreateOrDeleteClassrooms =
+    session?.user?.role === EnumRole.Teacher;
+
   return (
     <div className="flex flex-row flex-wrap justify-center gap-4 sm:justify-start">
       {classrooms.map((classroom) => (
@@ -24,13 +30,17 @@ export function Classrooms({ classrooms }: ClassroomsProps) {
                 View <MagnifyingGlassIcon />
               </Button>
             </Link>
-            <DeleteClassroomButton classroomId={classroom.id} />
+            {isAllowedToCreateOrDeleteClassrooms && (
+              <DeleteClassroomButton classroomId={classroom.id} />
+            )}
           </CardFooter>
         </Card>
       ))}
-      <Card className="grid max-h-32 min-h-32 min-w-72 max-w-72 place-items-center border-none">
-        <CreateClassroomDialog />
-      </Card>
+      {isAllowedToCreateOrDeleteClassrooms && (
+        <Card className="grid max-h-32 min-h-32 min-w-72 max-w-72 place-items-center border-none">
+          <CreateClassroomDialog />
+        </Card>
+      )}
     </div>
   );
 }

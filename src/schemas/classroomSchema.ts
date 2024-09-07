@@ -3,7 +3,6 @@ import {
   CLASSROOM_NAME_MIN_LENGTH,
 } from "@/utils/constants/classroom";
 import { z } from "zod";
-import { studentSchema } from "./studentSchema";
 import { assignmentSchema } from "./assignmentSchema";
 
 export const classroomSchema = z.object({
@@ -32,7 +31,6 @@ const createClassroomResultSchema = z.nativeEnum(EnumCreateClassroomResult);
 export type CreateClassroomResult = z.infer<typeof createClassroomResultSchema>;
 
 export const classroomDetailsSchema = classroomSchema.extend({
-  students: z.array(studentSchema).nullable(),
   assignments: z.array(assignmentSchema).nullable(),
 });
 

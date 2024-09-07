@@ -3,6 +3,8 @@ import { AlertOctagonIcon, ShieldQuestionIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { AddQuestionDialog } from "./AddQuestionDialog";
 import Link from "next/link";
+import { auth } from "@/utils/auth/config";
+import { EnumRole } from "@/schemas/userSchema";
 
 type AssignmentQuestionsProps = {
   assignmentId: string;
@@ -11,6 +13,9 @@ type AssignmentQuestionsProps = {
 export async function AssignmentQuestions({
   assignmentId,
 }: AssignmentQuestionsProps) {
+  const session = await auth();
+  const isAuthorizedToAddOrDelete = session?.user?.role === EnumRole.Teacher;
+
   const questions = await getAssignmentQuestionsFromDb({
     assignmentId,
   });
@@ -20,14 +25,16 @@ export async function AssignmentQuestions({
       <div className="flex h-full w-full flex-col items-center justify-center gap-3">
         <AlertOctagonIcon className="h-24 w-24" />
         <p>No questions found</p>
-        <AddQuestionDialog
-          assignmentId={assignmentId}
-          trigger={
-            <Button className="flex gap-2">
-              Add a question <ShieldQuestionIcon />
-            </Button>
-          }
-        />
+        {isAuthorizedToAddOrDelete && (
+          <AddQuestionDialog
+            assignmentId={assignmentId}
+            trigger={
+              <Button className="flex gap-2">
+                Add a question <ShieldQuestionIcon />
+              </Button>
+            }
+          />
+        )}
       </div>
     );
   }
@@ -45,16 +52,18 @@ export async function AssignmentQuestions({
           </li>
         ))}
       </div>
-      <li>
-        <AddQuestionDialog
-          assignmentId={assignmentId}
-          trigger={
-            <Button className="flex gap-2">
-              Add another question <ShieldQuestionIcon />
-            </Button>
-          }
-        />
-      </li>
+      {isAuthorizedToAddOrDelete && (
+        <li>
+          <AddQuestionDialog
+            assignmentId={assignmentId}
+            trigger={
+              <Button className="flex gap-2">
+                Add another question <ShieldQuestionIcon />
+              </Button>
+            }
+          />
+        </li>
+      )}
     </ul>
   );
 }
