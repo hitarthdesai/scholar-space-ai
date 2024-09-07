@@ -1,7 +1,7 @@
 import { getAssignmentQuestionsFromDb } from "@/utils/classroom/getAssignmentQuestionsFromDb";
 import { AlertOctagonIcon, ShieldQuestionIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import { AddQuestionDialog } from "./AddQuestionDialog";
+import { AddQuestionSheet } from "./AddQuestionSheet";
 import Link from "next/link";
 import { auth } from "@/utils/auth/config";
 import { EnumRole } from "@/schemas/userSchema";
@@ -26,7 +26,7 @@ export async function AssignmentQuestions({
         <AlertOctagonIcon className="h-24 w-24" />
         <p>No questions found</p>
         {isAuthorizedToAddOrDelete && (
-          <AddQuestionDialog
+          <AddQuestionSheet
             assignmentId={assignmentId}
             trigger={
               <Button className="flex gap-2">
@@ -54,7 +54,7 @@ export async function AssignmentQuestions({
       </div>
       {isAuthorizedToAddOrDelete && (
         <li>
-          <AddQuestionDialog
+          <AddQuestionSheet
             assignmentId={assignmentId}
             trigger={
               <Button className="flex gap-2">
