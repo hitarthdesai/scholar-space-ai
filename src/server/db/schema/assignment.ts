@@ -17,14 +17,10 @@ export const assignments = sqliteTable("assignment", {
 });
 
 export const questions = sqliteTable("question", {
-  id: text("id")
-    .primaryKey()
-    .notNull()
-    .$defaultFn(() => randomUUID()),
+  id: text("id").primaryKey().notNull(),
   assignmentId: text("assignmentId")
     .notNull()
     .references(() => assignments.id, { onDelete: "cascade" }),
-  question: text("question", { length: 255 }).notNull(),
 });
 
 export const classroomAssignments = sqliteTable("classroomAssignment", {

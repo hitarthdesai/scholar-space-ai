@@ -4,9 +4,13 @@ import {
   addQuestionFormSchema,
   EnumAddQuestionResult,
 } from "@/schemas/assignmentSchema";
+import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
 import { addQuestionToDb } from "@/utils/classroom/addQuestionToDb";
+import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
+import { putObject } from "@/utils/storage/s3/putObject";
+import { randomUUID } from "crypto";
 import { createSafeActionClient } from "next-safe-action";
 
 export const addQuestion = createSafeActionClient()
@@ -19,12 +23,31 @@ export const addQuestion = createSafeActionClient()
         return { type: EnumAddQuestionResult.NotAuthorized };
       }
 
-      // There is some problem with the the workspace/user TS version
-      // that causes TS to not recognize the type of parsedInput
-      // TODO: Fix this TS issue so that parsedInput has proper typing
       const { question, assignmentId } = parsedInput;
+      const isAuthorized = await canUserAccessAssignment({
+        assignmentId,
+        userId,
+        accessType: EnumAccessType.Write,
+      });
+      if (!isAuthorized) {
+        return { type: EnumAddQuestionResult.NotAuthorized };
+      }
+
+      const newQuestionId = randomUUID();
+      const fileName = `questions/${newQuestionId}`;
+      const buffer = Buffer.from(question as string, "utf-8");
+      const didUploadSucceed = await putObject({
+        body: buffer,
+        fileName,
+        contentType: "text/plain",
+      });
+
+      if (!didUploadSucceed) {
+        return { type: EnumAddQuestionResult.NotUploaded };
+      }
+
       await addQuestionToDb({
-        question,
+        questionId: newQuestionId,
         assignmentId,
       });
 

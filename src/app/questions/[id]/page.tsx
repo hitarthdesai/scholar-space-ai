@@ -1,6 +1,8 @@
 import { Question } from "@/components/assignment/Question";
+import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
+import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { auth } from "@/utils/auth/config";
-import { getQuestionFromDb } from "@/utils/classroom/getQuestionFromDb";
+import { canUserAccessQuestion } from "@/utils/classroom/canUserAccessQuestion";
 import assert from "assert";
 
 type PageProps = {
@@ -16,12 +18,19 @@ export default async function QuestionPage({
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
 
-  const _questions = await getQuestionFromDb({ questionId, userId });
-  const question = _questions[0];
+  const isAuthorized = await canUserAccessQuestion({
+    questionId,
+    userId,
+    accessType: EnumAccessType.Read,
+  });
+
+  if (!isAuthorized) {
+    return <NotAuthorizedToViewPage />;
+  }
 
   return (
     <main className="flex h-full w-full flex-col items-center justify-center p-4">
-      <Question question={question} />
+      <Question questionId={questionId} />
     </main>
   );
 }

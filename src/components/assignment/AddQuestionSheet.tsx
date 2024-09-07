@@ -2,20 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { BookPlus } from "lucide-react";
-import { AddQuestionFormComponent as AddQuestionForm } from "../assignment/AddQuestionForm";
+import { AddQuestionFormComponent as AddQuestionForm } from "./AddQuestionForm";
 import { FormIds } from "@/utils/constants/form";
 import { type ReactNode, useState } from "react";
 
-export type AddQuestionDialogProps = {
+export type AddQuestionSheetProps = {
   assignmentId: string;
   trigger?: ReactNode;
 };
@@ -31,29 +31,29 @@ function DefaultAddAssignmentTrigger() {
   );
 }
 
-export function AddQuestionDialog({
+export function AddQuestionSheet({
   assignmentId,
   trigger = <DefaultAddAssignmentTrigger />,
-}: AddQuestionDialogProps) {
+}: AddQuestionSheetProps) {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-72 sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Add Question</DialogTitle>
-          <DialogDescription>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger asChild>{trigger}</SheetTrigger>
+      <SheetContent className="max-w-72 sm:max-w-[425px]">
+        <SheetHeader>
+          <SheetTitle>Add Question</SheetTitle>
+          <SheetDescription>
             Enter your Question&apos;s text here. Then, click add to add this
             Question to your assignment.
-          </DialogDescription>
-        </DialogHeader>
+          </SheetDescription>
+        </SheetHeader>
         <AddQuestionForm assignmentId={assignmentId} setIsOpen={setIsOpen} />
-        <DialogFooter>
+        <SheetFooter>
           <Button type="submit" form={FormIds.AddQuestion}>
             Add
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }

@@ -50,6 +50,7 @@ export type AddQuestionForm = z.infer<typeof addQuestionFormSchema>;
 export const EnumAddQuestionResult = {
   QuestionAdded: "QuestionAdded",
   NotAuthorized: "notAuthorized",
+  NotUploaded: "notUploaded",
   Error: "error",
 } as const;
 

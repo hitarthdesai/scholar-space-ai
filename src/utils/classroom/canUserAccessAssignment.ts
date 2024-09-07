@@ -1,3 +1,4 @@
+import { type AccessType, EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { db } from "@/server/db";
 import {
   assignments,
@@ -7,15 +8,25 @@ import {
 } from "@/server/db/schema";
 import { and, eq, or, sql } from "drizzle-orm";
 
-type CanUserViewAssignmentProps = {
+type CanUserAccessAssignmentProps = {
   assignmentId: string;
   userId: string;
+  accessType: AccessType;
 };
 
-export async function canUserViewAssignment({
+export async function canUserAccessAssignment({
   assignmentId,
   userId,
-}: CanUserViewAssignmentProps): Promise<boolean> {
+  accessType,
+}: CanUserAccessAssignmentProps): Promise<boolean> {
+  const userAccessWhereClause =
+    accessType === EnumAccessType.Write
+      ? eq(classrooms.teacherId, userId)
+      : or(
+          eq(classrooms.teacherId, userId),
+          eq(classroomStudents.studentId, userId)
+        );
+
   const [{ exists }] = await db
     .select({
       exists: sql<number>`1`,
@@ -30,15 +41,7 @@ export async function canUserViewAssignment({
       eq(classroomStudents.classroomId, classroomAssignments.classroomId)
     )
     .leftJoin(classrooms, eq(classrooms.id, classroomAssignments.classroomId))
-    .where(
-      and(
-        eq(assignments.id, assignmentId),
-        or(
-          eq(classrooms.teacherId, userId),
-          eq(classroomStudents.studentId, userId)
-        )
-      )
-    );
+    .where(and(eq(assignments.id, assignmentId), userAccessWhereClause));
 
   return exists === 1;
 }

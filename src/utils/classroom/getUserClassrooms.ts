@@ -26,7 +26,5 @@ export async function getUserClassrooms({
     )
     .orderBy(desc(classrooms.created_at));
 
-  console.log(_classrooms);
-
   return z.array(classroomSchema).parse(_classrooms);
 }

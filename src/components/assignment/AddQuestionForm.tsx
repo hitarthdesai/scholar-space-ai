@@ -12,7 +12,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { toastDescriptionAddQuestion } from "@/utils/constants/toast";
 import {
@@ -24,6 +23,7 @@ import { FormIds } from "@/utils/constants/form";
 import { addQuestion } from "@/actions/addQuestion";
 import { type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
+import { Textarea } from "../ui/textarea";
 
 type AddQuestionFormComponentProps = {
   assignmentId: string;
@@ -77,7 +77,7 @@ export const AddQuestionFormComponent = ({
             <FormItem>
               <FormLabel>Question</FormLabel>
               <FormControl>
-                <Input required {...field} />
+                <Textarea required {...field} />
               </FormControl>
               <FormDescription>The question text</FormDescription>
               <FormMessage />

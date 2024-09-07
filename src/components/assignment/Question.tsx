@@ -3,7 +3,6 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { type Question as QuestionType } from "@/schemas/questionSchema";
 import { SolutionEditor } from "./SolutionEditor";
 import { Button } from "../ui/button";
 import { SendHorizonalIcon } from "lucide-react";
@@ -11,14 +10,16 @@ import { QuestionTabs } from "./QuestionTabs";
 import { RunCodeButton } from "./RunCodeButton";
 import { CodeProvider } from "@/contexts/CodeContext";
 import { OutputSection } from "./OutputSection";
+import { getObject } from "@/utils/storage/s3/getObject";
 
 type QuestionProps = {
-  question: QuestionType;
+  questionId: string;
 };
 
-export function Question({ question }: QuestionProps) {
+export function Question({ questionId }: QuestionProps) {
+  const questionText = getObject({ fileName: `questions/${questionId}` });
   return (
-    <CodeProvider questionId={question.id}>
+    <CodeProvider questionId={questionId}>
       <ResizablePanelGroup
         direction="horizontal"
         className="flex h-full w-full gap-2"
@@ -29,7 +30,7 @@ export function Question({ question }: QuestionProps) {
           className="flex h-full w-full flex-col items-center justify-between gap-2"
         >
           <div className="min-h-20 w-full rounded-t-md border p-2">
-            {question.question}
+            {questionText}
           </div>
           <div className="w-full grow">
             <SolutionEditor />
@@ -62,7 +63,7 @@ export function Question({ question }: QuestionProps) {
             </ResizablePanel>
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={80} minSize={50}>
-              <QuestionTabs questionId={question.id} />
+              <QuestionTabs questionId={questionId} />
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>

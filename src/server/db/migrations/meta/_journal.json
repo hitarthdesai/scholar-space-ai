@@ -64,6 +64,13 @@
       "when": 1724662081080,
       "tag": "0008_common_grim_reaper",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1725722790319,
+      "tag": "0009_third_wild_pack",
+      "breakpoints": true
     }
   ]
 }
