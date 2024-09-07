@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
 import { getAssignmentFromDb } from "@/utils/classroom/getAssignmentFromDb";
 import assert from "assert";
@@ -25,14 +24,9 @@ export default async function AssignmentPage({
   params: { id: assignmentId },
 }: PageProps) {
   const session = await auth();
-
-  const role = session?.user?.role;
-  if (role === EnumRole.Student) {
-    return <h1>Student Assignment Page</h1>;
-  }
-
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
+
   const _assignments = await getAssignmentFromDb({
     assignmentId,
     userId,

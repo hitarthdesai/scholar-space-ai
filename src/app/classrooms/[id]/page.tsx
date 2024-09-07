@@ -1,7 +1,7 @@
 import { Classroom } from "@/components/classroom/Classroom";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { auth } from "@/utils/auth/config";
-import { getClassroomDetails } from "@/utils/classroom/getClassroomDetails";
+import { ensureUserIsParticipantOfClassroom } from "@/utils/classroom/ensureUserIsParticipantOfClassroom";
 import assert from "assert";
 
 type PageProps = {
@@ -17,14 +17,17 @@ export default async function ClassroomPage({
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
 
-  const classroom = await getClassroomDetails({ classroomId, userId });
-  if (!classroom) {
+  const isAuthorized = await ensureUserIsParticipantOfClassroom({
+    classroomId,
+    userId,
+  });
+  if (!isAuthorized) {
     return <NotAuthorizedToViewPage />;
   }
 
   return (
     <main className="flex h-full w-full flex-col p-4">
-      <Classroom classroom={classroom} />
+      <Classroom id={classroomId} />
     </main>
   );
 }
