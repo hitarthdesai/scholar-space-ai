@@ -1,7 +1,8 @@
 import { AssignmentQuestions } from "@/components/assignment/AssignmentQuestions";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
+import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { auth } from "@/utils/auth/config";
-import { canUserViewAssignment } from "@/utils/classroom/canUserViewAssignment";
+import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { getAssignmentFromDb } from "@/utils/classroom/getAssignmentFromDb";
 import assert from "assert";
 
@@ -18,7 +19,11 @@ export default async function AssignmentPage({
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
 
-  const isAuthorized = await canUserViewAssignment({ assignmentId, userId });
+  const isAuthorized = await canUserAccessAssignment({
+    assignmentId,
+    userId,
+    accessType: EnumAccessType.Read,
+  });
   if (!isAuthorized) {
     <NotAuthorizedToViewPage />;
   }

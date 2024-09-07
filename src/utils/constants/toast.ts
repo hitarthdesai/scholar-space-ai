@@ -89,6 +89,7 @@ export const toastDescriptionAddQuestion: Record<AddQuestionResult, string> = {
   [EnumAddQuestionResult.QuestionAdded]: "The question was added successfully.",
   [EnumAddQuestionResult.NotAuthorized]:
     "You are not authorized to add a question.",
+  [EnumAddQuestionResult.NotUploaded]: "Unable to upload your question.",
   [EnumAddQuestionResult.Error]:
     "Unable to add a question. Please try again later.",
 };
