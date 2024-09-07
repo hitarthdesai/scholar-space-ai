@@ -2,15 +2,15 @@ import { db } from "@/server/db";
 import { classrooms, classroomStudents } from "@/server/db/schema";
 import { and, eq, or, sql } from "drizzle-orm";
 
-type EnsureUserIsParticipantOfClassroomProps = {
+type IsUserParticipantOfClassroomProps = {
   classroomId: string;
   userId: string;
 };
 
-export async function ensureUserIsParticipantOfClassroom({
+export async function isUserParticipantOfClassroom({
   classroomId,
   userId,
-}: EnsureUserIsParticipantOfClassroomProps): Promise<boolean> {
+}: IsUserParticipantOfClassroomProps): Promise<boolean> {
   const [{ exists }] = await db
     .select({
       exists: sql<number>`1`,

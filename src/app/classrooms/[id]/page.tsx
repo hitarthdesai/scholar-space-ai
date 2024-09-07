@@ -1,7 +1,7 @@
 import { Classroom } from "@/components/classroom/Classroom";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { auth } from "@/utils/auth/config";
-import { ensureUserIsParticipantOfClassroom } from "@/utils/classroom/ensureUserIsParticipantOfClassroom";
+import { isUserParticipantOfClassroom } from "@/utils/classroom/isUserParticipantOfClassroom";
 import assert from "assert";
 
 type PageProps = {
@@ -17,7 +17,7 @@ export default async function ClassroomPage({
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
 
-  const isAuthorized = await ensureUserIsParticipantOfClassroom({
+  const isAuthorized = await isUserParticipantOfClassroom({
     classroomId,
     userId,
   });
