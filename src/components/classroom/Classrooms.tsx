@@ -7,6 +7,7 @@ import { CreateClassroomDialog } from "./CreateClassroomDialog";
 import { DeleteClassroomButton } from "./DeleteClassroomButton";
 import { auth } from "@/utils/auth/config";
 import { EnumRole } from "@/schemas/userSchema";
+import { RenameClassroomButton } from "./RenameClassroomButton";
 
 type ClassroomsProps = {
   classrooms: Classroom[];
@@ -31,7 +32,10 @@ export async function Classrooms({ classrooms }: ClassroomsProps) {
               </Button>
             </Link>
             {isAllowedToCreateOrDeleteClassrooms && (
-              <DeleteClassroomButton classroomId={classroom.id} />
+              <>
+                <RenameClassroomButton classroomId={classroom.id} />
+                <DeleteClassroomButton classroomId={classroom.id} />
+              </>
             )}
           </CardFooter>
         </Card>

@@ -56,7 +56,7 @@ export type RenameConversationForm = z.infer<
 >;
 
 export const EnumRenameConversationResult = {
-  ConversationRenamed: "classroomCreated",
+  ConversationRenamed: "conversationRenamed",
   NotAuthorized: "notAuthorized",
   Error: "error",
 } as const;

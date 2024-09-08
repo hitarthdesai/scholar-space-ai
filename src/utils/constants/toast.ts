@@ -9,8 +9,10 @@ import {
 import {
   type CreateClassroomResult,
   type DeleteClassroomResult,
+  type RenameClassroomResult,
   EnumCreateClassroomResult,
   EnumDeleteClassroomResult,
+  EnumRenameClassroomResult,
 } from "@/schemas/classroomSchema";
 import { EnumLoginResult, type LoginResult } from "@/schemas/loginSchema";
 import {
@@ -59,6 +61,18 @@ export const toastDescriptionDeleteClassroom: Record<
     "You are not authorized to delete a classroom.",
   [EnumDeleteClassroomResult.Error]:
     "Unable to delete a classroom. Please try again later.",
+};
+
+export const toastDescriptionRenameClassroom: Record<
+  RenameClassroomResult,
+  string
+> = {
+  [EnumRenameClassroomResult.ClassroomRenamed]:
+    "Your classroom was renamed successfully.",
+  [EnumRenameClassroomResult.NotAuthorized]:
+    "You are not authorized to rename this classroom.",
+  [EnumRenameClassroomResult.Error]:
+    "Unable to rename this classroom. Please try again later.",
 };
 
 export const toastDescriptionDeleteAssignment: Record<
