@@ -17,7 +17,6 @@ export default async function ChatLayout({
 
   return (
     <div
-      id="hello"
       className="relative flex"
       style={{ height: "calc(100vh - 56px)" }} // 56px is the height of the header. Need to offset that
     >
