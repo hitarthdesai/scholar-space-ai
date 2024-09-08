@@ -50,3 +50,22 @@ export const EnumDeleteClassroomResult = {
 
 const deleteClassroomResultSchema = z.nativeEnum(EnumDeleteClassroomResult);
 export type DeleteClassroomResult = z.infer<typeof deleteClassroomResultSchema>;
+
+export const renameClassroomFormSchema = z.object({
+  classroomId: z.string().min(1),
+  newName: z
+    .string()
+    .min(CLASSROOM_NAME_MIN_LENGTH)
+    .max(CLASSROOM_NAME_MAX_LENGTH),
+});
+
+export type RenameClassroomForm = z.infer<typeof renameClassroomFormSchema>;
+
+export const EnumRenameClassroomResult = {
+  ClassroomRenamed: "classroomRenamed",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const renameClassroomResultSchema = z.nativeEnum(EnumRenameClassroomResult);
+export type RenameClassroomResult = z.infer<typeof renameClassroomResultSchema>;
