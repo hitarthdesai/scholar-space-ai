@@ -74,7 +74,7 @@ export function ConversationsSidebar({
         )}
       </div>
       {isOpen && (
-        <div className="pt-14">
+        <div className="h-full max-h-full overflow-y-auto pt-14">
           {conversations.map((conversation) => (
             <ConversationItem
               key={conversation.id}
