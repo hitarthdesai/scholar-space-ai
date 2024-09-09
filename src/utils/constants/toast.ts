@@ -2,9 +2,11 @@ import {
   type AddAssignmentResult,
   type AddQuestionResult,
   type DeleteAssignmentResult,
+  type RenameAssignmentResult,
   EnumAddAssignmentResult,
   EnumAddQuestionResult,
   EnumDeleteAssignmentResult,
+  EnumRenameAssignmentResult,
 } from "@/schemas/assignmentSchema";
 import {
   type CreateClassroomResult,
@@ -97,6 +99,18 @@ export const toastDescriptionAddAssignment: Record<
     "You are not authorized to create an assignment.",
   [EnumAddAssignmentResult.Error]:
     "Unable to create an assignment. Please try again later.",
+};
+
+export const toastDescriptionRenameAssignment: Record<
+  RenameAssignmentResult,
+  string
+> = {
+  [EnumRenameAssignmentResult.AssignmentRenamed]:
+    "Your assignment was renamed successfully.",
+  [EnumRenameAssignmentResult.NotAuthorized]:
+    "You are not authorized to rename this assignment.",
+  [EnumRenameAssignmentResult.Error]:
+    "Unable to rename this assignment. Please try again later.",
 };
 
 export const toastDescriptionAddQuestion: Record<AddQuestionResult, string> = {

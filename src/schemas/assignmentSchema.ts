@@ -1,7 +1,14 @@
 import { z } from "zod";
+import {
+  ASSIGNMENT_NAME_MAX_LENGTH,
+  ASSIGNMENT_NAME_MIN_LENGTH,
+} from "@/utils/constants/assignment";
 
 export const addAssignmentFormSchema = z.object({
-  name: z.string().min(1),
+  name: z
+    .string()
+    .min(ASSIGNMENT_NAME_MIN_LENGTH)
+    .max(ASSIGNMENT_NAME_MAX_LENGTH),
   classroomId: z.string().min(1),
 });
 
@@ -38,6 +45,27 @@ export const EnumDeleteAssignmentResult = {
 const deleteAssignmentResultSchema = z.nativeEnum(EnumDeleteAssignmentResult);
 export type DeleteAssignmentResult = z.infer<
   typeof deleteAssignmentResultSchema
+>;
+
+export const renameAssignmentFormSchema = z.object({
+  assignmentId: z.string().min(1),
+  newName: z
+    .string()
+    .min(ASSIGNMENT_NAME_MIN_LENGTH)
+    .max(ASSIGNMENT_NAME_MAX_LENGTH),
+});
+
+export type RenameAssignmentForm = z.infer<typeof renameAssignmentFormSchema>;
+
+export const EnumRenameAssignmentResult = {
+  AssignmentRenamed: "assignmentRenamed",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const renameAssignmentResultSchema = z.nativeEnum(EnumRenameAssignmentResult);
+export type RenameAssignmentResult = z.infer<
+  typeof renameAssignmentResultSchema
 >;
 
 export const addQuestionFormSchema = z.object({

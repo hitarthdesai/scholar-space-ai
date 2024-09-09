@@ -7,6 +7,7 @@ import { DeleteAssignmentButton } from "./DeleteAssignmentButton";
 import { getClassroomAssignments } from "@/utils/classroom/getClassroomAssignments";
 import { auth } from "@/utils/auth/config";
 import { EnumRole } from "@/schemas/userSchema";
+import { RenameAssignmentButton } from "./RenameAssignmentButton";
 
 type ClassroomProps = {
   id: string;
@@ -63,7 +64,7 @@ export async function Classroom({ id }: ClassroomProps) {
               {assignments.map((assignment) => (
                 <li
                   key={assignment.id}
-                  className="aspect-video min-w-52 max-w-52"
+                  className="aspect-video min-w-72 max-w-72"
                 >
                   <Card className="flex h-full w-full flex-col justify-between">
                     <CardHeader>
@@ -79,7 +80,14 @@ export async function Classroom({ id }: ClassroomProps) {
                         </Button>
                       </Link>
                       {isAuthorizedToCreateOrDeleteAssignment && (
-                        <DeleteAssignmentButton assignmentId={assignment.id} />
+                        <>
+                          <RenameAssignmentButton
+                            assignmentId={assignment.id}
+                          />
+                          <DeleteAssignmentButton
+                            assignmentId={assignment.id}
+                          />
+                        </>
                       )}
                     </CardFooter>
                   </Card>
