@@ -40,7 +40,7 @@ function ErrorAutoSavingCode({ onDismiss }: ErrorAutoSavingCodeProps) {
         </DialogHeader>
         <DialogFooter>
           <DialogTrigger asChild>
-            <Button>I understand</Button>
+            <Button variant="destructive">I understand</Button>
           </DialogTrigger>
         </DialogFooter>
       </DialogContent>

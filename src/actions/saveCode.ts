@@ -12,7 +12,6 @@ export const saveCode = createSafeActionClient()
   .schema(saveCodeInputSchema)
   .action(async ({ parsedInput }) => {
     try {
-      return { type: EnumSaveCodeResult.NotAuthorized };
       const session = await auth();
       const userId = session?.user?.id;
       if (!userId) {
