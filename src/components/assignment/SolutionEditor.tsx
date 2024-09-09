@@ -11,7 +11,6 @@ export function SolutionEditor() {
       theme="vs-dark"
       options={{ minimap: { enabled: false } }}
       defaultLanguage="python"
-      defaultValue=""
       value={code}
       onChange={(value) => value && updateCode(value)}
     />

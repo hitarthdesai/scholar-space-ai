@@ -13,17 +13,13 @@ export const deleteAssignment = createSafeActionClient()
   .schema(deleteAssignmentInputSchema)
   .action(async ({ parsedInput }) => {
     try {
-      // There is some problem with the the workspace/user TS version
-      // that causes TS to not recognize the type of parsedInput
-      // TODO: Fix this TS issue so that parsedInput has proper typing
-      const { assignmentId } = parsedInput;
-
       const session = await auth();
       const userId = session?.user?.id;
       if (!userId || session?.user?.role !== EnumRole.Teacher) {
         return { type: EnumDeleteAssignmentResult.NotAuthorized };
       }
 
+      const { assignmentId } = parsedInput;
       await deleteAssignmentFromDb({ assignmentId });
 
       return { type: EnumDeleteAssignmentResult.AssignmentDeleted };

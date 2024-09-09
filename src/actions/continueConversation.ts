@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 "use server";
 
 import {
@@ -18,6 +16,8 @@ import { createOpenAI as createGroq } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { SYSTEM_PROMPT } from "@/utils/constants/chat";
 import { createSafeActionClient } from "next-safe-action";
+import { canUserAccessQuestion } from "@/utils/classroom/canUserAccessQuestion";
+import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 
 type ContinueConversationOutput = {
   stream: StreamableValue;
@@ -40,10 +40,16 @@ export const continueConversation = createSafeActionClient()
       }
 
       if (parsedInput.type === EnumConversationType.Question) {
-        // TODO: check if user belongs in classroom that has the assignment that has this question
-        const canUserAttemptQuestion = true;
-        if (!canUserAttemptQuestion) {
-          throw new Error("User is not allowed to attempt this question");
+        if (parsedInput.questionId) {
+          const isAuthorized = await canUserAccessQuestion({
+            accessType: EnumAccessType.Read,
+            userId,
+            questionId: parsedInput.questionId,
+          });
+
+          if (!isAuthorized) {
+            throw new Error("User is not allowed to attempt this question");
+          }
         }
       }
 
@@ -51,11 +57,15 @@ export const continueConversation = createSafeActionClient()
         message: parsedInput.prompt,
         by: EnumMessageRole.User,
         userId,
-        conversationId: parsedInput.conversationId,
-        questionId:
-          parsedInput.type === EnumConversationType.Question
-            ? parsedInput.questionId
-            : undefined,
+        ...(parsedInput.type === EnumConversationType.Free
+          ? {
+              conversationId: parsedInput.conversationId,
+              questionId: undefined,
+            }
+          : {
+              conversationId: undefined,
+              questionId: parsedInput.questionId,
+            }),
       });
 
       let fullResponse = "";

@@ -13,17 +13,13 @@ export const createClassroom = createSafeActionClient()
   .schema(createClassroomFormSchema)
   .action(async ({ parsedInput }) => {
     try {
-      // There is some problem with the the workspace/user TS version
-      // that causes TS to not recognize the type of parsedInput
-      // TODO: Fix this TS issue so that parsedInput has proper typing
-      const { name } = parsedInput;
-
       const session = await auth();
       const userId = session?.user?.id;
       if (!userId || session?.user?.role !== EnumRole.Teacher) {
         return { type: EnumCreateClassroomResult.NotAuthorized };
       }
 
+      const { name } = parsedInput;
       await createClassroomInDb({
         name,
         teacherId: userId,

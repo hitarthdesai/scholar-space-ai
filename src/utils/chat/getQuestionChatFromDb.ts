@@ -2,7 +2,7 @@ import { db } from "@/server/db";
 import {
   conversationMessages,
   messages,
-  userQuestions,
+  questionAttempts,
 } from "@/server/db/schema";
 import { and, eq, isNull, not } from "drizzle-orm";
 
@@ -21,17 +21,17 @@ export async function getQuestionChatFromDb({
       content: messages.message,
       role: messages.by,
     })
-    .from(userQuestions)
+    .from(questionAttempts)
     .innerJoin(
       conversationMessages,
-      eq(userQuestions.conversationId, conversationMessages.conversationId)
+      eq(questionAttempts.conversationId, conversationMessages.conversationId)
     )
     .innerJoin(messages, eq(conversationMessages.messageId, messages.id))
     .where(
       and(
-        eq(userQuestions.userId, userId),
-        eq(userQuestions.questionId, questionId),
-        not(isNull(userQuestions.conversationId))
+        eq(questionAttempts.userId, userId),
+        eq(questionAttempts.questionId, questionId),
+        not(isNull(questionAttempts.conversationId))
       )
     );
 }

@@ -11,15 +11,28 @@ import { RunCodeButton } from "./RunCodeButton";
 import { CodeProvider } from "@/contexts/CodeContext";
 import { OutputSection } from "./OutputSection";
 import { getObject } from "@/utils/storage/s3/getObject";
+import { SaveCodeButton } from "./SaveCodeButton";
+import { auth } from "@/utils/auth/config";
+import assert from "assert";
 
 type QuestionProps = {
   questionId: string;
 };
 
-export function Question({ questionId }: QuestionProps) {
-  const questionText = getObject({ fileName: `questions/${questionId}` });
+export async function Question({ questionId }: QuestionProps) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  assert(!!userId, "User must be logged in to view this page");
+
+  const question =
+    (await getObject({ fileName: `questions/${questionId}` })) ?? "";
+  const questionAttempt =
+    (await getObject({
+      fileName: `questionAttempts/${questionId}/${userId}`,
+    })) ?? "";
+
   return (
-    <CodeProvider questionId={questionId}>
+    <CodeProvider questionId={questionId} initialValue={questionAttempt}>
       <ResizablePanelGroup
         direction="horizontal"
         className="flex h-full w-full gap-2"
@@ -30,7 +43,7 @@ export function Question({ questionId }: QuestionProps) {
           className="flex h-full w-full flex-col items-center justify-between gap-2"
         >
           <div className="min-h-20 w-full rounded-t-md border p-2">
-            {questionText}
+            {question}
           </div>
           <div className="w-full grow">
             <SolutionEditor />
@@ -39,12 +52,7 @@ export function Question({ questionId }: QuestionProps) {
             <Button className="mr-auto flex items-center justify-center gap-2 bg-green-700 text-white hover:bg-green-300 hover:text-black">
               Submit <SendHorizonalIcon aria-hidden />
             </Button>
-            {/* <Button
-              variant="outline"
-              className="flex items-center justify-center gap-2"
-            >
-              Save <SaveIcon aria-hidden />
-            </Button> */}
+            <SaveCodeButton />
             <RunCodeButton />
           </div>
         </ResizablePanel>
