@@ -1,6 +1,6 @@
 "use client";
 
-import { DotSquare, Ellipsis, Loader2, SaveIcon } from "lucide-react";
+import { Loader2, SaveIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { saveCode } from "@/actions/saveCode";
 import { useAction } from "next-safe-action/hooks";

@@ -35,7 +35,7 @@ export const addQuestion = createSafeActionClient()
 
       const newQuestionId = randomUUID();
       const fileName = `questions/${newQuestionId}`;
-      const buffer = Buffer.from(question as string, "utf-8");
+      const buffer = Buffer.from(question, "utf-8");
       const didUploadSucceed = await putObject({
         body: buffer,
         fileName,

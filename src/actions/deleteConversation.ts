@@ -13,16 +13,13 @@ export const deleteConversation = createSafeActionClient()
   .schema(deleteConversationInputSchema)
   .action(async ({ parsedInput }) => {
     try {
-      // There is some problem with the the workspace/user TS version
-      // that causes TS to not recognize the type of parsedInput
-      // TODO: Fix this TS issue so that parsedInput has proper typing
-      const { conversationId } = parsedInput;
-
       const session = await auth();
       const userId = session?.user?.id;
       if (!userId) {
         return { type: EnumDeleteConversationResult.NotAuthorized };
       }
+
+      const { conversationId } = parsedInput;
       const isUserAuthorizedToViewConversation =
         await doesConversationBelongToUser({ userId, conversationId });
 

@@ -9,9 +9,6 @@ export const login = createSafeActionClient()
   .schema(loginFormSchema)
   .action(async ({ parsedInput }) => {
     try {
-      // There is some problem with the the workspace/user TS version
-      // that causes TS to not recognize the type of parsedInput
-      // TODO: Fix this TS issue so that parsedInput has proper typing
       const { email } = parsedInput;
 
       /**
