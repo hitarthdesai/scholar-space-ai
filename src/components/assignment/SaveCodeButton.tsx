@@ -1,11 +1,11 @@
 "use client";
 
-import { Loader2, SaveIcon } from "lucide-react";
+import { BadgeAlertIcon, Loader2, SaveIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { saveCode } from "@/actions/saveCode";
 import { useAction } from "next-safe-action/hooks";
 import { useCodeContext } from "@/contexts/CodeContext";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 import {
   Dialog,
@@ -16,10 +16,20 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import { EnumSaveCodeResult } from "@/schemas/questionSchema";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 
-function ErrorAutoSavingCode() {
+type ErrorAutoSavingCodeProps = {
+  onDismiss: () => void;
+};
+
+function ErrorAutoSavingCode({ onDismiss }: ErrorAutoSavingCodeProps) {
   return (
-    <Dialog open>
+    <Dialog
+      open
+      onOpenChange={(newValue) => {
+        if (!newValue) onDismiss();
+      }}
+    >
       <DialogContent className="max-w-72 sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Error auto-saving your attempt</DialogTitle>
@@ -29,7 +39,9 @@ function ErrorAutoSavingCode() {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button>I understand</Button>
+          <DialogTrigger asChild>
+            <Button>I understand</Button>
+          </DialogTrigger>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -38,6 +50,12 @@ function ErrorAutoSavingCode() {
 
 export function SaveCodeButton() {
   const isMounted = useRef(false);
+  const [dismissedErrorDialog, setDismissedErrorDialog] = useState(false);
+  const handleDismissErrorDialog = useCallback(
+    () => setDismissedErrorDialog(true),
+    []
+  );
+
   const { code, questionId } = useCodeContext();
   const { executeAsync, isExecuting, execute, result } = useAction(saveCode, {
     onSettled({ result: { data } }) {
@@ -57,6 +75,8 @@ export function SaveCodeButton() {
 
   const isErrorInSaving =
     !!result?.data?.type && result.data.type !== EnumSaveCodeResult.CodeSaved;
+  const shouldDisplayErrorDialog = isErrorInSaving && !dismissedErrorDialog;
+
   return (
     <Button
       variant="outline"
@@ -68,10 +88,21 @@ export function SaveCodeButton() {
         <Loader2 className="animate-spin p-0.5" />
       ) : (
         <>
-          Save <SaveIcon aria-hidden />
+          {isErrorInSaving ? (
+            <>
+              <p className="text-red-600">Error</p>
+              <BadgeAlertIcon className="text-red-600" />
+            </>
+          ) : (
+            <>
+              Save <SaveIcon aria-hidden />
+            </>
+          )}
         </>
       )}
-      {isErrorInSaving && <ErrorAutoSavingCode />}
+      {shouldDisplayErrorDialog && (
+        <ErrorAutoSavingCode onDismiss={handleDismissErrorDialog} />
+      )}
     </Button>
   );
 }

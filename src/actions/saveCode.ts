@@ -12,6 +12,7 @@ export const saveCode = createSafeActionClient()
   .schema(saveCodeInputSchema)
   .action(async ({ parsedInput }) => {
     try {
+      return { type: EnumSaveCodeResult.NotAuthorized };
       const session = await auth();
       const userId = session?.user?.id;
       if (!userId) {
@@ -19,7 +20,6 @@ export const saveCode = createSafeActionClient()
       }
 
       const { questionId, code } = parsedInput;
-
       const fileName = `questionAttempts/${questionId}/${userId}`;
       const buffer = Buffer.from(code, "utf-8");
       const didSaveSucceed = await putObject({
