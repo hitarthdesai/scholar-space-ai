@@ -5,7 +5,7 @@ import {
   conversations,
   messages,
   userConversations,
-  userQuestions,
+  questionAttempts,
 } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 
@@ -37,13 +37,13 @@ export const saveMessageToDb = async ({
     } else if (!!questionId) {
       const [{ convId }] = await tx
         .select({
-          convId: userQuestions.conversationId,
+          convId: questionAttempts.conversationId,
         })
-        .from(userQuestions)
+        .from(questionAttempts)
         .where(
           and(
-            eq(userQuestions.questionId, questionId),
-            eq(userQuestions.userId, userId)
+            eq(questionAttempts.questionId, questionId),
+            eq(questionAttempts.userId, userId)
           )
         );
 
@@ -62,12 +62,12 @@ export const saveMessageToDb = async ({
 
       if (!!questionId) {
         await tx
-          .update(userQuestions)
+          .update(questionAttempts)
           .set({ conversationId })
           .where(
             and(
-              eq(userQuestions.questionId, questionId),
-              eq(userQuestions.userId, userId)
+              eq(questionAttempts.questionId, questionId),
+              eq(questionAttempts.userId, userId)
             )
           );
       }

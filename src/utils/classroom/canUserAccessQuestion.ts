@@ -23,9 +23,12 @@ export async function canUserAccessQuestion({
     .from(questions)
     .where(eq(questions.id, questionId));
 
-  const assignmentId = z
+  const assignments = z
     .array(z.object({ assignmentId: z.string().min(1) }))
-    .parse(data)[0].assignmentId;
+    .parse(data);
+
+  if (assignments.length === 0) return false;
+  const assignmentId = assignments[0].assignmentId;
 
   const isAuthorized = await canUserAccessAssignment({
     assignmentId,

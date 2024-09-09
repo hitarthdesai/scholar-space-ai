@@ -71,6 +71,13 @@
       "when": 1725722790319,
       "tag": "0009_third_wild_pack",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1725837616409,
+      "tag": "0010_cold_tempest",
+      "breakpoints": true
     }
   ]
 }

@@ -29,6 +29,6 @@ export async function getObject({ fileName }: PutObjectProps) {
     return contents;
   } catch (e) {
     console.error("Error in putObject", e);
-    return "";
+    return undefined;
   }
 }

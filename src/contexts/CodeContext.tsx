@@ -30,10 +30,15 @@ export const CodeContext = createContext<CodeContextState>(initialState);
 
 type CodeProviderProps = PropsWithChildren<{
   questionId: string;
+  initialValue: string;
 }>;
 
-export function CodeProvider({ children, questionId }: CodeProviderProps) {
-  const [code, setCode] = useState("");
+export function CodeProvider({
+  children,
+  questionId,
+  initialValue,
+}: CodeProviderProps) {
+  const [code, setCode] = useState(initialValue);
   const [output, setOutput] = useState("");
 
   useEffect(() => {
