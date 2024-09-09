@@ -46,17 +46,6 @@ export function CodeProvider({
     if (storedCode) {
       setCode(storedCode);
     }
-
-    return () => {
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      void new Promise(async (resolve) => {
-        // TODO: Save file to the server, text to the database, etc.
-        console.log("CodeProvider cleanup");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log("CodeProvider cleanup done");
-        resolve(1);
-      });
-    };
   }, [questionId]);
 
   useEffect(() => {
