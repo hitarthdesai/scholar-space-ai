@@ -34,9 +34,9 @@ export default async function ClassroomPage({
   });
 
   return (
-    <div className="p-4">
+    <div className="flex h-full w-full flex-col p-4">
       <PageBreadcrumbs breadcrumbs={breadcrumbs} />
-      <main className="flex h-full w-full flex-col">
+      <main className="flex h-full w-full grow flex-col">
         <Classroom id={classroomId} />
       </main>
     </div>

@@ -10,7 +10,10 @@ export async function getAssignmentQuestionsFromDb({
   assignmentId,
 }: GetAssignmentQuestionsFromDbProps) {
   return db
-    .select()
+    .select({
+      id: questions.id,
+      name: questions.name,
+    })
     .from(questions)
     .where(eq(questions.assignmentId, assignmentId));
 }

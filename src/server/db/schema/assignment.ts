@@ -21,6 +21,7 @@ export const questions = sqliteTable("question", {
   assignmentId: text("assignmentId")
     .notNull()
     .references(() => assignments.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
 });
 
 export const classroomAssignments = sqliteTable("classroomAssignment", {

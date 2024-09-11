@@ -70,6 +70,7 @@ export type RenameAssignmentResult = z.infer<
 
 export const addQuestionFormSchema = z.object({
   assignmentId: z.string().min(1),
+  name: z.string().min(1),
   question: z.string().min(1),
 });
 

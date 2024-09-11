@@ -52,17 +52,23 @@ export async function getBreadcrumbsByPage(
       ];
 
     case EnumPage.Assignment: {
-      const [{ classroomId, classroomName }] = await db
-        .select({
-          classroomId: classroomAssignments.classroomId,
-          classroomName: classrooms.name,
-        })
-        .from(classroomAssignments)
-        .innerJoin(
-          classrooms,
-          eq(classroomAssignments.classroomId, classrooms.id)
-        )
-        .where(eq(classroomAssignments.assignmentId, props.assignmentId));
+      const [{ classroomId, classroomName, assignmentId, assignmentName }] =
+        await db
+          .select({
+            classroomId: classroomAssignments.classroomId,
+            classroomName: classrooms.name,
+            assignmentId: assignments.id,
+            assignmentName: assignments.name,
+          })
+          .from(classroomAssignments)
+          .innerJoin(
+            classrooms,
+            eq(classroomAssignments.classroomId, classrooms.id)
+          )
+          .innerJoin(
+            assignments,
+            eq(classroomAssignments.assignmentId, props.assignmentId)
+          );
 
       return [
         {
@@ -77,29 +83,43 @@ export async function getBreadcrumbsByPage(
           label: classroomName,
           href: `/classrooms/${classroomId}`,
         },
+        {
+          label: assignmentName,
+          href: `/assignments/${assignmentName}`,
+        },
       ];
     }
 
     case EnumPage.Question: {
-      const [{ classroomId, classroomName, assignmentId, assignmentName }] =
-        await db
-          .select({
-            classroomId: classroomAssignments.classroomId,
-            classroomName: classrooms.name,
-            assignmentId: questions.assignmentId,
-            assignmentName: assignments.name,
-          })
-          .from(classroomAssignments)
-          .innerJoin(
-            classrooms,
-            eq(classroomAssignments.classroomId, classrooms.id)
-          )
-          .innerJoin(
-            assignments,
-            eq(classroomAssignments.assignmentId, assignments.id)
-          )
-          .innerJoin(questions, eq(assignments.id, questions.assignmentId))
-          .where(eq(questions.id, props.questionId));
+      const [
+        {
+          classroomId,
+          classroomName,
+          assignmentId,
+          assignmentName,
+          questionid,
+          questionName,
+        },
+      ] = await db
+        .select({
+          classroomId: classroomAssignments.classroomId,
+          classroomName: classrooms.name,
+          assignmentId: questions.assignmentId,
+          assignmentName: assignments.name,
+          questionid: questions.id,
+          questionName: questions.name,
+        })
+        .from(classroomAssignments)
+        .innerJoin(
+          classrooms,
+          eq(classroomAssignments.classroomId, classrooms.id)
+        )
+        .innerJoin(
+          assignments,
+          eq(classroomAssignments.assignmentId, assignments.id)
+        )
+        .innerJoin(questions, eq(assignments.id, questions.assignmentId))
+        .where(eq(questions.id, props.questionId));
 
       return [
         {
@@ -117,6 +137,10 @@ export async function getBreadcrumbsByPage(
         {
           label: assignmentName,
           href: `/assignments/${assignmentId}`,
+        },
+        {
+          label: questionName,
+          href: `/questions/${questionid}`,
         },
       ];
     }
