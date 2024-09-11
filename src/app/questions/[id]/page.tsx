@@ -1,8 +1,11 @@
 import { Question } from "@/components/assignment/Question";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
+import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { auth } from "@/utils/auth/config";
+import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { canUserAccessQuestion } from "@/utils/classroom/canUserAccessQuestion";
+import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
 
 type PageProps = {
@@ -28,9 +31,17 @@ export default async function QuestionPage({
     return <NotAuthorizedToViewPage />;
   }
 
+  const breadcrumbs = await getBreadcrumbsByPage({
+    page: EnumPage.Question,
+    questionId,
+  });
+
   return (
-    <main className="flex h-full w-full flex-col items-center justify-center p-4">
-      <Question questionId={questionId} />
-    </main>
+    <div className="flex h-full w-full flex-col gap-4 p-4">
+      <PageBreadcrumbs breadcrumbs={breadcrumbs} />
+      <main className="grow">
+        <Question questionId={questionId} />
+      </main>
+    </div>
   );
 }
