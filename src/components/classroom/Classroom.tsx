@@ -23,7 +23,7 @@ export async function Classroom({ id }: ClassroomProps) {
     session?.user?.role === EnumRole.Teacher;
 
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex h-full w-full flex-col pt-4">
       {/* <section className="p-4">
         {doesNotHaveStudents ? (
           <div className="flex">
@@ -44,7 +44,7 @@ export async function Classroom({ id }: ClassroomProps) {
         )}
       </section>
       <Separator /> */}
-      <section className="grow p-4">
+      <section className="grow">
         {doesNotHaveAssignments ? (
           <div className="flex h-full flex-col items-center justify-center gap-3">
             <BookPlusIcon className="h-16 w-16" />

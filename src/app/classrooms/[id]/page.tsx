@@ -1,7 +1,10 @@
 import { Classroom } from "@/components/classroom/Classroom";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
+import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 import { auth } from "@/utils/auth/config";
+import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { isUserParticipantOfClassroom } from "@/utils/classroom/isUserParticipantOfClassroom";
+import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
 
 type PageProps = {
@@ -25,9 +28,17 @@ export default async function ClassroomPage({
     return <NotAuthorizedToViewPage />;
   }
 
+  const breadcrumbs = await getBreadcrumbsByPage({
+    page: EnumPage.Classroom,
+    classroomId,
+  });
+
   return (
-    <main className="flex h-full w-full flex-col p-4">
-      <Classroom id={classroomId} />
-    </main>
+    <div className="flex h-full w-full flex-col p-4">
+      <PageBreadcrumbs breadcrumbs={breadcrumbs} />
+      <main className="flex h-full w-full grow flex-col">
+        <Classroom id={classroomId} />
+      </main>
+    </div>
   );
 }

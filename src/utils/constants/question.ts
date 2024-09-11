@@ -1,3 +1,9 @@
+/** Maximum length of name of the question */
+export const QUESTION_NAME_MAX_LENGTH = 50;
+
+/** Minimum length of name of the question */
+export const QUESTION_NAME_MIN_LENGTH = 5;
+
 export const EnumTabsContentType = {
   Chat: "Chat",
   // InputOutput: "InputOutput",

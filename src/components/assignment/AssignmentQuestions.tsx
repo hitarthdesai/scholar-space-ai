@@ -40,30 +40,26 @@ export async function AssignmentQuestions({
   }
 
   return (
-    <ul className="flex flex-col gap-4">
-      <div className="">
-        {questions.map((question, index) => (
-          <li key={question.id}>
-            <Link href={`/questions/${question.id}`}>
-              <Button variant="link" className="flex gap-2">
-                Question {index + 1}
-              </Button>
-            </Link>
-          </li>
-        ))}
-      </div>
+    <ol className="flex flex-col">
+      {questions.map(({ id, name }) => (
+        <li key={id}>
+          <Link href={`/questions/${id}`}>
+            <Button variant="link">{name}</Button>
+          </Link>
+        </li>
+      ))}
       {isAuthorizedToAddOrDelete && (
         <li>
           <AddQuestionSheet
             assignmentId={assignmentId}
             trigger={
-              <Button className="flex gap-2">
+              <Button className="mt-2 flex gap-2">
                 Add another question <ShieldQuestionIcon />
               </Button>
             }
           />
         </li>
       )}
-    </ul>
+    </ol>
   );
 }

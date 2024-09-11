@@ -24,6 +24,7 @@ import { addQuestion } from "@/actions/addQuestion";
 import { type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
+import { Input } from "../ui/input";
 
 type AddQuestionFormComponentProps = {
   assignmentId: string;
@@ -36,6 +37,7 @@ export const AddQuestionFormComponent = ({
 }: AddQuestionFormComponentProps) => {
   const addQuestionFormDefaultValues: AddQuestionForm = {
     question: "",
+    name: "",
     assignmentId,
   };
 
@@ -70,6 +72,20 @@ export const AddQuestionFormComponent = ({
   return (
     <Form {...form}>
       <form id={FormIds.AddQuestion} onSubmit={form.handleSubmit(executeAsync)}>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input required {...field} />
+              </FormControl>
+              <FormDescription>Name of the question</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="question"
