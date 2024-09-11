@@ -1,5 +1,5 @@
-import { Breadcrumb } from "./types";
-import { EnumPage, Page } from "../constants/page";
+import { type Breadcrumb } from "./types";
+import { EnumPage } from "../constants/page";
 import { db } from "@/server/db";
 import {
   assignments,
@@ -85,7 +85,7 @@ export async function getBreadcrumbsByPage(
         },
         {
           label: assignmentName,
-          href: `/assignments/${assignmentName}`,
+          href: `/assignments/${assignmentId}`,
         },
       ];
     }

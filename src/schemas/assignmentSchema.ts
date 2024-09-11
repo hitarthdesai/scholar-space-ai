@@ -3,6 +3,10 @@ import {
   ASSIGNMENT_NAME_MAX_LENGTH,
   ASSIGNMENT_NAME_MIN_LENGTH,
 } from "@/utils/constants/assignment";
+import {
+  QUESTION_NAME_MAX_LENGTH,
+  QUESTION_NAME_MIN_LENGTH,
+} from "@/utils/constants/question";
 
 export const addAssignmentFormSchema = z.object({
   name: z
@@ -70,7 +74,7 @@ export type RenameAssignmentResult = z.infer<
 
 export const addQuestionFormSchema = z.object({
   assignmentId: z.string().min(1),
-  name: z.string().min(1),
+  name: z.string().min(QUESTION_NAME_MIN_LENGTH).max(QUESTION_NAME_MAX_LENGTH),
   question: z.string().min(1),
 });
 
