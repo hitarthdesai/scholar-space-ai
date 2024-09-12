@@ -5,5 +5,6 @@ export const FormIds = {
   AddAssignment: "addAssignmentForm",
   RenameAssignment: "renameAssignmentForm",
   AddQuestion: "addQuestionForm",
+  EditQuestion: "editQuestionForm",
   RenameConversation: "renameConversationForm",
 } as const;

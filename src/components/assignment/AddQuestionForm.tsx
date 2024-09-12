@@ -15,10 +15,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
 import { toastDescriptionAddQuestion } from "@/utils/constants/toast";
 import {
-  type AddQuestionForm,
+  type AddQuestionForm as AddQuestionFormType,
   addQuestionFormSchema,
   EnumAddQuestionResult,
-} from "@/schemas/assignmentSchema";
+} from "@/schemas/questionSchema";
 import { FormIds } from "@/utils/constants/form";
 import { addQuestion } from "@/actions/addQuestion";
 import { type Dispatch, type SetStateAction } from "react";
@@ -31,18 +31,18 @@ type AddQuestionFormComponentProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export const AddQuestionFormComponent = ({
+export const AddQuestionForm = ({
   assignmentId,
   setIsOpen,
 }: AddQuestionFormComponentProps) => {
-  const addQuestionFormDefaultValues: AddQuestionForm = {
+  const addQuestionFormDefaultValues: AddQuestionFormType = {
     question: "",
     name: "",
     assignmentId,
   };
 
   const router = useRouter();
-  const form = useForm<AddQuestionForm>({
+  const form = useForm<AddQuestionFormType>({
     resolver: zodResolver(addQuestionFormSchema),
     defaultValues: addQuestionFormDefaultValues,
   });

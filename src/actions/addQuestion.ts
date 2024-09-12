@@ -3,7 +3,7 @@
 import {
   addQuestionFormSchema,
   EnumAddQuestionResult,
-} from "@/schemas/assignmentSchema";
+} from "@/schemas/questionSchema";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
