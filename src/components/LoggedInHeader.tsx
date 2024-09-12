@@ -73,10 +73,8 @@ export async function LoggedInHeader() {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             {linksToDisplay.map((link, index) => (
-              <DropdownMenuItem>
-                <Link key={index} href={link.href}>
-                  {link.label}
-                </Link>
+              <DropdownMenuItem key={index}>
+                <Link href={link.href}>{link.label}</Link>
               </DropdownMenuItem>
             ))}
           </DropdownMenuGroup>
