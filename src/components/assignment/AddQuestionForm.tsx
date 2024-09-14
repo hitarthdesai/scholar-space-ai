@@ -25,6 +25,8 @@ import { type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { SheetFooter } from "../ui/sheet";
 
 type AddQuestionFormComponentProps = {
   assignmentId: string;
@@ -71,7 +73,11 @@ export const AddQuestionForm = ({
 
   return (
     <Form {...form}>
-      <form id={FormIds.AddQuestion} onSubmit={form.handleSubmit(executeAsync)}>
+      <form
+        id={FormIds.AddQuestion}
+        onSubmit={form.handleSubmit(executeAsync)}
+        className="h-full"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -101,6 +107,11 @@ export const AddQuestionForm = ({
           )}
         />
       </form>
+      <SheetFooter>
+        <Button type="submit" form={FormIds.AddQuestion}>
+          Add
+        </Button>
+      </SheetFooter>
     </Form>
   );
 };

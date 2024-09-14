@@ -33,7 +33,9 @@ function QuestionTitle({ id, name }: { id: string; name: string }) {
         mode={EnumQuestionFormMode.Edit}
         editPromise={editPromise}
       >
-        <PencilIcon className="h-4 w-4" />
+        <Button variant="ghost">
+          <PencilIcon className="h-4 w-4" />
+        </Button>
       </AddEditQuestionSheet>
     </li>
   );

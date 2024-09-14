@@ -8,7 +8,6 @@ import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
 import { putObject } from "@/utils/storage/s3/putObject";
-import { randomUUID } from "crypto";
 import { createSafeActionClient } from "next-safe-action";
 import { canUserAccessQuestion } from "@/utils/classroom/canUserAccessQuestion";
 import { updateQuestionToDb } from "@/utils/classroom/updateQuestionInDb";

@@ -13,12 +13,16 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
-import { toastDescriptionEditQuestion } from "@/utils/constants/toast";
+import {
+  toastDescriptionDeleteQuestion,
+  toastDescriptionEditQuestion,
+} from "@/utils/constants/toast";
 import {
   type EditFormDefaultValues,
   editFormDefaultValuesSchema,
   editQuestionFormSchema,
   type EditQuestionForm as EditQuestionFormType,
+  EnumDeleteQuestionResult,
   EnumEditQuestionResult,
 } from "@/schemas/questionSchema";
 import { FormIds } from "@/utils/constants/form";
@@ -27,6 +31,9 @@ import { use, type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
+import { SheetFooter } from "../ui/sheet";
+import { LoadingButton } from "../ui/loading-button";
+import { deleteQuestion } from "@/actions/deleteQuestion";
 
 export type EditQuestionFormProps = {
   editPromise: Promise<EditFormDefaultValues>;
@@ -53,27 +60,30 @@ export const EditQuestionForm = ({
     defaultValues: editQuestionFormDefaultValues,
   });
 
-  const { executeAsync } = useAction(editQuestion, {
-    onSuccess({ data }) {
-      if (!data?.type) return;
+  const { executeAsync: executeEdit, isExecuting: isEditing } = useAction(
+    editQuestion,
+    {
+      onSuccess({ data }) {
+        if (!data?.type) return;
 
-      const isErroneous = data.type !== EnumEditQuestionResult.QuestionEdited;
+        const isErroneous = data.type !== EnumEditQuestionResult.QuestionEdited;
 
-      toast({
-        title: isErroneous
-          ? "Error in editing Question"
-          : "Question edited successfully",
-        description: toastDescriptionEditQuestion[data.type],
-        variant: isErroneous ? "destructive" : "default",
-      });
+        toast({
+          title: isErroneous
+            ? "Error in editing Question"
+            : "Question edited successfully",
+          description: toastDescriptionEditQuestion[data.type],
+          variant: isErroneous ? "destructive" : "default",
+        });
 
-      if (!isErroneous) {
-        form.reset();
-        setIsOpen(false);
-        router.refresh();
-      }
-    },
-  });
+        if (!isErroneous) {
+          form.reset();
+          setIsOpen(false);
+          router.refresh();
+        }
+      },
+    }
+  );
 
   const onSubmit = async (data: EditQuestionFormType) => {
     const hasNameChanged = data.name !== editQuestionFormDefaultValues.name;
@@ -89,20 +99,52 @@ export const EditQuestionForm = ({
       return;
     }
 
-    await executeAsync({
+    await executeEdit({
       ...data,
       name: hasNameChanged ? data.name : undefined,
       question: hasQuestionChanged ? data.question : undefined,
     });
   };
 
+  const { executeAsync: executeDelete, isExecuting: isDeleting } = useAction(
+    deleteQuestion,
+    {
+      onSuccess({ data }) {
+        if (!data?.type) return;
+
+        const isErroneous =
+          data.type !== EnumDeleteQuestionResult.QuestionDeleted;
+
+        toast({
+          title: isErroneous
+            ? "Error in deleting Question"
+            : "Question deleted successfully",
+          description: toastDescriptionDeleteQuestion[data.type],
+          variant: isErroneous ? "destructive" : "default",
+        });
+
+        if (!isErroneous) {
+          setIsOpen(false);
+          router.refresh();
+        }
+      },
+    }
+  );
+
+  // TODO: Find a better error for this.
   if (error) {
     return <div>ERROR</div>;
   }
 
+  const disableActions = isEditing || isDeleting;
+
   return (
     <Form {...form}>
-      <form id={FormIds.EditQuestion} onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="h-full"
+        id={FormIds.EditQuestion}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="name"
@@ -132,6 +174,28 @@ export const EditQuestionForm = ({
           )}
         />
       </form>
+      <SheetFooter className="flex flex-row items-center">
+        <LoadingButton
+          disabled={disableActions}
+          isLoading={isDeleting}
+          variant="destructive"
+          onClick={async () =>
+            executeDelete({
+              questionId: editQuestionFormDefaultValues.questionId,
+            })
+          }
+        >
+          Delete
+        </LoadingButton>
+        <LoadingButton
+          disabled={disableActions}
+          isLoading={isEditing}
+          type="submit"
+          form={FormIds.EditQuestion}
+        >
+          Save
+        </LoadingButton>
+      </SheetFooter>
     </Form>
   );
 };

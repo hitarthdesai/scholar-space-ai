@@ -87,6 +87,19 @@ export const runCodeInputSchema = z.object({
   code: z.string().min(1),
 });
 
+export const deleteQuestionInputSchema = z.object({
+  questionId: z.string().min(1),
+});
+
+export const EnumDeleteQuestionResult = {
+  QuestionDeleted: "QuestionDeleted",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const deleteQuestionResultSchema = z.nativeEnum(EnumDeleteQuestionResult);
+export type DeleteQuestionResult = z.infer<typeof deleteQuestionResultSchema>;
+
 export const EnumRunCodeResult = {
   CodeRanSuccessfully: "codeRanSuccessfully",
   CodeRanWithErrors: "codeRanWithErrors",
