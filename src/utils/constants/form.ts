@@ -3,7 +3,7 @@ export const FormIds = {
   CreateClassroom: "createClassroomForm",
   RenameClassroom: "renameClassroomForm",
   AddAssignment: "addAssignmentForm",
-  RenameAssignment: "renameAssignmentForm",
+  EditAssignment: "editAssignmentForm",
   AddQuestion: "addQuestionForm",
   EditQuestion: "editQuestionForm",
   RenameConversation: "renameConversationForm",

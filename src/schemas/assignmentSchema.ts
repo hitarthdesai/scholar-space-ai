@@ -3,6 +3,29 @@ import {
   ASSIGNMENT_NAME_MAX_LENGTH,
   ASSIGNMENT_NAME_MIN_LENGTH,
 } from "@/utils/constants/assignment";
+import { EnumFormMode } from "./formSchema";
+
+export const assignmentSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+});
+
+export type Assignment = z.infer<typeof assignmentSchema>;
+
+export const addEditAssignmentSheetPropsSchema = z.union([
+  z.object({
+    mode: z.literal(EnumFormMode.Add),
+    classroomId: z.string().min(1),
+  }),
+  z.object({
+    mode: z.literal(EnumFormMode.Edit),
+    assignment: assignmentSchema,
+  }),
+]);
+
+export type AddEditAssignmentSheetProps = z.infer<
+  typeof addEditAssignmentSheetPropsSchema
+>;
 
 export const addAssignmentFormSchema = z.object({
   name: z
@@ -22,13 +45,6 @@ export const EnumAddAssignmentResult = {
 
 const addAssignmentResultSchema = z.nativeEnum(EnumAddAssignmentResult);
 export type AddAssignmentResult = z.infer<typeof addAssignmentResultSchema>;
-
-export const assignmentSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
-});
-
-export type Assignment = z.infer<typeof assignmentSchema>;
 
 export const deleteAssignmentInputSchema = z.object({
   assignmentId: z.string().min(1),

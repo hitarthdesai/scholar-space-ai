@@ -10,16 +10,14 @@ import {
 } from "@/components/ui/sheet";
 import { AddQuestionForm } from "./AddQuestionForm";
 import { type PropsWithChildren, Suspense, useState } from "react";
-import {
-  type AddEditQuestionSheetProps,
-  EnumQuestionFormMode,
-} from "@/schemas/questionSchema";
+import { type AddEditQuestionSheetProps } from "@/schemas/questionSchema";
 import {
   questionSheetDescription,
   questionSheetTitle,
 } from "@/utils/constants/question";
 import { Loader2 } from "lucide-react";
 import { EditQuestionForm } from "./EditQuestionForm";
+import { EnumFormMode } from "@/schemas/formSchema";
 
 function EditQuestionFormFallback() {
   return (
@@ -33,8 +31,8 @@ export function AddEditQuestionSheet({
   children,
   ...props
 }: PropsWithChildren<AddEditQuestionSheetProps>) {
-  const [isOpen, setIsOpen] = useState(false);
   const { mode } = props;
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -44,7 +42,7 @@ export function AddEditQuestionSheet({
           <SheetTitle>{questionSheetTitle[mode]}</SheetTitle>
           <SheetDescription>{questionSheetDescription[mode]}</SheetDescription>
         </SheetHeader>
-        {mode === EnumQuestionFormMode.Add ? (
+        {mode === EnumFormMode.Add ? (
           <AddQuestionForm {...props} setIsOpen={setIsOpen} />
         ) : (
           <Suspense fallback={<EditQuestionFormFallback />}>

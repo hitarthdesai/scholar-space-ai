@@ -1,13 +1,11 @@
-import { AddAssignmentDialog } from "./AddAssignmentDialog";
+import { AddEditAssignmentSheet } from "../assignment/AddEditAssignmentSheet";
 import { Button } from "../ui/button";
-import { BookAIcon, BookPlusIcon } from "lucide-react";
-import Link from "next/link";
-import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
-import { DeleteAssignmentButton } from "./DeleteAssignmentButton";
+import { BookPlus, BookPlusIcon } from "lucide-react";
 import { getClassroomAssignments } from "@/utils/classroom/getClassroomAssignments";
 import { auth } from "@/utils/auth/config";
 import { EnumRole } from "@/schemas/userSchema";
-import { RenameAssignmentButton } from "./RenameAssignmentButton";
+import { EnumFormMode } from "@/schemas/formSchema";
+import { AssignmentCard } from "./AssignmentCard";
 
 type ClassroomProps = {
   id: string;
@@ -24,26 +22,6 @@ export async function Classroom({ id }: ClassroomProps) {
 
   return (
     <div className="flex h-full w-full flex-col pt-4">
-      {/* <section className="p-4">
-        {doesNotHaveStudents ? (
-          <div className="flex">
-            <AddStudentDialog classroomId={id} />
-            <div className="flex grow items-center justify-center text-center">
-              <p>There are no students in this classroom.</p>
-            </div>
-          </div>
-        ) : (
-          <div className="flex">
-            <ul className="grow">
-              {students.map((student) => (
-                <li key={student.id}>{student.name}</li>
-              ))}
-            </ul>
-            <AddStudentDialog classroomId={id} />
-          </div>
-        )}
-      </section>
-      <Separator /> */}
       <section className="grow">
         {doesNotHaveAssignments ? (
           <div className="flex h-full flex-col items-center justify-center gap-3">
@@ -52,50 +30,37 @@ export async function Classroom({ id }: ClassroomProps) {
               <p>There are no assignments for this classroom.</p>
             </div>
             {isAuthorizedToCreateOrDeleteAssignment && (
-              <AddAssignmentDialog
-                classroomId={id}
-                trigger={<Button>Create an assignment</Button>}
-              />
+              <AddEditAssignmentSheet mode={EnumFormMode.Add} classroomId={id}>
+                <Button>Create an assignment</Button>
+              </AddEditAssignmentSheet>
             )}
           </div>
         ) : (
           <>
             <ul className="flex grow flex-wrap gap-4">
               {assignments.map((assignment) => (
-                <li
-                  key={assignment.id}
-                  className="aspect-video min-w-72 max-w-72"
-                >
-                  <Card className="flex h-full w-full flex-col justify-between">
-                    <CardHeader>
-                      <CardTitle>{assignment.name}</CardTitle>
-                    </CardHeader>
-                    <CardFooter className="flex items-center gap-2">
-                      <Link
-                        href={`/assignments/${assignment.id}`}
-                        className="grow"
-                      >
-                        <Button className="flex w-full items-center justify-center gap-2">
-                          View <BookAIcon />
-                        </Button>
-                      </Link>
-                      {isAuthorizedToCreateOrDeleteAssignment && (
-                        <>
-                          <RenameAssignmentButton
-                            assignmentId={assignment.id}
-                          />
-                          <DeleteAssignmentButton
-                            assignmentId={assignment.id}
-                          />
-                        </>
-                      )}
-                    </CardFooter>
-                  </Card>
+                <li key={assignment.id} className="min-w-72 max-w-72">
+                  <AssignmentCard
+                    assignment={assignment}
+                    isAuthorizedToEditAssignment={
+                      isAuthorizedToCreateOrDeleteAssignment
+                    }
+                  />
                 </li>
               ))}
               {isAuthorizedToCreateOrDeleteAssignment && (
                 <li>
-                  <AddAssignmentDialog classroomId={id} />
+                  <AddEditAssignmentSheet
+                    mode={EnumFormMode.Add}
+                    classroomId={id}
+                  >
+                    <Button
+                      variant="ghost"
+                      className="flex h-full min-w-72 max-w-72 items-center justify-center border border-dashed"
+                    >
+                      <BookPlus className="h-16 w-16" />
+                    </Button>
+                  </AddEditAssignmentSheet>
                 </li>
               )}
             </ul>

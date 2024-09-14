@@ -1,19 +1,16 @@
-import {
-  EnumQuestionFormMode,
-  type QuestionFormMode,
-} from "@/schemas/questionSchema";
+import { EnumFormMode, type FormMode } from "@/schemas/formSchema";
 
 /** Title of the sheet shown when dealing with questions */
-export const questionSheetTitle: Record<QuestionFormMode, string> = {
-  [EnumQuestionFormMode.Add]: "Add Question",
-  [EnumQuestionFormMode.Edit]: "Edit Question",
+export const questionSheetTitle: Record<FormMode, string> = {
+  [EnumFormMode.Add]: "Add Question",
+  [EnumFormMode.Edit]: "Edit Question",
 };
 
 /** Description of the sheet shown when dealing with questions */
-export const questionSheetDescription: Record<QuestionFormMode, string> = {
-  [EnumQuestionFormMode.Add]:
+export const questionSheetDescription: Record<FormMode, string> = {
+  [EnumFormMode.Add]:
     "You're now creating a new question. Specify a name and your question's text. Then, click add when you're done.",
-  [EnumQuestionFormMode.Edit]:
+  [EnumFormMode.Edit]:
     "You're now editing a questions. Modify what you need to, then click save when you're done.",
 };
 

@@ -1,4 +1,4 @@
-import { Question } from "@/components/assignment/Question";
+import { Question } from "@/components/question/Question";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";

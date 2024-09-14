@@ -1,15 +1,15 @@
 import { getAssignmentQuestionsFromDb } from "@/utils/classroom/getAssignmentQuestionsFromDb";
 import { AlertOctagonIcon, PencilIcon, ShieldQuestionIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import { AddEditQuestionSheet } from "./AddEditQuestionSheet";
 import Link from "next/link";
 import { auth } from "@/utils/auth/config";
 import { EnumRole } from "@/schemas/userSchema";
-import { EnumQuestionFormMode } from "@/schemas/questionSchema";
 import { db } from "@/server/db";
 import { questions } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { getObject } from "@/utils/storage/s3/getObject";
+import { AddEditQuestionSheet } from "../question/AddEditQuestionSheet";
+import { EnumFormMode } from "@/schemas/formSchema";
 
 type AssignmentQuestionsProps = {
   assignmentId: string;
@@ -29,10 +29,7 @@ function QuestionTitle({ id, name }: { id: string; name: string }) {
       <Link href={`/questions/${id}`}>
         <Button variant="link">{name}</Button>
       </Link>
-      <AddEditQuestionSheet
-        mode={EnumQuestionFormMode.Edit}
-        editPromise={editPromise}
-      >
+      <AddEditQuestionSheet mode={EnumFormMode.Edit} editPromise={editPromise}>
         <Button variant="ghost">
           <PencilIcon className="h-4 w-4" />
         </Button>
@@ -58,7 +55,7 @@ export async function AssignmentQuestions({
         <p>No questions found</p>
         {isAuthorizedToAddOrDelete && (
           <AddEditQuestionSheet
-            mode={EnumQuestionFormMode.Add}
+            mode={EnumFormMode.Add}
             assignmentId={assignmentId}
           >
             <Button className="flex gap-2">
@@ -78,7 +75,7 @@ export async function AssignmentQuestions({
       {isAuthorizedToAddOrDelete && (
         <li>
           <AddEditQuestionSheet
-            mode={EnumQuestionFormMode.Add}
+            mode={EnumFormMode.Add}
             assignmentId={assignmentId}
           >
             <Button className="mt-2 flex gap-2">
