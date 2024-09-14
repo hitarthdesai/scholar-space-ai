@@ -174,7 +174,7 @@ export const EditQuestionForm = ({
           )}
         />
       </form>
-      <SheetFooter className="flex flex-row items-center">
+      <SheetFooter className="flex w-full items-center justify-between">
         <LoadingButton
           disabled={disableActions}
           isLoading={isDeleting}

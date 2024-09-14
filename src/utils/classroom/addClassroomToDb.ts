@@ -1,15 +1,15 @@
 import { db } from "@/server/db";
 import { classrooms } from "@/server/db/schema";
 
-type CreateClassroomInDbProps = {
+type AddClassroomToDbProps = {
   name: string;
   teacherId: string;
 };
 
-export async function createClassroomInDb({
+export async function addClassroomToDb({
   name,
   teacherId,
-}: CreateClassroomInDbProps) {
+}: AddClassroomToDbProps) {
   const [{ classroomId }] = await db
     .insert(classrooms)
     .values({

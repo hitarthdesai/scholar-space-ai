@@ -2,15 +2,15 @@ import { db } from "@/server/db";
 import { assignments } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 
-type renameAssignmentProps = {
+type EditAssignmentInDbProps = {
   assignmentId: string;
   newName: string;
 };
 
-export async function renameAssignmentInDb({
+export async function editAssignmentInDb({
   assignmentId,
   newName,
-}: renameAssignmentProps): Promise<boolean> {
+}: EditAssignmentInDbProps): Promise<boolean> {
   const result = await db
     .update(assignments)
     .set({ name: newName })

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { EnumFormMode } from "./formSchema";
 
 export const questionSchema = z.object({
   id: z.string().min(1),
@@ -6,14 +7,6 @@ export const questionSchema = z.object({
 });
 
 export type Question = z.infer<typeof questionSchema>;
-
-export const EnumQuestionFormMode = {
-  Add: "add",
-  Edit: "edit",
-} as const;
-
-const questionFormModeSchema = z.nativeEnum(EnumQuestionFormMode);
-export type QuestionFormMode = z.infer<typeof questionFormModeSchema>;
 
 export const editFormDefaultValuesSchema = z.tuple([
   z.object({
@@ -27,11 +20,11 @@ export type EditFormDefaultValues = z.infer<typeof editFormDefaultValuesSchema>;
 
 export const addEditQuestionSheetPropsSchema = z.union([
   z.object({
-    mode: z.literal(EnumQuestionFormMode.Add),
+    mode: z.literal(EnumFormMode.Add),
     assignmentId: z.string().min(1),
   }),
   z.object({
-    mode: z.literal(EnumQuestionFormMode.Edit),
+    mode: z.literal(EnumFormMode.Edit),
     editPromise: z.promise(editFormDefaultValuesSchema),
   }),
 ]);

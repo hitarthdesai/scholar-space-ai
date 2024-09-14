@@ -1,6 +1,7 @@
+import { AddEditClassroomSheet } from "@/components/classroom/AddEditClassroomSheet";
 import { Classrooms } from "@/components/classroom/Classrooms";
-import { CreateClassroomDialog } from "@/components/classroom/CreateClassroomDialog";
 import { Button } from "@/components/ui/button";
+import { EnumFormMode } from "@/schemas/formSchema";
 import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
 import { getUserClassrooms } from "@/utils/classroom/getUserClassrooms";
@@ -23,13 +24,11 @@ export default async function ClassroomsPage() {
         </p>
 
         {isAllowedToCreateClassrooms && (
-          <CreateClassroomDialog
-            trigger={
-              <Button className="flex items-center justify-center gap-2">
-                Create a classroom now <Pencil1Icon />
-              </Button>
-            }
-          />
+          <AddEditClassroomSheet mode={EnumFormMode.Add}>
+            <Button className="flex items-center justify-center gap-2">
+              Create a classroom now <Pencil1Icon />
+            </Button>
+          </AddEditClassroomSheet>
         )}
       </main>
     );

@@ -14,47 +14,46 @@ import {
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import {
-  createClassroomFormSchema,
-  EnumCreateClassroomResult,
-  type CreateClassroomForm,
+  addClassroomFormSchema,
+  EnumAddClassroomResult,
+  type AddClassroomForm as AddClassroomFormType,
 } from "@/schemas/classroomSchema";
 import { toast } from "@/components/ui/use-toast";
-import { toastDescriptionCreateClassroom } from "@/utils/constants/toast";
+import { toastDescriptionAddClassroom } from "@/utils/constants/toast";
 
-import { createClassroom } from "@/actions/createClassroom";
+import { addClassroom } from "@/actions/addClassroom";
 import { FormIds } from "@/utils/constants/form";
 import { type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
+import { SheetFooter } from "../ui/sheet";
+import { LoadingButton } from "../ui/loading-button";
 
-type CreateClassroomFormProps = {
+type AddClassroomFormProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const createClassroomFormDefaultValues: CreateClassroomForm = {
+const addClassroomFormDefaultValues: AddClassroomFormType = {
   name: "",
 };
 
-export const CreateClassroomFormComponent = ({
-  setIsOpen,
-}: CreateClassroomFormProps) => {
+export const AddClassroomForm = ({ setIsOpen }: AddClassroomFormProps) => {
   const router = useRouter();
-  const form = useForm<CreateClassroomForm>({
-    resolver: zodResolver(createClassroomFormSchema),
-    defaultValues: createClassroomFormDefaultValues,
+  const form = useForm<AddClassroomFormType>({
+    resolver: zodResolver(addClassroomFormSchema),
+    defaultValues: addClassroomFormDefaultValues,
   });
 
-  const { executeAsync } = useAction(createClassroom, {
+  const { executeAsync, isExecuting: isAdding } = useAction(addClassroom, {
     onSuccess({ data }) {
       if (!data?.type) return;
 
-      const isErroneous =
-        data.type !== EnumCreateClassroomResult.ClassroomCreated;
+      const isErroneous = data.type !== EnumAddClassroomResult.ClassroomAdded;
 
       toast({
         title: isErroneous
-          ? "Error in creating classroom"
-          : "Classroom created successfully",
-        description: toastDescriptionCreateClassroom[data.type],
+          ? "Error in adding classroom"
+          : "Classroom added successfully",
+        description: toastDescriptionAddClassroom[data.type],
         variant: isErroneous ? "destructive" : "default",
       });
 
@@ -69,8 +68,9 @@ export const CreateClassroomFormComponent = ({
   return (
     <Form {...form}>
       <form
-        id={FormIds.CreateClassroom}
+        id={FormIds.AddClassroom}
         onSubmit={form.handleSubmit(executeAsync)}
+        className="h-full"
       >
         <FormField
           control={form.control}
@@ -89,6 +89,16 @@ export const CreateClassroomFormComponent = ({
           )}
         />
       </form>
+      <SheetFooter>
+        <LoadingButton
+          disabled={isAdding}
+          isLoading={isAdding}
+          type="submit"
+          form={FormIds.AddClassroom}
+        >
+          Add
+        </LoadingButton>
+      </SheetFooter>
     </Form>
   );
 };
