@@ -1,10 +1,8 @@
 import {
   type AddAssignmentResult,
-  type AddQuestionResult,
   type DeleteAssignmentResult,
   type RenameAssignmentResult,
   EnumAddAssignmentResult,
-  EnumAddQuestionResult,
   EnumDeleteAssignmentResult,
   EnumRenameAssignmentResult,
 } from "@/schemas/assignmentSchema";
@@ -27,6 +25,14 @@ import {
   EnumRenameConversationResult,
   EnumDeleteConversationResult,
 } from "@/schemas/chatSchema";
+import {
+  type AddQuestionResult,
+  type DeleteQuestionResult,
+  type EditQuestionResult,
+  EnumAddQuestionResult,
+  EnumDeleteQuestionResult,
+  EnumEditQuestionResult,
+} from "@/schemas/questionSchema";
 
 export const toastDescriptionAuth: Record<LoginResult, string> = {
   [EnumLoginResult.EmailSent]: "User registered successfully.",
@@ -120,6 +126,30 @@ export const toastDescriptionAddQuestion: Record<AddQuestionResult, string> = {
   [EnumAddQuestionResult.NotUploaded]: "Unable to upload your question.",
   [EnumAddQuestionResult.Error]:
     "Unable to add a question. Please try again later.",
+};
+
+export const toastDescriptionEditQuestion: Record<EditQuestionResult, string> =
+  {
+    [EnumEditQuestionResult.QuestionEdited]:
+      "The question was edited successfully.",
+    [EnumEditQuestionResult.NotAuthorized]:
+      "You are not authorized to edit this question.",
+    [EnumEditQuestionResult.NotUploaded]:
+      "Unable to upload your updated question.",
+    [EnumEditQuestionResult.Error]:
+      "Unable to edit this question. Please try again later.",
+  };
+
+export const toastDescriptionDeleteQuestion: Record<
+  DeleteQuestionResult,
+  string
+> = {
+  [EnumDeleteQuestionResult.QuestionDeleted]:
+    "The question was deleted successfully.",
+  [EnumDeleteQuestionResult.NotAuthorized]:
+    "You are not authorized to delete this question.",
+  [EnumDeleteQuestionResult.Error]:
+    "Unable to delete this question. Please try again later.",
 };
 
 export const toastDescriptionRenameConversation: Record<

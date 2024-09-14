@@ -3,10 +3,6 @@ import {
   ASSIGNMENT_NAME_MAX_LENGTH,
   ASSIGNMENT_NAME_MIN_LENGTH,
 } from "@/utils/constants/assignment";
-import {
-  QUESTION_NAME_MAX_LENGTH,
-  QUESTION_NAME_MIN_LENGTH,
-} from "@/utils/constants/question";
 
 export const addAssignmentFormSchema = z.object({
   name: z
@@ -71,21 +67,3 @@ const renameAssignmentResultSchema = z.nativeEnum(EnumRenameAssignmentResult);
 export type RenameAssignmentResult = z.infer<
   typeof renameAssignmentResultSchema
 >;
-
-export const addQuestionFormSchema = z.object({
-  assignmentId: z.string().min(1),
-  name: z.string().min(QUESTION_NAME_MIN_LENGTH).max(QUESTION_NAME_MAX_LENGTH),
-  question: z.string().min(1),
-});
-
-export type AddQuestionForm = z.infer<typeof addQuestionFormSchema>;
-
-export const EnumAddQuestionResult = {
-  QuestionAdded: "QuestionAdded",
-  NotAuthorized: "notAuthorized",
-  NotUploaded: "notUploaded",
-  Error: "error",
-} as const;
-
-const addQuestionResultSchema = z.nativeEnum(EnumAddQuestionResult);
-export type AddQuestionResult = z.infer<typeof addQuestionResultSchema>;
