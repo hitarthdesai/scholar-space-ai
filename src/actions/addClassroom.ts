@@ -1,33 +1,33 @@
 "use server";
 
 import {
-  EnumCreateClassroomResult,
-  createClassroomFormSchema,
+  EnumAddClassroomResult,
+  addClassroomFormSchema,
 } from "@/schemas/classroomSchema";
 import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
-import { createClassroomInDb } from "@/utils/classroom/createClassroomInDb";
+import { addClassroomToDb } from "@/utils/classroom/addClassroomToDb";
 import { createSafeActionClient } from "next-safe-action";
 
-export const createClassroom = createSafeActionClient()
-  .schema(createClassroomFormSchema)
+export const addClassroom = createSafeActionClient()
+  .schema(addClassroomFormSchema)
   .action(async ({ parsedInput }) => {
     try {
       const session = await auth();
       const userId = session?.user?.id;
       if (!userId || session?.user?.role !== EnumRole.Teacher) {
-        return { type: EnumCreateClassroomResult.NotAuthorized };
+        return { type: EnumAddClassroomResult.NotAuthorized };
       }
 
       const { name } = parsedInput;
-      await createClassroomInDb({
+      await addClassroomToDb({
         name,
         teacherId: userId,
       });
 
-      return { type: EnumCreateClassroomResult.ClassroomCreated };
+      return { type: EnumAddClassroomResult.ClassroomAdded };
     } catch (e) {
       console.error(e);
-      return { type: EnumCreateClassroomResult.Error };
+      return { type: EnumAddClassroomResult.Error };
     }
   });

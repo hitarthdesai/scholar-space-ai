@@ -1,16 +1,16 @@
 "use server";
 
 import {
-  EnumRenameAssignmentResult,
-  renameAssignmentFormSchema,
+  EnumEditAssignmentResult,
+  editAssignmentFormSchema,
 } from "@/schemas/assignmentSchema";
 
 import { auth } from "@/utils/auth/config";
-import { renameAssignmentInDb } from "@/utils/classroom/renameAssignmentInDb";
+import { editAssignmentInDb } from "@/utils/classroom/editAssignmentInDb";
 import { createSafeActionClient } from "next-safe-action";
 
-export const renameAssignment = createSafeActionClient()
-  .schema(renameAssignmentFormSchema)
+export const editAssignment = createSafeActionClient()
+  .schema(editAssignmentFormSchema)
   .action(async ({ parsedInput }) => {
     try {
       const { assignmentId, newName } = parsedInput;
@@ -18,17 +18,17 @@ export const renameAssignment = createSafeActionClient()
       const session = await auth();
       const userId = session?.user?.id;
       if (!userId) {
-        return { type: EnumRenameAssignmentResult.NotAuthorized };
+        return { type: EnumEditAssignmentResult.NotAuthorized };
       }
 
-      await renameAssignmentInDb({
+      await editAssignmentInDb({
         assignmentId: assignmentId,
         newName: newName,
       });
 
-      return { type: EnumRenameAssignmentResult.AssignmentRenamed };
+      return { type: EnumEditAssignmentResult.AssignmentEdited };
     } catch (e) {
       console.error(e);
-      return { type: EnumRenameAssignmentResult.Error };
+      return { type: EnumEditAssignmentResult.Error };
     }
   });

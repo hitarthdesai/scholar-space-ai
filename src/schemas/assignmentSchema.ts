@@ -63,7 +63,7 @@ export type DeleteAssignmentResult = z.infer<
   typeof deleteAssignmentResultSchema
 >;
 
-export const renameAssignmentFormSchema = z.object({
+export const editAssignmentFormSchema = z.object({
   assignmentId: z.string().min(1),
   newName: z
     .string()
@@ -71,15 +71,13 @@ export const renameAssignmentFormSchema = z.object({
     .max(ASSIGNMENT_NAME_MAX_LENGTH),
 });
 
-export type RenameAssignmentForm = z.infer<typeof renameAssignmentFormSchema>;
+export type EditAssignmentForm = z.infer<typeof editAssignmentFormSchema>;
 
-export const EnumRenameAssignmentResult = {
-  AssignmentRenamed: "assignmentRenamed",
+export const EnumEditAssignmentResult = {
+  AssignmentEdited: "assignmentEdited",
   NotAuthorized: "notAuthorized",
   Error: "error",
 } as const;
 
-const renameAssignmentResultSchema = z.nativeEnum(EnumRenameAssignmentResult);
-export type RenameAssignmentResult = z.infer<
-  typeof renameAssignmentResultSchema
->;
+const editAssignmentResultSchema = z.nativeEnum(EnumEditAssignmentResult);
+export type EditAssignmentResult = z.infer<typeof editAssignmentResultSchema>;

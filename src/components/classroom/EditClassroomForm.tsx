@@ -14,61 +14,60 @@ import {
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import {
-  editAssignmentFormSchema,
-  EnumEditAssignmentResult,
-  type EditAssignmentForm as EditAssignmentFormType,
-  type Assignment,
-  EnumDeleteAssignmentResult,
-} from "@/schemas/assignmentSchema";
+  editClassroomFormSchema,
+  EnumEditClassroomResult,
+  type EditClassroomForm as EditClassroomFormType,
+  type Classroom,
+  EnumDeleteClassroomResult,
+} from "@/schemas/classroomSchema";
 import { toast } from "@/components/ui/use-toast";
 import {
-  toastDescriptionDeleteAssignment,
-  toastDescriptionEditAssignment,
+  toastDescriptionDeleteClassroom,
+  toastDescriptionEditClassroom,
 } from "@/utils/constants/toast";
 
+import { editClassroom } from "@/actions/editClassroom";
 import { FormIds } from "@/utils/constants/form";
 import { type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
-import { LoadingButton } from "../ui/loading-button";
 import { SheetFooter } from "../ui/sheet";
-import { deleteAssignment } from "@/actions/deleteAssignment";
-import { editAssignment } from "@/actions/editAssignment";
+import { LoadingButton } from "../ui/loading-button";
+import { deleteClassroom } from "@/actions/deleteClassroom";
 
-type EditAssignmentFormProps = {
-  assignment: Assignment;
+type EditClassroomFormProps = {
+  classroom: Classroom;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export const EditAssignmentForm = ({
-  assignment,
+export const EditClassroomForm = ({
+  classroom,
   setIsOpen,
-}: EditAssignmentFormProps) => {
+}: EditClassroomFormProps) => {
   const router = useRouter();
 
-  const editAssignmentFormDefaultValues: EditAssignmentFormType = {
-    newName: assignment.name,
-    assignmentId: assignment.id,
+  const editClassroomFormDefaultValues: EditClassroomFormType = {
+    newName: classroom.name,
+    classroomId: classroom.id,
   };
 
-  const form = useForm<EditAssignmentFormType>({
-    resolver: zodResolver(editAssignmentFormSchema),
-    defaultValues: editAssignmentFormDefaultValues,
+  const form = useForm<EditClassroomFormType>({
+    resolver: zodResolver(editClassroomFormSchema),
+    defaultValues: editClassroomFormDefaultValues,
   });
 
   const { executeAsync: executeEdit, isExecuting: isEditing } = useAction(
-    editAssignment,
+    editClassroom,
     {
       onSuccess({ data }) {
         if (!data?.type) return;
 
         const isErroneous =
-          data.type !== EnumEditAssignmentResult.AssignmentEdited;
-
+          data.type !== EnumEditClassroomResult.ClassroomEdited;
         toast({
           title: isErroneous
-            ? "Error in editing Assignment"
-            : "Assignment edited successfully",
-          description: toastDescriptionEditAssignment[data.type],
+            ? "Error in editing classroom"
+            : "Classroom edited successfully",
+          description: toastDescriptionEditClassroom[data.type],
           variant: isErroneous ? "destructive" : "default",
         });
 
@@ -82,19 +81,18 @@ export const EditAssignmentForm = ({
   );
 
   const { executeAsync: executeDelete, isExecuting: isDeleting } = useAction(
-    deleteAssignment,
+    deleteClassroom,
     {
       onSuccess({ data }) {
         if (!data?.type) return;
 
         const isErroneous =
-          data.type !== EnumDeleteAssignmentResult.AssignmentDeleted;
-
+          data.type !== EnumDeleteClassroomResult.ClassroomDeleted;
         toast({
           title: isErroneous
-            ? "Error in deleting assignment"
-            : "Assignment deleted successfully",
-          description: toastDescriptionDeleteAssignment[data.type],
+            ? "Error in deleting classroom"
+            : "Classroom deleted successfully",
+          description: toastDescriptionDeleteClassroom[data.type],
           variant: isErroneous ? "destructive" : "default",
         });
 
@@ -111,7 +109,7 @@ export const EditAssignmentForm = ({
   return (
     <Form {...form}>
       <form
-        id={FormIds.EditAssignment}
+        id={FormIds.EditClassroom}
         onSubmit={form.handleSubmit(executeEdit)}
         className="h-full"
       >
@@ -124,7 +122,7 @@ export const EditAssignmentForm = ({
               <FormControl>
                 <Input required {...field} />
               </FormControl>
-              <FormDescription>Updated name of the assignment</FormDescription>
+              <FormDescription>Updated name of the classroom</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -136,7 +134,7 @@ export const EditAssignmentForm = ({
           isLoading={isDeleting}
           variant="destructive"
           onClick={async () => {
-            await executeDelete({ assignmentId: assignment.id });
+            await executeDelete({ classroomId: classroom.id });
           }}
         >
           Delete
@@ -145,7 +143,7 @@ export const EditAssignmentForm = ({
           disabled={disableActions}
           isLoading={isEditing}
           type="submit"
-          form={FormIds.EditAssignment}
+          form={FormIds.EditClassroom}
         >
           Save
         </LoadingButton>

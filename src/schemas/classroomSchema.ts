@@ -4,6 +4,7 @@ import {
 } from "@/utils/constants/classroom";
 import { z } from "zod";
 import { assignmentSchema } from "./assignmentSchema";
+import { EnumFormMode } from "./formSchema";
 
 export const classroomSchema = z.object({
   id: z.string().min(1),
@@ -12,22 +13,36 @@ export const classroomSchema = z.object({
 
 export type Classroom = z.infer<typeof classroomSchema>;
 
-export const createClassroomFormSchema = z.object({
+export const addEditClassroomSheetPropsSchema = z.union([
+  z.object({
+    mode: z.literal(EnumFormMode.Add),
+  }),
+  z.object({
+    mode: z.literal(EnumFormMode.Edit),
+    classroom: classroomSchema,
+  }),
+]);
+
+export type AddEditClassroomSheetProps = z.infer<
+  typeof addEditClassroomSheetPropsSchema
+>;
+
+export const addClassroomFormSchema = z.object({
   name: z
     .string()
     .min(CLASSROOM_NAME_MIN_LENGTH)
     .max(CLASSROOM_NAME_MAX_LENGTH),
 });
 
-export type CreateClassroomForm = z.infer<typeof createClassroomFormSchema>;
+export type AddClassroomForm = z.infer<typeof addClassroomFormSchema>;
 
-export const EnumCreateClassroomResult = {
-  ClassroomCreated: "classroomCreated",
+export const EnumAddClassroomResult = {
+  ClassroomAdded: "classroomCreated",
   NotAuthorized: "notAuthorized",
   Error: "error",
 } as const;
 
-const createClassroomResultSchema = z.nativeEnum(EnumCreateClassroomResult);
+const createClassroomResultSchema = z.nativeEnum(EnumAddClassroomResult);
 export type CreateClassroomResult = z.infer<typeof createClassroomResultSchema>;
 
 export const classroomDetailsSchema = classroomSchema.extend({
@@ -51,7 +66,7 @@ export const EnumDeleteClassroomResult = {
 const deleteClassroomResultSchema = z.nativeEnum(EnumDeleteClassroomResult);
 export type DeleteClassroomResult = z.infer<typeof deleteClassroomResultSchema>;
 
-export const renameClassroomFormSchema = z.object({
+export const editClassroomFormSchema = z.object({
   classroomId: z.string().min(1),
   newName: z
     .string()
@@ -59,13 +74,13 @@ export const renameClassroomFormSchema = z.object({
     .max(CLASSROOM_NAME_MAX_LENGTH),
 });
 
-export type RenameClassroomForm = z.infer<typeof renameClassroomFormSchema>;
+export type EditClassroomForm = z.infer<typeof editClassroomFormSchema>;
 
-export const EnumRenameClassroomResult = {
-  ClassroomRenamed: "classroomRenamed",
+export const EnumEditClassroomResult = {
+  ClassroomEdited: "classroomEdited",
   NotAuthorized: "notAuthorized",
   Error: "error",
 } as const;
 
-const renameClassroomResultSchema = z.nativeEnum(EnumRenameClassroomResult);
-export type RenameClassroomResult = z.infer<typeof renameClassroomResultSchema>;
+const editClassroomResultSchema = z.nativeEnum(EnumEditClassroomResult);
+export type EditClassroomResult = z.infer<typeof editClassroomResultSchema>;
