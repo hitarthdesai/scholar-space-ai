@@ -5,11 +5,13 @@ import { ProfileData } from "./Profile";
 type ProfileDisplayProps = {
   profileData: ProfileData;
   handleEditClick: () => void;
+  isUserAllowedToEdit: boolean;
 };
 
 export default function ProfileDisplay({
   profileData,
   handleEditClick,
+  isUserAllowedToEdit,
 }: ProfileDisplayProps) {
   return (
     <div className="flex flex-col gap-8 p-8 md:flex-row">
@@ -25,13 +27,14 @@ export default function ProfileDisplay({
         <p className="flex items-center">
           <Mail className="mr-2" /> {profileData.email}
         </p>
-
-        <Button
-          onClick={handleEditClick}
-          className="w-25 rounded bg-blue-500 px-4 py-2 text-white"
-        >
-          Edit Profile
-        </Button>
+        {isUserAllowedToEdit ? (
+          <Button
+            onClick={handleEditClick}
+            className="w-25 rounded bg-blue-500 px-4 py-2 text-white"
+          >
+            Edit Profile
+          </Button>
+        ) : null}
       </div>
 
       <div className="md:w-2/3">

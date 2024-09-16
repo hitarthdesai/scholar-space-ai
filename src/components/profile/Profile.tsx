@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import ProfileDisplay from "./ProfileDisplay";
 import ProfileEditForm from "./ProfileEditForm";
 import { updateUserInformation } from "@/actions/updateUserInformation";
+import { is } from "drizzle-orm";
 
 // Define the types for the profile data
 export type ProfileData = {
@@ -19,6 +20,7 @@ type ProfileProps = {
   email: string;
   userDescription: string;
   userProfileUrl: string;
+  isUserAllowedToEdit: boolean;
 };
 
 export default function Profile({
@@ -27,6 +29,7 @@ export default function Profile({
   email,
   userDescription,
   userProfileUrl,
+  isUserAllowedToEdit,
 }: ProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({
@@ -55,6 +58,7 @@ export default function Profile({
     <ProfileDisplay
       profileData={profileData}
       handleEditClick={() => setIsEditing(true)}
+      isUserAllowedToEdit={isUserAllowedToEdit}
     />
   );
 }
