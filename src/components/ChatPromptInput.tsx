@@ -28,11 +28,10 @@ export type ChatPromptInputProps =
       questionId: string;
     };
 
-export function ChatPromptInput({ type, ...props }: ChatPromptInputProps) {
+export function ChatPromptInput(props: ChatPromptInputProps) {
   const defaultPromptInputValues: ContinueConversationInput = {
-    prompt: "",
-    type,
     ...props,
+    prompt: "",
   };
 
   const router = useRouter();
@@ -68,7 +67,7 @@ export function ChatPromptInput({ type, ...props }: ChatPromptInputProps) {
         });
       }
 
-      if (type === EnumConversationType.Free) {
+      if (props.type === EnumConversationType.Free) {
         router.push(`/chat/${newConversationId}`);
       }
       router.refresh();
