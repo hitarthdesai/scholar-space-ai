@@ -1,14 +1,42 @@
 import { getAssignmentQuestionsFromDb } from "@/utils/classroom/getAssignmentQuestionsFromDb";
-import { AlertOctagonIcon, ShieldQuestionIcon } from "lucide-react";
+import { AlertOctagonIcon, PencilIcon, ShieldQuestionIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import { AddQuestionSheet } from "./AddQuestionSheet";
 import Link from "next/link";
 import { auth } from "@/utils/auth/config";
 import { EnumRole } from "@/schemas/userSchema";
+import { db } from "@/server/db";
+import { questions } from "@/server/db/schema";
+import { eq } from "drizzle-orm";
+import { getObject } from "@/utils/storage/s3/getObject";
+import { AddEditQuestionSheet } from "../question/AddEditQuestionSheet";
+import { EnumFormMode } from "@/schemas/formSchema";
 
 type AssignmentQuestionsProps = {
   assignmentId: string;
 };
+
+function QuestionTitle({ id, name }: { id: string; name: string }) {
+  const namePromise = db
+    .select({ name: questions.name, id: questions.id })
+    .from(questions)
+    .where(eq(questions.id, id))
+    .then((data) => data[0]);
+  const questionPromise = getObject({ fileName: `questions/${id}` });
+  const editPromise = Promise.all([namePromise, questionPromise]);
+
+  return (
+    <li className="flex flex-row items-center">
+      <Link href={`/questions/${id}`}>
+        <Button variant="link">{name}</Button>
+      </Link>
+      <AddEditQuestionSheet mode={EnumFormMode.Edit} editPromise={editPromise}>
+        <Button variant="ghost">
+          <PencilIcon className="h-4 w-4" />
+        </Button>
+      </AddEditQuestionSheet>
+    </li>
+  );
+}
 
 export async function AssignmentQuestions({
   assignmentId,
@@ -26,44 +54,36 @@ export async function AssignmentQuestions({
         <AlertOctagonIcon className="h-24 w-24" />
         <p>No questions found</p>
         {isAuthorizedToAddOrDelete && (
-          <AddQuestionSheet
+          <AddEditQuestionSheet
+            mode={EnumFormMode.Add}
             assignmentId={assignmentId}
-            trigger={
-              <Button className="flex gap-2">
-                Add a question <ShieldQuestionIcon />
-              </Button>
-            }
-          />
+          >
+            <Button className="flex gap-2">
+              Add a question <ShieldQuestionIcon />
+            </Button>
+          </AddEditQuestionSheet>
         )}
       </div>
     );
   }
 
   return (
-    <ul className="flex flex-col gap-4">
-      <div className="">
-        {questions.map((question, index) => (
-          <li key={question.id}>
-            <Link href={`/questions/${question.id}`}>
-              <Button variant="link" className="flex gap-2">
-                Question {index + 1}
-              </Button>
-            </Link>
-          </li>
-        ))}
-      </div>
+    <ol className="flex flex-col">
+      {questions.map(({ id, name }) => (
+        <QuestionTitle key={id} id={id} name={name} />
+      ))}
       {isAuthorizedToAddOrDelete && (
         <li>
-          <AddQuestionSheet
+          <AddEditQuestionSheet
+            mode={EnumFormMode.Add}
             assignmentId={assignmentId}
-            trigger={
-              <Button className="flex gap-2">
-                Add another question <ShieldQuestionIcon />
-              </Button>
-            }
-          />
+          >
+            <Button className="mt-2 flex gap-2">
+              Add another question <ShieldQuestionIcon />
+            </Button>
+          </AddEditQuestionSheet>
         </li>
       )}
-    </ul>
+    </ol>
   );
 }

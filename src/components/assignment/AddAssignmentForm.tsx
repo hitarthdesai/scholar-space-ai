@@ -24,6 +24,8 @@ import { FormIds } from "@/utils/constants/form";
 import { addAssignment } from "@/actions/addAssignment";
 import { type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
+import { SheetFooter } from "../ui/sheet";
+import { LoadingButton } from "../ui/loading-button";
 
 type AddStudentFormComponentProps = {
   classroomId: string;
@@ -45,7 +47,7 @@ export const AddAssignmentFormComponent = ({
     defaultValues: addAssignmentFormDefaultValues,
   });
 
-  const { executeAsync } = useAction(addAssignment, {
+  const { executeAsync, isExecuting: isAdding } = useAction(addAssignment, {
     onSuccess({ data }) {
       if (!data?.type) return;
 
@@ -72,6 +74,7 @@ export const AddAssignmentFormComponent = ({
       <form
         id={FormIds.AddAssignment}
         onSubmit={form.handleSubmit(executeAsync)}
+        className="h-full"
       >
         <FormField
           control={form.control}
@@ -88,6 +91,16 @@ export const AddAssignmentFormComponent = ({
           )}
         />
       </form>
+      <SheetFooter>
+        <LoadingButton
+          disabled={isAdding}
+          isLoading={isAdding}
+          type="submit"
+          form={FormIds.AddAssignment}
+        >
+          Add
+        </LoadingButton>
+      </SheetFooter>
     </Form>
   );
 };

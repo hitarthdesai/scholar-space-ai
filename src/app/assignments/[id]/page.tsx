@@ -1,9 +1,11 @@
 import { AssignmentQuestions } from "@/components/assignment/AssignmentQuestions";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
+import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { auth } from "@/utils/auth/config";
+import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
-import { getAssignmentFromDb } from "@/utils/classroom/getAssignmentFromDb";
+import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
 
 type PageProps = {
@@ -28,18 +30,17 @@ export default async function AssignmentPage({
     <NotAuthorizedToViewPage />;
   }
 
-  const [assignment] = await getAssignmentFromDb({
+  const breadcrumbs = await getBreadcrumbsByPage({
+    page: EnumPage.Assignment,
     assignmentId,
   });
 
   return (
-    <main className="flex h-full flex-col items-center p-4">
-      <div className="w-full text-left font-semibold">
-        Assignment Name: {assignment.name}
-      </div>
-      <div className="h-full w-full grow">
+    <div className="flex h-full w-full flex-col p-4">
+      <PageBreadcrumbs breadcrumbs={breadcrumbs} />
+      <main className="flex h-full grow flex-col">
         <AssignmentQuestions assignmentId={assignmentId} />
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

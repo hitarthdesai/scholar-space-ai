@@ -3,7 +3,7 @@
 import {
   addQuestionFormSchema,
   EnumAddQuestionResult,
-} from "@/schemas/assignmentSchema";
+} from "@/schemas/questionSchema";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
@@ -23,7 +23,7 @@ export const addQuestion = createSafeActionClient()
         return { type: EnumAddQuestionResult.NotAuthorized };
       }
 
-      const { question, assignmentId } = parsedInput;
+      const { question, name, assignmentId } = parsedInput;
       const isAuthorized = await canUserAccessAssignment({
         assignmentId,
         userId,
@@ -48,6 +48,7 @@ export const addQuestion = createSafeActionClient()
 
       await addQuestionToDb({
         questionId: newQuestionId,
+        name,
         assignmentId,
       });
 

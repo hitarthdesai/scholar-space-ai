@@ -1,0 +1,1 @@
+ALTER TABLE `question` ADD `name` text NOT NULL;

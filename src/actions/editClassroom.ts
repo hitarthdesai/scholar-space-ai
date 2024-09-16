@@ -1,16 +1,16 @@
 "use server";
 
 import {
-  EnumRenameClassroomResult,
-  renameClassroomFormSchema,
+  EnumEditClassroomResult,
+  editClassroomFormSchema,
 } from "@/schemas/classroomSchema";
 
 import { auth } from "@/utils/auth/config";
-import { renameClassroomInDb } from "@/utils/classroom/renameClassroomInDb";
+import { editClassroomInDb } from "@/utils/classroom/editClassroomInDb";
 import { createSafeActionClient } from "next-safe-action";
 
-export const renameClassroom = createSafeActionClient()
-  .schema(renameClassroomFormSchema)
+export const editClassroom = createSafeActionClient()
+  .schema(editClassroomFormSchema)
   .action(async ({ parsedInput }) => {
     try {
       const { classroomId, newName } = parsedInput;
@@ -18,17 +18,17 @@ export const renameClassroom = createSafeActionClient()
       const session = await auth();
       const userId = session?.user?.id;
       if (!userId) {
-        return { type: EnumRenameClassroomResult.NotAuthorized };
+        return { type: EnumEditClassroomResult.NotAuthorized };
       }
 
-      await renameClassroomInDb({
+      await editClassroomInDb({
         classroomId: classroomId,
         newName: newName,
       });
 
-      return { type: EnumRenameClassroomResult.ClassroomRenamed };
+      return { type: EnumEditClassroomResult.ClassroomEdited };
     } catch (e) {
       console.error(e);
-      return { type: EnumRenameClassroomResult.Error };
+      return { type: EnumEditClassroomResult.Error };
     }
   });

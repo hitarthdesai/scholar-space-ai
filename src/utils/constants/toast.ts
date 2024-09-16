@@ -1,20 +1,18 @@
 import {
   type AddAssignmentResult,
-  type AddQuestionResult,
   type DeleteAssignmentResult,
-  type RenameAssignmentResult,
+  type EditAssignmentResult,
   EnumAddAssignmentResult,
-  EnumAddQuestionResult,
   EnumDeleteAssignmentResult,
-  EnumRenameAssignmentResult,
+  EnumEditAssignmentResult,
 } from "@/schemas/assignmentSchema";
 import {
   type CreateClassroomResult,
   type DeleteClassroomResult,
-  type RenameClassroomResult,
-  EnumCreateClassroomResult,
+  type EditClassroomResult,
+  EnumAddClassroomResult,
   EnumDeleteClassroomResult,
-  EnumRenameClassroomResult,
+  EnumEditClassroomResult,
 } from "@/schemas/classroomSchema";
 import { EnumLoginResult, type LoginResult } from "@/schemas/loginSchema";
 import {
@@ -27,21 +25,29 @@ import {
   EnumRenameConversationResult,
   EnumDeleteConversationResult,
 } from "@/schemas/chatSchema";
+import {
+  type AddQuestionResult,
+  type DeleteQuestionResult,
+  type EditQuestionResult,
+  EnumAddQuestionResult,
+  EnumDeleteQuestionResult,
+  EnumEditQuestionResult,
+} from "@/schemas/questionSchema";
 
 export const toastDescriptionAuth: Record<LoginResult, string> = {
   [EnumLoginResult.EmailSent]: "User registered successfully.",
   [EnumLoginResult.Error]: "Failed to register user.",
 };
 
-export const toastDescriptionCreateClassroom: Record<
+export const toastDescriptionAddClassroom: Record<
   CreateClassroomResult,
   string
 > = {
-  [EnumCreateClassroomResult.ClassroomCreated]:
+  [EnumAddClassroomResult.ClassroomAdded]:
     "Your classroom was created successfully.",
-  [EnumCreateClassroomResult.NotAuthorized]:
+  [EnumAddClassroomResult.NotAuthorized]:
     "You are not authorized to create a classroom.",
-  [EnumCreateClassroomResult.Error]:
+  [EnumAddClassroomResult.Error]:
     "Unable to create your classroom. Please try again later.",
 };
 
@@ -65,16 +71,16 @@ export const toastDescriptionDeleteClassroom: Record<
     "Unable to delete a classroom. Please try again later.",
 };
 
-export const toastDescriptionRenameClassroom: Record<
-  RenameClassroomResult,
+export const toastDescriptionEditClassroom: Record<
+  EditClassroomResult,
   string
 > = {
-  [EnumRenameClassroomResult.ClassroomRenamed]:
-    "Your classroom was renamed successfully.",
-  [EnumRenameClassroomResult.NotAuthorized]:
-    "You are not authorized to rename this classroom.",
-  [EnumRenameClassroomResult.Error]:
-    "Unable to rename this classroom. Please try again later.",
+  [EnumEditClassroomResult.ClassroomEdited]:
+    "Your classroom was edited successfully.",
+  [EnumEditClassroomResult.NotAuthorized]:
+    "You are not authorized to edit this classroom.",
+  [EnumEditClassroomResult.Error]:
+    "Unable to edit this classroom. Please try again later.",
 };
 
 export const toastDescriptionDeleteAssignment: Record<
@@ -101,16 +107,16 @@ export const toastDescriptionAddAssignment: Record<
     "Unable to create an assignment. Please try again later.",
 };
 
-export const toastDescriptionRenameAssignment: Record<
-  RenameAssignmentResult,
+export const toastDescriptionEditAssignment: Record<
+  EditAssignmentResult,
   string
 > = {
-  [EnumRenameAssignmentResult.AssignmentRenamed]:
-    "Your assignment was renamed successfully.",
-  [EnumRenameAssignmentResult.NotAuthorized]:
-    "You are not authorized to rename this assignment.",
-  [EnumRenameAssignmentResult.Error]:
-    "Unable to rename this assignment. Please try again later.",
+  [EnumEditAssignmentResult.AssignmentEdited]:
+    "Your assignment was edited successfully.",
+  [EnumEditAssignmentResult.NotAuthorized]:
+    "You are not authorized to edit this assignment.",
+  [EnumEditAssignmentResult.Error]:
+    "Unable to edit this assignment. Please try again later.",
 };
 
 export const toastDescriptionAddQuestion: Record<AddQuestionResult, string> = {
@@ -120,6 +126,30 @@ export const toastDescriptionAddQuestion: Record<AddQuestionResult, string> = {
   [EnumAddQuestionResult.NotUploaded]: "Unable to upload your question.",
   [EnumAddQuestionResult.Error]:
     "Unable to add a question. Please try again later.",
+};
+
+export const toastDescriptionEditQuestion: Record<EditQuestionResult, string> =
+  {
+    [EnumEditQuestionResult.QuestionEdited]:
+      "The question was edited successfully.",
+    [EnumEditQuestionResult.NotAuthorized]:
+      "You are not authorized to edit this question.",
+    [EnumEditQuestionResult.NotUploaded]:
+      "Unable to upload your updated question.",
+    [EnumEditQuestionResult.Error]:
+      "Unable to edit this question. Please try again later.",
+  };
+
+export const toastDescriptionDeleteQuestion: Record<
+  DeleteQuestionResult,
+  string
+> = {
+  [EnumDeleteQuestionResult.QuestionDeleted]:
+    "The question was deleted successfully.",
+  [EnumDeleteQuestionResult.NotAuthorized]:
+    "You are not authorized to delete this question.",
+  [EnumDeleteQuestionResult.Error]:
+    "Unable to delete this question. Please try again later.",
 };
 
 export const toastDescriptionRenameConversation: Record<
