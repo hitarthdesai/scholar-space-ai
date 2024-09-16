@@ -23,7 +23,7 @@ export const addQuestion = createSafeActionClient()
         return { type: EnumAddQuestionResult.NotAuthorized };
       }
 
-      const { question, name, assignmentId } = parsedInput;
+      const { question, name, assignmentId, starterCode } = parsedInput;
       const isAuthorized = await canUserAccessAssignment({
         assignmentId,
         userId,
@@ -34,15 +34,27 @@ export const addQuestion = createSafeActionClient()
       }
 
       const newQuestionId = randomUUID();
-      const fileName = `questions/${newQuestionId}`;
-      const buffer = Buffer.from(question, "utf-8");
-      const didUploadSucceed = await putObject({
-        body: buffer,
-        fileName,
+      const questionTextFileName = `questions/${newQuestionId}/question.txt`;
+      const questionTextBuffer = Buffer.from(question, "utf-8");
+      const didQuestionTextUploadSucceed = await putObject({
+        body: questionTextBuffer,
+        fileName: questionTextFileName,
         contentType: "text/plain",
       });
 
-      if (!didUploadSucceed) {
+      if (!didQuestionTextUploadSucceed) {
+        return { type: EnumAddQuestionResult.NotUploaded };
+      }
+
+      const starterCodeFileName = `questions/${newQuestionId}/starterCode.txt`;
+      const starterCodeBuffer = Buffer.from(starterCode, "utf-8");
+      const didStarterCodeUploadSucceed = await putObject({
+        body: starterCodeBuffer,
+        fileName: starterCodeFileName,
+        contentType: "text/plain",
+      });
+
+      if (!didStarterCodeUploadSucceed) {
         return { type: EnumAddQuestionResult.NotUploaded };
       }
 

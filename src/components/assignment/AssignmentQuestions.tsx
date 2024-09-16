@@ -21,8 +21,18 @@ function QuestionTitle({ id, name }: { id: string; name: string }) {
     .from(questions)
     .where(eq(questions.id, id))
     .then((data) => data[0]);
-  const questionPromise = getObject({ fileName: `questions/${id}` });
-  const editPromise = Promise.all([namePromise, questionPromise]);
+  const questionPromise = getObject({
+    fileName: `questions/${id}/question.txt`,
+  });
+  const starterCodePromise = getObject({
+    fileName: `questions/${id}/starterCode.txt`,
+  });
+
+  const editPromise = Promise.all([
+    namePromise,
+    questionPromise,
+    starterCodePromise,
+  ]);
 
   return (
     <li className="flex flex-row items-center">

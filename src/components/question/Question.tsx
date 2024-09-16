@@ -14,6 +14,7 @@ import { getObject } from "@/utils/storage/s3/getObject";
 import { SaveCodeButton } from "./SaveCodeButton";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
+import { ResetCodeButton } from "./ResetCodeButton";
 
 type QuestionProps = {
   questionId: string;
@@ -25,14 +26,21 @@ export async function Question({ questionId }: QuestionProps) {
   assert(!!userId, "User must be logged in to view this page");
 
   const question =
-    (await getObject({ fileName: `questions/${questionId}` })) ?? "";
-  const questionAttempt =
-    (await getObject({
-      fileName: `questionAttempts/${questionId}/${userId}`,
-    })) ?? "";
+    (await getObject({ fileName: `questions/${questionId}/question.txt` })) ??
+    "";
+
+  let code = await getObject({
+    fileName: `questionAttempts/${questionId}/${userId}`,
+  });
+  if (!code) {
+    code =
+      (await getObject({
+        fileName: `questions/${questionId}/starterCode.txt`,
+      })) ?? "";
+  }
 
   return (
-    <CodeProvider questionId={questionId} initialValue={questionAttempt}>
+    <CodeProvider questionId={questionId} initialValue={code}>
       <ResizablePanelGroup
         direction="horizontal"
         className="flex h-full w-full gap-2"
@@ -52,6 +60,7 @@ export async function Question({ questionId }: QuestionProps) {
             <Button className="mr-auto flex items-center justify-center gap-2 bg-green-700 text-white hover:bg-green-300 hover:text-black">
               Submit <SendHorizonalIcon aria-hidden />
             </Button>
+            <ResetCodeButton />
             <SaveCodeButton />
             <RunCodeButton />
           </div>

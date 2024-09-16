@@ -22,7 +22,7 @@ export const editQuestion = createSafeActionClient()
         return { type: EnumEditQuestionResult.NotAuthorized };
       }
 
-      const { question, name, questionId } = parsedInput;
+      const { question, name, questionId, starterCode } = parsedInput;
       const isAuthorized = await canUserAccessQuestion({
         questionId,
         userId,
@@ -33,9 +33,23 @@ export const editQuestion = createSafeActionClient()
         return { type: EnumEditQuestionResult.NotAuthorized };
       }
 
-      if (!!question) {
-        const fileName = `questions/${questionId}`;
+      if (!!question && question.length > 0) {
+        const fileName = `questions/${questionId}/question.txt`;
         const buffer = Buffer.from(question, "utf-8");
+        const didUploadSucceed = await putObject({
+          body: buffer,
+          fileName,
+          contentType: "text/plain",
+        });
+
+        if (!didUploadSucceed) {
+          return { type: EnumEditQuestionResult.NotUploaded };
+        }
+      }
+
+      if (!!starterCode && starterCode.length > 0) {
+        const fileName = `questions/${questionId}/starterCode.txt`;
+        const buffer = Buffer.from(starterCode, "utf-8");
         const didUploadSucceed = await putObject({
           body: buffer,
           fileName,

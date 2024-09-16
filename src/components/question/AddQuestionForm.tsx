@@ -38,9 +38,10 @@ export const AddQuestionForm = ({
   setIsOpen,
 }: AddQuestionFormComponentProps) => {
   const addQuestionFormDefaultValues: AddQuestionFormType = {
-    question: "",
-    name: "",
     assignmentId,
+    name: "",
+    question: "",
+    starterCode: "",
   };
 
   const router = useRouter();
@@ -76,7 +77,7 @@ export const AddQuestionForm = ({
       <form
         id={FormIds.AddQuestion}
         onSubmit={form.handleSubmit(executeAsync)}
-        className="h-full"
+        className="flex h-full flex-col gap-4"
       >
         <FormField
           control={form.control}
@@ -102,6 +103,22 @@ export const AddQuestionForm = ({
                 <Textarea required {...field} />
               </FormControl>
               <FormDescription>The question text</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="starterCode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Starter code</FormLabel>
+              <FormControl>
+                <Textarea required {...field} />
+              </FormControl>
+              <FormDescription>
+                Stubbed code to assist the user in solving questions
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
