@@ -22,6 +22,7 @@ export default async function ProfilePage() {
         email={userInfo.email}
         userDescription={userDescription}
         userProfileUrl={userProfileUrl}
+        isUserAllowedToEdit={true}
       />
     </main>
   );

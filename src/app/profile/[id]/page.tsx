@@ -13,15 +13,16 @@ type PageProps = {
 export default async function ProfilePage({
   params: { id: userId },
 }: PageProps) {
-  //   const session = await auth();
-  //   const userId = session?.user?.id;
-  //   assert(!!userId, "User must be logged in to view this page");
+  const session = await auth();
+  const sessionuserId = session?.user?.id;
+  assert(!!sessionuserId, "User must be logged in to view this page");
 
   const userInfo = await getUserInformationFromDb({ userId });
   const userDescription =
     (await getObject({ fileName: `users/${userId}/description` })) ??
     "No information has been added yet.";
-  const userProfileUrl = "./default-profile-photo.jpg";
+  const userProfileUrl = "../default-profile-photo.jpg";
+  const isUserAllowedToEdit = userId === sessionuserId;
   return (
     <main className="flex h-full flex-col justify-between p-4">
       <Profile
@@ -30,6 +31,7 @@ export default async function ProfilePage({
         email={userInfo.email}
         userDescription={userDescription}
         userProfileUrl={userProfileUrl}
+        isUserAllowedToEdit={isUserAllowedToEdit}
       />
     </main>
   );
