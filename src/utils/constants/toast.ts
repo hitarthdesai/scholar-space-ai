@@ -29,11 +29,11 @@ import {
   type AddQuestionResult,
   type DeleteQuestionResult,
   type EditQuestionResult,
+  type ResetCodeResult,
   EnumAddQuestionResult,
   EnumDeleteQuestionResult,
   EnumEditQuestionResult,
   EnumResetCodeResult,
-  ResetCodeResult,
 } from "@/schemas/questionSchema";
 
 export const toastDescriptionAuth: Record<LoginResult, string> = {
