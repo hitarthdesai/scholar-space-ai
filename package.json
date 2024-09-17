@@ -29,6 +29,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
+    "@tanstack/react-table": "^8.20.5",
     "@uidotdev/usehooks": "^2.4.1",
     "@uiw/react-markdown-preview": "^5.1.2",
     "ai": "^3.2.45",
