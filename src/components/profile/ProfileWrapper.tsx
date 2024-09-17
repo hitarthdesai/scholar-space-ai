@@ -31,7 +31,7 @@ export default async function ProfileWrapper({ userId }: ProfileProps) {
       email={userInfo.email}
       userDescription={userDescription}
       userProfileUrl={userProfileUrl}
-      isUserAllowedToEdit={sessionUserId === userId}
+      isUserAllowedToEdit={sessionUserId === profileUserId}
     />
   );
 }
