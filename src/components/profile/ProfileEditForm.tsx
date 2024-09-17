@@ -2,7 +2,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ProfileData } from "./Profile";
-
+import { User } from "lucide-react";
 type ProfileEditFormProps = {
   profileData: ProfileData;
   setProfileData: (data: ProfileData) => void;
@@ -35,11 +35,7 @@ export default function ProfileEditForm({
       className="flex flex-col gap-8 p-8 md:flex-row"
     >
       <div className="flex flex-col gap-3 md:w-1/3">
-        <img
-          src={profileData.profileUrl}
-          alt="Profile Photo"
-          className="mb-4 h-40 w-40 rounded-full object-cover"
-        />
+        <User className="mb-4 h-40 w-40 rounded-full bg-white object-cover text-slate-900" />
 
         <div className="mb-2">
           <label htmlFor="name" className="font-semibold text-white">

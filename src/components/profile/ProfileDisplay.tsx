@@ -1,7 +1,7 @@
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProfileData } from "./Profile";
-
+import { User } from "lucide-react";
 type ProfileDisplayProps = {
   profileData: ProfileData;
   handleEditClick: () => void;
@@ -16,11 +16,7 @@ export default function ProfileDisplay({
   return (
     <div className="flex flex-col gap-8 p-8 md:flex-row">
       <div className="flex flex-col gap-3 md:w-1/3">
-        <img
-          src={profileData.profileUrl}
-          alt="Profile Photo"
-          className="mb-4 h-40 w-40 rounded-full object-cover"
-        />
+        <User className="mb-4 h-40 w-40 rounded-full bg-white object-cover text-slate-900" />
         <h2 className="items-center text-xl font-semibold">
           {profileData.name}
         </h2>
