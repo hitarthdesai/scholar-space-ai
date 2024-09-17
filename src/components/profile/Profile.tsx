@@ -5,37 +5,28 @@ import ProfileDisplay from "./ProfileDisplay";
 import ProfileEditForm from "./ProfileEditForm";
 import { updateUserInformation } from "@/actions/updateUserInformation";
 
-// Define the types for the profile data
 export type ProfileData = {
   name: string;
   email: string;
   aboutMe: string;
-  profileUrl: string;
 };
 
 type ProfileProps = {
   userId: string;
-  name: string | null;
-  email: string;
-  userDescription: string;
-  userProfileUrl: string;
+  userData: ProfileData;
   isUserAllowedToEdit: boolean;
 };
 
 export default function Profile({
   userId,
-  name,
-  email,
-  userDescription,
-  userProfileUrl,
+  userData,
   isUserAllowedToEdit,
 }: ProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({
-    name: name || "Username",
-    email: email,
-    aboutMe: userDescription,
-    profileUrl: userProfileUrl,
+    name: userData.name,
+    email: userData.email,
+    aboutMe: userData.aboutMe,
   });
 
   function handleSave(updatedProfileData: ProfileData) {
