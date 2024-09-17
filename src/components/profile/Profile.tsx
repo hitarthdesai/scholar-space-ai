@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import ProfileDisplay from "./ProfileDisplay";
 import ProfileEditForm from "./ProfileEditForm";
 import { updateUserInformation } from "@/actions/updateUserInformation";
-import { is } from "drizzle-orm";
 
 // Define the types for the profile data
 export type ProfileData = {
