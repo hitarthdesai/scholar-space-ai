@@ -6,7 +6,10 @@ import {
   EnumMessageRole,
 } from "@/schemas/chatSchema";
 import { auth } from "@/utils/auth/config";
-import { saveMessageToDb } from "@/utils/chat/saveMessageToDb";
+import {
+  saveMessageToDb,
+  type SaveMessageToDbInput,
+} from "@/utils/chat/saveMessageToDb";
 import {
   createStreamableValue,
   type StreamableValue,
@@ -18,6 +21,13 @@ import { SYSTEM_PROMPT } from "@/utils/constants/chat";
 import { createSafeActionClient } from "next-safe-action";
 import { canUserAccessQuestion } from "@/utils/classroom/canUserAccessQuestion";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
+import { db } from "@/server/db";
+import {
+  conversations,
+  questionAttempts,
+  userConversations,
+} from "@/server/db/schema";
+import { and, eq } from "drizzle-orm";
 
 type ContinueConversationOutput = {
   stream: StreamableValue;
@@ -39,33 +49,89 @@ export const continueConversation = createSafeActionClient()
         throw new Error("User session does not exist");
       }
 
-      if (parsedInput.type === EnumConversationType.Question) {
-        if (parsedInput.questionId) {
-          const isAuthorized = await canUserAccessQuestion({
-            accessType: EnumAccessType.Read,
-            userId,
-            questionId: parsedInput.questionId,
-          });
+      const saveMessageToDbArgs: SaveMessageToDbInput = {
+        by: EnumMessageRole.User,
+        message: parsedInput.prompt,
+        conversationId: "",
+      };
 
-          if (!isAuthorized) {
-            throw new Error("User is not allowed to attempt this question");
+      switch (parsedInput.type) {
+        case EnumConversationType.Free: {
+          if (!parsedInput.conversationId) {
+            const [{ id }] = await db
+              .insert(conversations)
+              .values({
+                type: parsedInput.type,
+              })
+              .returning({ id: conversations.id });
+            saveMessageToDbArgs.conversationId = id;
+          } else {
+            saveMessageToDbArgs.conversationId = parsedInput.conversationId;
           }
+
+          break;
         }
+
+        case EnumConversationType.Question:
+          {
+            const isAuthorized = await canUserAccessQuestion({
+              accessType: EnumAccessType.Read,
+              userId,
+              questionId: parsedInput.questionId,
+            });
+
+            if (!isAuthorized) {
+              throw new Error("User is not allowed to attempt this question");
+            }
+
+            await db.transaction(async (tx) => {
+              const attempts = await tx
+                .select()
+                .from(questionAttempts)
+                .where(
+                  and(
+                    eq(questionAttempts.questionId, parsedInput.questionId),
+                    eq(questionAttempts.userId, userId)
+                  )
+                );
+
+              const _conversationId = attempts.at(0)?.conversationId;
+              if (!_conversationId) {
+                const [{ id }] = await tx
+                  .insert(conversations)
+                  .values({
+                    type: parsedInput.type,
+                  })
+                  .returning({ id: conversations.id });
+
+                await tx
+                  .insert(userConversations)
+                  .values({ conversationId: id, userId });
+
+                saveMessageToDbArgs.conversationId = id;
+              } else {
+                saveMessageToDbArgs.conversationId = _conversationId;
+              }
+
+              if (attempts.length === 0) {
+                await tx.insert(questionAttempts).values([
+                  {
+                    userId,
+                    questionId: parsedInput.questionId,
+                    conversationId: saveMessageToDbArgs.conversationId,
+                    answer: "",
+                  },
+                ]);
+              }
+            });
+          }
+
+          break;
       }
 
       const { conversationId } = await saveMessageToDb({
-        message: parsedInput.prompt,
+        ...saveMessageToDbArgs,
         by: EnumMessageRole.User,
-        userId,
-        ...(parsedInput.type === EnumConversationType.Free
-          ? {
-              conversationId: parsedInput.conversationId,
-              questionId: undefined,
-            }
-          : {
-              conversationId: undefined,
-              questionId: parsedInput.questionId,
-            }),
       });
 
       let fullResponse = "";
@@ -94,10 +160,9 @@ export const continueConversation = createSafeActionClient()
         ]);
 
         await saveMessageToDb({
-          message: fullResponse,
+          ...saveMessageToDbArgs,
           by: EnumMessageRole.Assistant,
-          userId,
-          conversationId,
+          message: fullResponse,
         });
         stream.done();
       })();

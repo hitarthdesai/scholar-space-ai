@@ -29,9 +29,11 @@ import {
   type AddQuestionResult,
   type DeleteQuestionResult,
   type EditQuestionResult,
+  type ResetCodeResult,
   EnumAddQuestionResult,
   EnumDeleteQuestionResult,
   EnumEditQuestionResult,
+  EnumResetCodeResult,
 } from "@/schemas/questionSchema";
 
 export const toastDescriptionAuth: Record<LoginResult, string> = {
@@ -174,4 +176,10 @@ export const toastDescriptionDeleteConversation: Record<
     "You are not authorized to delete this conversation.",
   [EnumDeleteConversationResult.Error]:
     "Unable to delete conversation. Please try again later.",
+};
+
+export const toastDescriptionResetCode: Record<ResetCodeResult, string> = {
+  [EnumResetCodeResult.CodeReset]: "The code was reset successfully.",
+  [EnumResetCodeResult.NotAuthorized]: "You are not authorized to reset code.",
+  [EnumResetCodeResult.Error]: "Unable to reset code. Please try again later.",
 };

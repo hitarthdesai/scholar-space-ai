@@ -49,9 +49,10 @@ export const EditQuestionForm = ({
     editFormDefaultValuesSchema.safeParse(_editQuestionData);
 
   const editQuestionFormDefaultValues: EditQuestionFormType = {
+    questionId: data?.[0].id ?? "",
     name: data?.[0]?.name ?? undefined,
     question: data?.[1] ?? undefined,
-    questionId: data?.[0].id ?? "",
+    starterCode: data?.[2] ?? undefined,
   };
 
   const router = useRouter();
@@ -89,8 +90,10 @@ export const EditQuestionForm = ({
     const hasNameChanged = data.name !== editQuestionFormDefaultValues.name;
     const hasQuestionChanged =
       data.question !== editQuestionFormDefaultValues.question;
+    const hasStarterCodeChanged =
+      data.starterCode !== editQuestionFormDefaultValues.starterCode;
 
-    if (!hasNameChanged && !hasQuestionChanged) {
+    if (!hasNameChanged && !hasQuestionChanged && !hasStarterCodeChanged) {
       toast({
         title: "No changes detected",
         description: "You haven't made any changes to the form.",
@@ -103,6 +106,7 @@ export const EditQuestionForm = ({
       ...data,
       name: hasNameChanged ? data.name : undefined,
       question: hasQuestionChanged ? data.question : undefined,
+      starterCode: hasStarterCodeChanged ? data.starterCode : undefined,
     });
   };
 
@@ -141,9 +145,9 @@ export const EditQuestionForm = ({
   return (
     <Form {...form}>
       <form
-        className="h-full"
         id={FormIds.EditQuestion}
         onSubmit={form.handleSubmit(onSubmit)}
+        className="flex h-full flex-col gap-4"
       >
         <FormField
           control={form.control}
@@ -169,6 +173,20 @@ export const EditQuestionForm = ({
                 <Textarea required {...field} />
               </FormControl>
               <FormDescription>Updated question text</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="starterCode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Starter code</FormLabel>
+              <FormControl>
+                <Textarea required {...field} />
+              </FormControl>
+              <FormDescription>Updated starter code</FormDescription>
               <FormMessage />
             </FormItem>
           )}

@@ -104,7 +104,7 @@ export const continueConversationInputSchema = z.union([
       .string()
       .min(CHAT_PROMPT_INPUT_MIN_LENGTH)
       .max(CHAT_PROMPT_INPUT_MAX_LENGTH),
-    questionId: z.string().optional(),
+    questionId: z.string(),
   }),
 ]);
 
