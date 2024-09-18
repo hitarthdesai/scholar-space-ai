@@ -1,4 +1,4 @@
-import ProfileWrapper from "@/components/profile/ProfileWrapper";
+import ProfileWrapper from "@/components/profile/Profile";
 
 type PageProps = {
   params: {
