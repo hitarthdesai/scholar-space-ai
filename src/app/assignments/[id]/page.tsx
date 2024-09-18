@@ -1,19 +1,12 @@
 import { AssignmentQuestions } from "@/components/assignment/AssignmentQuestions";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { EnumRole } from "@/schemas/userSchema";
+import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
+import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { auth } from "@/utils/auth/config";
-import { getAssignmentFromDb } from "@/utils/classroom/getAssignmentFromDb";
+import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
+import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
+import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
-import { SchoolIcon } from "lucide-react";
-import Link from "next/link";
 
 type PageProps = {
   params: {
@@ -25,45 +18,29 @@ export default async function AssignmentPage({
   params: { id: assignmentId },
 }: PageProps) {
   const session = await auth();
-
-  const role = session?.user?.role;
-  if (role === EnumRole.Student) {
-    return <h1>Student Assignment Page</h1>;
-  }
-
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
-  const _assignments = await getAssignmentFromDb({
+
+  const isAuthorized = await canUserAccessAssignment({
     assignmentId,
     userId,
+    accessType: EnumAccessType.Read,
   });
-
-  if (!_assignments || _assignments.length === 0) {
+  if (!isAuthorized) {
     <NotAuthorizedToViewPage />;
   }
 
-  const assignment = _assignments[0];
+  const breadcrumbs = await getBreadcrumbsByPage({
+    page: EnumPage.Assignment,
+    assignmentId,
+  });
 
   return (
-    <main className="flex h-full flex-col items-center p-4">
-      <Card className="flex w-full items-center justify-between">
-        <CardHeader>
-          <CardTitle>{assignment.name}</CardTitle>
-          <CardDescription>
-            for classroom: {assignment.classroomName}
-          </CardDescription>
-        </CardHeader>
-        <CardFooter className="flex items-center justify-center p-0 pr-6">
-          <Link href={`/classrooms/${assignment.classroomId}`}>
-            <Button variant="outline" className="flex gap-2">
-              Go to classroom <SchoolIcon />
-            </Button>
-          </Link>
-        </CardFooter>
-      </Card>
-      <div className="h-full w-full grow">
+    <div className="flex h-full w-full flex-col p-4">
+      <PageBreadcrumbs breadcrumbs={breadcrumbs} />
+      <main className="flex h-full grow flex-col">
         <AssignmentQuestions assignmentId={assignmentId} />
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

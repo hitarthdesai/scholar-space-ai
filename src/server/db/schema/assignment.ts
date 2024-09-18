@@ -17,14 +17,11 @@ export const assignments = sqliteTable("assignment", {
 });
 
 export const questions = sqliteTable("question", {
-  id: text("id")
-    .primaryKey()
-    .notNull()
-    .$defaultFn(() => randomUUID()),
+  id: text("id").primaryKey().notNull(),
   assignmentId: text("assignmentId")
     .notNull()
     .references(() => assignments.id, { onDelete: "cascade" }),
-  question: text("question", { length: 255 }).notNull(),
+  name: text("name").notNull(),
 });
 
 export const classroomAssignments = sqliteTable("classroomAssignment", {
@@ -50,7 +47,7 @@ export const classroomAssignmentsRelations = relations(
   })
 );
 
-export const userQuestions = sqliteTable("userQuestion", {
+export const questionAttempts = sqliteTable("questionAttempt", {
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
@@ -63,17 +60,20 @@ export const userQuestions = sqliteTable("userQuestion", {
   answer: text("answer", { length: 255 }).notNull(),
 });
 
-export const userQuestionsRelations = relations(userQuestions, ({ one }) => ({
-  user: one(users, {
-    fields: [userQuestions.userId],
-    references: [users.id],
-  }),
-  question: one(questions, {
-    fields: [userQuestions.questionId],
-    references: [questions.id],
-  }),
-  conversation: one(conversations, {
-    fields: [userQuestions.conversationId],
-    references: [conversations.id],
-  }),
-}));
+export const questionAttemptsRelations = relations(
+  questionAttempts,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [questionAttempts.userId],
+      references: [users.id],
+    }),
+    question: one(questions, {
+      fields: [questionAttempts.questionId],
+      references: [questions.id],
+    }),
+    conversation: one(conversations, {
+      fields: [questionAttempts.conversationId],
+      references: [conversations.id],
+    }),
+  })
+);

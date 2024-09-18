@@ -13,10 +13,16 @@ type ChatProps = ChatPromptInputProps & {
 export function Chat({ messages, ...props }: ChatProps) {
   return (
     <AI initialAIState={messages ?? []} initialUIState={messages ?? []}>
-      <div className="flex h-full w-full justify-center">
-        <div className="flex h-full w-full max-w-full flex-col justify-between p-2 pb-0 sm:max-w-2xl">
-          <ChatMessages />
-          <ChatPromptInput {...props} />
+      <div className="flex h-full flex-col">
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="mx-auto flex w-full max-w-2xl flex-col">
+            <ChatMessages />
+          </div>
+        </div>
+        <div className="bottom-0 mx-auto w-full max-w-2xl items-center justify-center bg-background p-2">
+          <div className="w-full max-w-2xl justify-center">
+            <ChatPromptInput {...props} />
+          </div>
         </div>
       </div>
     </AI>

@@ -2,16 +2,19 @@ import { db } from "@/server/db";
 import { questions } from "@/server/db/schema";
 
 type AddQuestionToDbProps = {
-  question: string;
+  questionId: string;
+  name: string;
   assignmentId: string;
 };
 
 export async function addQuestionToDb({
-  question,
+  questionId,
+  name,
   assignmentId,
 }: AddQuestionToDbProps) {
   return db.insert(questions).values({
-    question,
+    id: questionId,
+    name,
     assignmentId,
   });
 }

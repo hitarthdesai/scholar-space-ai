@@ -22,18 +22,12 @@ export const addAssignment = createSafeActionClient()
         return { type: EnumAddAssignmentResult.NotAuthorized };
       }
 
-      // There is some problem with the the workspace/user TS version
-      // that causes TS to not recognize the type of parsedInput
-      // TODO: Fix this TS issue so that parsedInput has proper typing
       const { name, classroomId } = parsedInput;
       const _classrooms = await db
         .select()
         .from(classrooms)
         .where(
-          and(
-            eq(classrooms.id, classroomId as string),
-            eq(classrooms.teacherId, userId)
-          )
+          and(eq(classrooms.id, classroomId), eq(classrooms.teacherId, userId))
         );
 
       if (!_classrooms || _classrooms.length === 0) {

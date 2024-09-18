@@ -1,6 +1,11 @@
-import { Question } from "@/components/assignment/Question";
+import { Question } from "@/components/question/Question";
+import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
+import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
+import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { auth } from "@/utils/auth/config";
-import { getQuestionFromDb } from "@/utils/classroom/getQuestionFromDb";
+import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
+import { canUserAccessQuestion } from "@/utils/classroom/canUserAccessQuestion";
+import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
 
 type PageProps = {
@@ -16,12 +21,27 @@ export default async function QuestionPage({
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
 
-  const _questions = await getQuestionFromDb({ questionId, userId });
-  const question = _questions[0];
+  const isAuthorized = await canUserAccessQuestion({
+    questionId,
+    userId,
+    accessType: EnumAccessType.Read,
+  });
+
+  if (!isAuthorized) {
+    return <NotAuthorizedToViewPage />;
+  }
+
+  const breadcrumbs = await getBreadcrumbsByPage({
+    page: EnumPage.Question,
+    questionId,
+  });
 
   return (
-    <main className="flex h-full w-full flex-col items-center justify-center p-4">
-      <Question question={question} />
-    </main>
+    <div className="flex h-full w-full flex-col gap-4 p-4">
+      <PageBreadcrumbs breadcrumbs={breadcrumbs} />
+      <main className="grow">
+        <Question questionId={questionId} />
+      </main>
+    </div>
   );
 }

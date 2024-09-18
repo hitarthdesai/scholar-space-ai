@@ -32,7 +32,7 @@ export async function LoggedInHeader() {
         </Link>
       </div>
       {/* TODO: Bring back nav menu on mobile screens */}
-      <div className="group hidden flex-row items-center justify-center gap-4 lg:flex lg:gap-6">
+      <div className="hidden flex-row items-center justify-center gap-4 sm:flex lg:gap-6">
         {/* TODO: Highlight active item in here */}
         {linksToDisplay.map((link, index) => (
           <Link
@@ -69,6 +69,14 @@ export async function LoggedInHeader() {
             <DropdownMenuItem>
               <Link href="/profile">Profile</Link>
             </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            {linksToDisplay.map((link, index) => (
+              <DropdownMenuItem key={index}>
+                <Link href={link.href}>{link.label}</Link>
+              </DropdownMenuItem>
+            ))}
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
