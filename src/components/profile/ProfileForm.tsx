@@ -33,17 +33,17 @@ export type ProfileData = {
   aboutMe: string;
 };
 
-type ProfileEditFormProps = {
+type ProfileFormProps = {
   initialProfileData: ProfileData;
   userId: string;
   isUserAllowedToEdit: boolean;
 };
 
-export default function ProfileEditForm({
+export default function ProfileForm({
   initialProfileData,
   userId,
   isUserAllowedToEdit,
-}: ProfileEditFormProps) {
+}: ProfileFormProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const updateUserInformationDefaultValues: EditProfileFormType = {

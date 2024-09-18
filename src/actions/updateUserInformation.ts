@@ -14,7 +14,7 @@ export const updateUserInformation = createSafeActionClient()
   .schema(updateUserInformationFormSchema)
   .action(async ({ parsedInput }) => {
     try {
-      const { userId, newName, userDescription, email } = parsedInput;
+      const { userId, newName, userDescription } = parsedInput;
 
       const session = await auth();
       const sessionUserId = session?.user?.id;
