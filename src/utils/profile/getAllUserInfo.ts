@@ -1,12 +1,13 @@
 import { getUserInformationFromDb } from "./getUserInformationFromDb";
 import { getObject } from "../storage/s3/getObject";
-import { ProfileData } from "@/components/profile/Profile";
+import { ProfileData } from "@/components/profile/ProfileForm";
 
 type GetAllUserInfoProps = {
   userId: string;
 };
 
 export async function getAllUserInfo({ userId }: GetAllUserInfoProps) {
+  console.log("userId", userId);
   const userInfoFromDb = await getUserInformationFromDb({ userId: userId });
   const userDescription =
     (await getObject({ fileName: `users/${userId}/description` })) ??

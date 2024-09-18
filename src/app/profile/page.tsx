@@ -1,4 +1,4 @@
-import ProfileWrapper from "@/components/profile/ProfileWrapper";
+import ProfileWrapper from "@/components/profile/Profile";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
 

@@ -1,53 +1,28 @@
-"use client";
+"use server";
 
-import React, { useState } from "react";
-import ProfileDisplay from "./ProfileDisplay";
-import ProfileEditForm from "./ProfileEditForm";
-import { updateUserInformation } from "@/actions/updateUserInformation";
-
-export type ProfileData = {
-  name: string;
-  email: string;
-  aboutMe: string;
-};
+import React from "react";
+import { auth } from "@/utils/auth/config";
+import assert from "assert";
+import { getAllUserInfo } from "@/utils/profile/getAllUserInfo";
+import ProfileEditForm from "./ProfileForm";
 
 type ProfileProps = {
   userId: string;
-  userData: ProfileData;
-  isUserAllowedToEdit: boolean;
 };
 
-export default function Profile({
-  userId,
-  userData,
-  isUserAllowedToEdit,
-}: ProfileProps) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState<ProfileData>({
-    name: userData.name,
-    email: userData.email,
-    aboutMe: userData.aboutMe,
-  });
+export default async function ProfileWrapper({ userId }: ProfileProps) {
+  const session = await auth();
+  const sessionUserId = session?.user?.id;
+  assert(!!sessionUserId, "User must be logged in to view this page");
 
-  function handleSave(updatedProfileData: ProfileData) {
-    setIsEditing(false);
-    updateUserInformation({
-      userId,
-      newName: updatedProfileData.name,
-      userDescription: updatedProfileData.aboutMe,
-    });
-  }
+  const isUserAllowedToEdit = sessionUserId === userId;
 
-  return isEditing ? (
+  const userData = await getAllUserInfo({ userId });
+
+  return (
     <ProfileEditForm
-      profileData={profileData}
-      setProfileData={setProfileData}
-      handleSave={handleSave}
-    />
-  ) : (
-    <ProfileDisplay
-      profileData={profileData}
-      handleEditClick={() => setIsEditing(true)}
+      userId={userId}
+      initialProfileData={userData}
       isUserAllowedToEdit={isUserAllowedToEdit}
     />
   );

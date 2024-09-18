@@ -14,14 +14,13 @@ export const updateUserInformation = createSafeActionClient()
   .schema(updateUserInformationFormSchema)
   .action(async ({ parsedInput }) => {
     try {
-      const { userId, newName, userDescription } = parsedInput;
+      const { userId, newName, userDescription, email } = parsedInput;
 
       const session = await auth();
       const sessionUserId = session?.user?.id;
       if (!userId || userId !== sessionUserId) {
         return { type: EnumUpdateUserInformationResult.NotAuthorized };
       }
-      console.log("Before db update newName", newName);
       const fileName = `users/${userId}/description`;
       const buffer = Buffer.from(userDescription, "utf-8");
       const didUploadSucceed = await putObject({

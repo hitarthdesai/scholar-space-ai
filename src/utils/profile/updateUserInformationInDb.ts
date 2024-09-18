@@ -10,11 +10,6 @@ type updateUserInformationProps = {
 export async function updateUserInformationInDb({
   userId,
   newName,
-}: updateUserInformationProps): Promise<boolean> {
-  const result = await db
-    .update(users)
-    .set({ name: newName })
-    .where(eq(users.id, userId));
-
-  return result.rows.length > 0;
+}: updateUserInformationProps) {
+  return db.update(users).set({ name: newName }).where(eq(users.id, userId));
 }

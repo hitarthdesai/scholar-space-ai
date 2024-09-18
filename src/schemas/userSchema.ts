@@ -8,6 +8,7 @@ export const updateUserInformationFormSchema = z.object({
   userId: z.string().min(1),
   newName: z.string().min(USER_NAME_MIN_LENGTH).max(USER_NAME_MAX_LENGTH),
   userDescription: z.string(),
+  email: z.string().email(),
 });
 
 export type UpdateUserInformationForm = z.infer<
@@ -23,6 +24,6 @@ export const EnumUpdateUserInformationResult = {
 const updateUserInformationResultSchema = z.nativeEnum(
   EnumUpdateUserInformationResult
 );
-export type RenameAssignmentResult = z.infer<
+export type UpdateUserInformationResult = z.infer<
   typeof updateUserInformationResultSchema
 >;
