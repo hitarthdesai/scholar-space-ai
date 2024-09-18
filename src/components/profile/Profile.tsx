@@ -4,7 +4,7 @@ import React from "react";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
 import { getAllUserInfo } from "@/utils/profile/getAllUserInfo";
-import ProfileEditForm from "./ProfileForm";
+import ProfileForm from "./ProfileForm";
 
 type ProfileProps = {
   userId: string;
@@ -20,7 +20,7 @@ export default async function Profile({ userId }: ProfileProps) {
   const userData = await getAllUserInfo({ userId });
 
   return (
-    <ProfileEditForm
+    <ProfileForm
       userId={userId}
       initialProfileData={userData}
       isUserAllowedToEdit={isUserAllowedToEdit}

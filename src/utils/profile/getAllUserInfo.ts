@@ -1,6 +1,6 @@
 import { getUserInformationFromDb } from "./getUserInformationFromDb";
 import { getObject } from "../storage/s3/getObject";
-import { ProfileData } from "@/components/profile/ProfileForm";
+import { type ProfileData } from "@/components/profile/ProfileForm";
 
 type GetAllUserInfoProps = {
   userId: string;
@@ -14,7 +14,7 @@ export async function getAllUserInfo({ userId }: GetAllUserInfoProps) {
     "No information has been added yet.";
 
   const profileData: ProfileData = {
-    name: userInfoFromDb.name || "Username",
+    name: userInfoFromDb.name ?? "Username",
     email: userInfoFromDb.email,
     aboutMe: userDescription,
   };

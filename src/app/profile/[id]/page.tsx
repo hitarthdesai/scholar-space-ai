@@ -6,9 +6,7 @@ type PageProps = {
   };
 };
 
-export default async function ProfilePage({
-  params: { id: userId },
-}: PageProps) {
+export default function ProfilePage({ params: { id: userId } }: PageProps) {
   return (
     <main className="flex h-full flex-col justify-between p-4">
       <Profile userId={userId} />
