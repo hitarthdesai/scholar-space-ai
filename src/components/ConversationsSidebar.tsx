@@ -8,6 +8,7 @@ import { type Conversation } from "@/schemas/chatSchema";
 import Link from "next/link";
 import { RenameConversationButton } from "./RenameConversationButton";
 import { DeleteConversationButton } from "./DeleteConversationButton";
+import { MoreOptionsButton } from "./MoreOptionsButton";
 
 type ConversationItemProps = {
   conversation: Conversation;
@@ -31,8 +32,12 @@ export function ConversationItem({ conversation }: ConversationItemProps) {
           {conversation.name}
         </Link>
       </div>
-      <RenameConversationButton conversationId={conversation.id} />
-      <DeleteConversationButton conversationId={conversation.id} />
+      <MoreOptionsButton
+        components={[
+          <RenameConversationButton conversationId={conversation.id} />,
+          <DeleteConversationButton conversationId={conversation.id} />,
+        ]}
+      />
     </div>
   );
 }
