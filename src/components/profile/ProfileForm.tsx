@@ -25,6 +25,7 @@ import { updateUserInformation } from "@/actions/updateUserInformation";
 import { Textarea } from "@/components/ui/textarea";
 import { User } from "lucide-react";
 import { toastDescriptionUpdateUserInformation } from "@/utils/constants/toast";
+import { cn } from "@/utils/cn";
 
 export type ProfileData = {
   email: string;
@@ -96,7 +97,7 @@ export default function ProfileEditForm({
                   <Input
                     autoComplete="off"
                     {...field}
-                    className="bg-gray-900 text-white"
+                    className="bg-slate-900 text-white disabled:cursor-default disabled:opacity-100"
                     disabled={!isEditing}
                   />
                 </FormControl>
@@ -113,7 +114,11 @@ export default function ProfileEditForm({
                 <FormControl>
                   <Input
                     {...field}
-                    className="bg-gray-900 text-white"
+                    className={cn(
+                      "disabled:cursor-default disabled:bg-slate-900 disabled:opacity-100",
+                      isEditing &&
+                        "disabled:cursor-not-allowed disabled:opacity-50"
+                    )}
                     disabled
                   />
                 </FormControl>
@@ -167,7 +172,7 @@ export default function ProfileEditForm({
                   <Textarea
                     autoComplete="off"
                     {...field}
-                    className="w-full rounded border bg-gray-900 p-2 text-white"
+                    className="w-full rounded border bg-slate-900 text-white disabled:cursor-default disabled:opacity-100"
                     disabled={!isEditing}
                   />
                 </FormControl>
