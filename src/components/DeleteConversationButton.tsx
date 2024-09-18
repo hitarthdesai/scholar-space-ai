@@ -14,12 +14,12 @@ export function DeleteConversationButton({
       conversationId={conversationId}
       trigger={
         <Button
-          className="group h-6 w-6 flex-shrink-0 rounded-md"
+          className="flex flex-row items-center justify-center gap-2 border-none"
           variant="outline"
-          size="icon"
           name="Delete Conversation"
         >
-          <TrashIcon className="h-4 w-4 group-hover:text-red-500" />
+          <TrashIcon className="h-4 w-4" />
+          Delete
         </Button>
       }
     />

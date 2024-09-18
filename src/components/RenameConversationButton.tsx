@@ -14,12 +14,12 @@ export function RenameConversationButton({
       conversationId={conversationId}
       trigger={
         <Button
-          className="h-6 w-6 flex-shrink-0 rounded-md"
+          className="flex flex-row items-center justify-center gap-2 border-none"
           variant="outline"
-          size="icon"
           name="Rename Conversation"
         >
           <Pencil2Icon className="h-4 w-4" />
+          Rename
         </Button>
       }
     />
