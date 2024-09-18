@@ -10,7 +10,7 @@ type ProfileProps = {
   userId: string;
 };
 
-export default async function ProfileWrapper({ userId }: ProfileProps) {
+export default async function Profile({ userId }: ProfileProps) {
   const session = await auth();
   const sessionUserId = session?.user?.id;
   assert(!!sessionUserId, "User must be logged in to view this page");

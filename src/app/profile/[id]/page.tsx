@@ -1,4 +1,4 @@
-import ProfileWrapper from "@/components/profile/Profile";
+import Profile from "@/components/profile/Profile";
 
 type PageProps = {
   params: {
@@ -11,7 +11,7 @@ export default async function ProfilePage({
 }: PageProps) {
   return (
     <main className="flex h-full flex-col justify-between p-4">
-      <ProfileWrapper userId={userId} />
+      <Profile userId={userId} />
     </main>
   );
 }

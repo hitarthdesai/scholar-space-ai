@@ -1,4 +1,4 @@
-import ProfileWrapper from "@/components/profile/Profile";
+import Profile from "@/components/profile/Profile";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
 
@@ -8,7 +8,7 @@ export default async function ProfilePage() {
   assert(!!sessionUserId, "User must be logged in to view this page");
   return (
     <main className="flex h-full flex-col justify-between p-4">
-      <ProfileWrapper userId={sessionUserId} />
+      <Profile userId={sessionUserId} />
     </main>
   );
 }
