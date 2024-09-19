@@ -3,7 +3,7 @@
 import React from "react";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
-import { getAllUserInfo } from "@/utils/profile/getAllUserInfo";
+import { getUserProfileData } from "@/utils/profile/getUserProfileData";
 import ProfileForm from "./ProfileForm";
 
 type ProfileProps = {
@@ -17,7 +17,7 @@ export default async function Profile({ userId }: ProfileProps) {
 
   const isUserAllowedToEdit = sessionUserId === userId;
 
-  const userData = await getAllUserInfo({ userId });
+  const userData = await getUserProfileData({ userId });
 
   return (
     <ProfileForm

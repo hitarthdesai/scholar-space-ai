@@ -46,6 +46,9 @@ export default function ProfileForm({
 }: ProfileFormProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
+  const [clickedButton, setClickedButton] = useState<"save" | "cancel" | null>(
+    null
+  );
   const updateUserInformationDefaultValues: EditProfileFormType = {
     email: initialProfileData.email,
     userId: userId,
@@ -75,13 +78,27 @@ export default function ProfileForm({
       if (!isErroneous) {
         router.refresh();
         setIsEditing(false);
+        setClickedButton(null);
       }
     },
   });
+
+  const handleSave = form.handleSubmit((data) => {
+    setClickedButton("save");
+    executeAsync(data);
+  });
+
+  const handleCancel = () => {
+    setClickedButton("cancel");
+    setIsEditing(false);
+    form.reset(updateUserInformationDefaultValues);
+    setClickedButton(null);
+  };
+
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(executeAsync)}
+        onSubmit={handleSave}
         className="flex flex-col gap-8 p-8 md:flex-row"
       >
         <div className="flex flex-col gap-3 md:w-1/3">
@@ -131,18 +148,17 @@ export default function ProfileForm({
               <LoadingButton
                 type="submit"
                 className="w-20 rounded bg-green-800 text-white"
-                isLoading={isExecuting}
+                isLoading={isExecuting && clickedButton === "save"}
+                disabled={isExecuting && clickedButton === "cancel"}
               >
                 Save
               </LoadingButton>
               <LoadingButton
                 type="button"
-                isLoading={isExecuting}
                 className="w-20 rounded bg-red-800 text-white"
-                onClick={() => {
-                  setIsEditing(false);
-                  form.reset(updateUserInformationDefaultValues);
-                }}
+                isLoading={isExecuting && clickedButton === "cancel"}
+                disabled={isExecuting && clickedButton === "save"}
+                onClick={handleCancel}
               >
                 Cancel
               </LoadingButton>
