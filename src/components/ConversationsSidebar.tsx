@@ -9,6 +9,7 @@ import Link from "next/link";
 import { RenameConversationButton } from "./RenameConversationButton";
 import { DeleteConversationButton } from "./DeleteConversationButton";
 import { MoreOptionsButton } from "./MoreOptionsButton";
+import { RenameConversationDialog } from "./RenameConversationDialog";
 
 type ConversationItemProps = {
   conversation: Conversation;

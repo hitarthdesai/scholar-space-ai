@@ -1,24 +1,23 @@
+import { Button } from "@/components/ui/button";
+import { PencilIcon } from "lucide-react";
 import { RenameConversationDialog } from "./RenameConversationDialog";
-import { Pencil2Icon } from "@radix-ui/react-icons";
-import { Button } from "./ui/button";
 
 type RenameConversationButtonProps = {
   conversationId: string;
+  closeDropdown?: () => void;
 };
 
 export function RenameConversationButton({
   conversationId,
+  closeDropdown,
 }: RenameConversationButtonProps) {
   return (
     <RenameConversationDialog
       conversationId={conversationId}
+      closeDropdown={closeDropdown}
       trigger={
-        <Button
-          className="flex flex-row items-center justify-center gap-2 border-none"
-          variant="outline"
-          name="Rename Conversation"
-        >
-          <Pencil2Icon className="h-4 w-4" />
+        <Button variant="ghost" className="w-full justify-start">
+          <PencilIcon className="mr-2 h-4 w-4" />
           Rename
         </Button>
       }

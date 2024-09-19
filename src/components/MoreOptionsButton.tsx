@@ -5,28 +5,39 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
+import React from "react";
 
 type MoreOptionsButtonProps = {
   components: ReactNode[];
 };
 
 export function MoreOptionsButton({ components }: MoreOptionsButtonProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggle = (open: boolean) => {
+    setIsOpen(open);
+  };
+
+  const closeDropdown = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOpen} onOpenChange={handleToggle}>
       <DropdownMenuTrigger asChild>
         <EllipsisIcon />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {components.map((component, index) => (
-          <DropdownMenuItem
-            key={index}
-            className="p-0"
-            onSelect={(e) => e.preventDefault()}
-          >
-            {component}
-          </DropdownMenuItem>
-        ))}
+        {components.map((component, index) => {
+          if (React.isValidElement(component)) {
+            return React.cloneElement(component, {
+              key: index,
+              closeDropdown: closeDropdown,
+            });
+          }
+          return <DropdownMenuItem key={index}>{component}</DropdownMenuItem>;
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );

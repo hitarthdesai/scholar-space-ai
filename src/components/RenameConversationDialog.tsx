@@ -18,6 +18,7 @@ import { type ReactNode, useState } from "react";
 type RenameConversationDialogProps = {
   conversationId: string;
   trigger?: ReactNode;
+  closeDropdown?: () => void;
 };
 
 function DefaultRenameConversationTrigger() {
@@ -34,11 +35,19 @@ function DefaultRenameConversationTrigger() {
 export function RenameConversationDialog({
   conversationId,
   trigger = <DefaultRenameConversationTrigger />,
+  closeDropdown,
 }: RenameConversationDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open && closeDropdown) {
+      closeDropdown();
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-72 sm:max-w-[425px]">
         <DialogHeader>
@@ -52,7 +61,14 @@ export function RenameConversationDialog({
           setIsOpen={setIsOpen}
         />
         <DialogFooter>
-          <Button type="submit" form={FormIds.RenameConversation}>
+          <Button
+            type="submit"
+            form={FormIds.RenameConversation}
+            onClick={() => {
+              setIsOpen(false);
+              if (closeDropdown) closeDropdown();
+            }}
+          >
             Rename
           </Button>
         </DialogFooter>
