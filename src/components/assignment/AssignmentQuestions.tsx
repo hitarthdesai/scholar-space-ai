@@ -3,13 +3,15 @@ import { AlertOctagonIcon, PencilIcon, ShieldQuestionIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { auth } from "@/utils/auth/config";
-import { EnumRole } from "@/schemas/userSchema";
 import { db } from "@/server/db";
 import { questions } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { getObject } from "@/utils/storage/s3/getObject";
 import { AddEditQuestionSheet } from "../question/AddEditQuestionSheet";
 import { EnumFormMode } from "@/schemas/formSchema";
+import assert from "assert";
+import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
+import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 
 type AssignmentQuestionsProps = {
   assignmentId: string;
@@ -52,7 +54,13 @@ export async function AssignmentQuestions({
   assignmentId,
 }: AssignmentQuestionsProps) {
   const session = await auth();
-  const isAuthorizedToAddOrDelete = session?.user?.role === EnumRole.Teacher;
+  const userId = session?.user?.id;
+  assert(!!userId, "User must be logged in to view this page");
+  const isAuthorizedToAddOrDelete = await canUserAccessAssignment({
+    assignmentId,
+    userId,
+    accessType: EnumAccessType.Write,
+  });
 
   const questions = await getAssignmentQuestionsFromDb({
     assignmentId,

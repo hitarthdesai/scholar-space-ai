@@ -1,5 +1,3 @@
-import { EnumRole } from "@/schemas/userSchema";
-
 import { relations } from "drizzle-orm";
 import {
   index,
@@ -16,9 +14,6 @@ export const users = sqliteTable("user", {
   email: text("email", { length: 255 }).notNull().unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image", { length: 255 }).default(""),
-  role: text("role", { enum: [EnumRole.Student, EnumRole.Teacher] }).default(
-    EnumRole.Student
-  ),
 });
 
 export const usersRelations = relations(users, ({ one }) => ({

@@ -4,8 +4,9 @@ import {
   EnumDeleteClassroomResult,
   deleteClassroomInputSchema,
 } from "@/schemas/classroomSchema";
-import { EnumRole } from "@/schemas/userSchema";
+import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { auth } from "@/utils/auth/config";
+import { canUserAccessClassroom } from "@/utils/classroom/canUserAccessClassroom";
 import { deleteClassroomFromDb } from "@/utils/classroom/deleteClassroomFromDb";
 import { createSafeActionClient } from "next-safe-action";
 
@@ -17,7 +18,16 @@ export const deleteClassroom = createSafeActionClient()
 
       const session = await auth();
       const userId = session?.user?.id;
-      if (!userId || session?.user?.role !== EnumRole.Teacher) {
+      if (!userId) {
+        return { type: EnumDeleteClassroomResult.NotAuthorized };
+      }
+
+      const isAuthorized = await canUserAccessClassroom({
+        classroomId,
+        userId,
+        accessType: EnumAccessType.Write,
+      });
+      if (!isAuthorized) {
         return { type: EnumDeleteClassroomResult.NotAuthorized };
       }
 

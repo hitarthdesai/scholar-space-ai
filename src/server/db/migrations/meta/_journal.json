@@ -85,6 +85,13 @@
       "when": 1726085960855,
       "tag": "0011_skinny_russian",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1726619787331,
+      "tag": "0012_shallow_shaman",
+      "breakpoints": true
     }
   ]
 }

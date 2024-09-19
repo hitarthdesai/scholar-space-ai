@@ -4,8 +4,9 @@ import {
   EnumDeleteAssignmentResult,
   deleteAssignmentInputSchema,
 } from "@/schemas/assignmentSchema";
-import { EnumRole } from "@/schemas/userSchema";
+import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { auth } from "@/utils/auth/config";
+import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { deleteAssignmentFromDb } from "@/utils/classroom/deleteAssignmentFromDb";
 import { createSafeActionClient } from "next-safe-action";
 
@@ -15,13 +16,21 @@ export const deleteAssignment = createSafeActionClient()
     try {
       const session = await auth();
       const userId = session?.user?.id;
-      if (!userId || session?.user?.role !== EnumRole.Teacher) {
+      if (!userId) {
         return { type: EnumDeleteAssignmentResult.NotAuthorized };
       }
 
       const { assignmentId } = parsedInput;
-      await deleteAssignmentFromDb({ assignmentId });
+      const isAuthorized = await canUserAccessAssignment({
+        assignmentId,
+        userId,
+        accessType: EnumAccessType.Write,
+      });
+      if (!isAuthorized) {
+        return { type: EnumDeleteAssignmentResult.NotAuthorized };
+      }
 
+      await deleteAssignmentFromDb({ assignmentId });
       return { type: EnumDeleteAssignmentResult.AssignmentDeleted };
     } catch (e) {
       console.error(e);
