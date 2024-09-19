@@ -4,12 +4,10 @@ import {
   addAssignmentFormSchema,
   EnumAddAssignmentResult,
 } from "@/schemas/assignmentSchema";
-import { EnumRole } from "@/schemas/userSchema";
-import { db } from "@/server/db";
-import { classrooms } from "@/server/db/schema";
+import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { auth } from "@/utils/auth/config";
-import { AddAssignmentToDb } from "@/utils/classroom/addAssignmentToDb";
-import { and, eq } from "drizzle-orm";
+import { addAssignmentToDb } from "@/utils/classroom/addAssignmentToDb";
+import { canUserAccessClassroom } from "@/utils/classroom/canUserAccessClassroom";
 import { createSafeActionClient } from "next-safe-action";
 
 export const addAssignment = createSafeActionClient()
@@ -18,23 +16,21 @@ export const addAssignment = createSafeActionClient()
     try {
       const session = await auth();
       const userId = session?.user?.id;
-      if (!userId || session?.user?.role !== EnumRole.Teacher) {
+      if (!userId) {
         return { type: EnumAddAssignmentResult.NotAuthorized };
       }
 
       const { name, classroomId } = parsedInput;
-      const _classrooms = await db
-        .select()
-        .from(classrooms)
-        .where(
-          and(eq(classrooms.id, classroomId), eq(classrooms.teacherId, userId))
-        );
-
-      if (!_classrooms || _classrooms.length === 0) {
+      const isAuthorized = await canUserAccessClassroom({
+        classroomId,
+        userId,
+        accessType: EnumAccessType.Write,
+      });
+      if (!isAuthorized) {
         return { type: EnumAddAssignmentResult.NotAuthorized };
       }
 
-      await AddAssignmentToDb({ name, classroomId });
+      await addAssignmentToDb({ name, classroomId });
       return { type: EnumAddAssignmentResult.AssignmentAdded };
     } catch (e) {
       console.error(e);

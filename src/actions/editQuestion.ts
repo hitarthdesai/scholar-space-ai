@@ -5,7 +5,6 @@ import {
   EnumEditQuestionResult,
 } from "@/schemas/questionSchema";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
-import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
 import { putObject } from "@/utils/storage/s3/putObject";
 import { createSafeActionClient } from "next-safe-action";
@@ -18,7 +17,7 @@ export const editQuestion = createSafeActionClient()
     try {
       const session = await auth();
       const userId = session?.user?.id;
-      if (!userId || session?.user?.role !== EnumRole.Teacher) {
+      if (!userId) {
         return { type: EnumEditQuestionResult.NotAuthorized };
       }
 

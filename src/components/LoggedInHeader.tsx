@@ -14,12 +14,8 @@ import { LogoutButton } from "./LogoutButton";
 
 export async function LoggedInHeader() {
   const session = await auth();
-  const role = session?.user?.role;
-  if (!role) return null;
-
-  const linksToDisplay = navLinks.filter((link) =>
-    link.visibleTo.includes(role)
-  );
+  const userId = session?.user?.id;
+  if (!userId) return null;
 
   return (
     <div className="flex h-14 w-full items-center justify-between px-4 sm:px-8">
@@ -34,7 +30,7 @@ export async function LoggedInHeader() {
       {/* TODO: Bring back nav menu on mobile screens */}
       <div className="hidden flex-row items-center justify-center gap-4 sm:flex lg:gap-6">
         {/* TODO: Highlight active item in here */}
-        {linksToDisplay.map((link, index) => (
+        {navLinks.map((link, index) => (
           <Link
             key={index}
             href={link.href}
@@ -44,7 +40,7 @@ export async function LoggedInHeader() {
           </Link>
         ))}
       </div>
-      {/* On small screens i.e. below lg, show another menu whose active item is the current page url, and remaining items are `linksToDisplay` */}
+      {/* On small screens i.e. below lg, show another menu whose active item is the current page url, and remaining items are `navLinks` */}
       {/* <div className="flex flex-row items-center justify-center gap-1"> */}
       {/* Contains an avatar showing user's profile photo */}
 
@@ -72,7 +68,7 @@ export async function LoggedInHeader() {
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            {linksToDisplay.map((link, index) => (
+            {navLinks.map((link, index) => (
               <DropdownMenuItem key={index}>
                 <Link href={link.href}>{link.label}</Link>
               </DropdownMenuItem>

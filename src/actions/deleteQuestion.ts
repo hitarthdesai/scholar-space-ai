@@ -5,7 +5,6 @@ import {
   EnumDeleteQuestionResult,
   deleteQuestionInputSchema,
 } from "@/schemas/questionSchema";
-import { EnumRole } from "@/schemas/userSchema";
 import { auth } from "@/utils/auth/config";
 import { canUserAccessQuestion } from "@/utils/classroom/canUserAccessQuestion";
 import { deleteQuestionFromDb } from "@/utils/classroom/deleteQuestionFromDb";
@@ -17,7 +16,7 @@ export const deleteQuestion = createSafeActionClient()
     try {
       const session = await auth();
       const userId = session?.user?.id;
-      if (!userId || session?.user?.role !== EnumRole.Teacher) {
+      if (!userId) {
         return { type: EnumDeleteQuestionResult.NotAuthorized };
       }
 

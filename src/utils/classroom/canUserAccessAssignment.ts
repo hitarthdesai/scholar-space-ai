@@ -1,12 +1,9 @@
-import { type AccessType, EnumAccessType } from "@/schemas/dbTableAccessSchema";
+import { type AccessType } from "@/schemas/dbTableAccessSchema";
 import { db } from "@/server/db";
-import {
-  assignments,
-  classroomAssignments,
-  classrooms,
-  classroomStudents,
-} from "@/server/db/schema";
-import { and, eq, or, sql } from "drizzle-orm";
+import { classroomAssignments } from "@/server/db/schema";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { canUserAccessClassroom } from "./canUserAccessClassroom";
 
 type CanUserAccessAssignmentProps = {
   assignmentId: string;
@@ -19,29 +16,25 @@ export async function canUserAccessAssignment({
   userId,
   accessType,
 }: CanUserAccessAssignmentProps): Promise<boolean> {
-  const userAccessWhereClause =
-    accessType === EnumAccessType.Write
-      ? eq(classrooms.teacherId, userId)
-      : or(
-          eq(classrooms.teacherId, userId),
-          eq(classroomStudents.studentId, userId)
-        );
-
-  const [{ exists }] = await db
+  const data = await db
     .select({
-      exists: sql<number>`1`,
+      classroomId: classroomAssignments.classroomId,
     })
-    .from(assignments)
-    .leftJoin(
-      classroomAssignments,
-      eq(assignments.id, classroomAssignments.assignmentId)
-    )
-    .leftJoin(
-      classroomStudents,
-      eq(classroomStudents.classroomId, classroomAssignments.classroomId)
-    )
-    .leftJoin(classrooms, eq(classrooms.id, classroomAssignments.classroomId))
-    .where(and(eq(assignments.id, assignmentId), userAccessWhereClause));
+    .from(classroomAssignments)
+    .where(eq(classroomAssignments.assignmentId, assignmentId));
 
-  return exists === 1;
+  const classrooms = z
+    .array(z.object({ classroomId: z.string().min(1) }))
+    .parse(data);
+
+  if (classrooms.length === 0) return false;
+  const classroomId = classrooms[0].classroomId;
+
+  const isAuthorized = await canUserAccessClassroom({
+    classroomId,
+    userId,
+    accessType,
+  });
+
+  return isAuthorized;
 }

@@ -6,7 +6,7 @@ type AddAssignmentToDbProps = {
   name: string;
 };
 
-export async function AddAssignmentToDb({
+export async function addAssignmentToDb({
   name,
   classroomId,
 }: AddAssignmentToDbProps) {

@@ -3,12 +3,37 @@ import {
   CLASSROOM_NAME_MIN_LENGTH,
 } from "@/utils/constants/classroom";
 import { z } from "zod";
-import { assignmentSchema } from "./assignmentSchema";
 import { EnumFormMode } from "./formSchema";
+
+export const EnumClassroomRole = {
+  Admin: "admin",
+  Teacher: "teacher",
+  TeachingAssistant: "teachingAssistant",
+  Student: "student",
+} as const;
+
+const classroomRoleSchema = z.nativeEnum(EnumClassroomRole);
+export type ClassroomRole = z.infer<typeof classroomRoleSchema>;
+
+export const EnumClassroomParticpantStatus = {
+  Accepted: "accepted",
+  Pending: "pending",
+  Invited: "invited",
+} as const;
+
+const classroomParticipantStatusSchema = z.nativeEnum(
+  EnumClassroomParticpantStatus
+);
+export type ClassroomParticipantStatus = z.infer<
+  typeof classroomParticipantStatusSchema
+>;
 
 export const classroomSchema = z.object({
   id: z.string().min(1),
-  name: z.string().min(1),
+  name: z
+    .string()
+    .min(CLASSROOM_NAME_MIN_LENGTH)
+    .max(CLASSROOM_NAME_MAX_LENGTH),
 });
 
 export type Classroom = z.infer<typeof classroomSchema>;
@@ -45,11 +70,12 @@ export const EnumAddClassroomResult = {
 const createClassroomResultSchema = z.nativeEnum(EnumAddClassroomResult);
 export type CreateClassroomResult = z.infer<typeof createClassroomResultSchema>;
 
-export const classroomDetailsSchema = classroomSchema.extend({
-  assignments: z.array(assignmentSchema).nullable(),
+export const userClassroomSchema = classroomSchema.extend({
+  role: classroomRoleSchema,
+  status: classroomParticipantStatusSchema,
 });
 
-export type ClassroomDetails = z.infer<typeof classroomDetailsSchema>;
+export type UserClassroom = z.infer<typeof userClassroomSchema>;
 
 export const deleteClassroomInputSchema = z.object({
   classroomId: z.string().min(1),
