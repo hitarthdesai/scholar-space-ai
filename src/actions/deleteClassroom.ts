@@ -33,7 +33,6 @@ export const deleteClassroom = createSafeActionClient()
 
       await deleteClassroomFromDb({
         classroomId,
-        teacherId: userId,
       });
 
       return { type: EnumDeleteClassroomResult.ClassroomDeleted };
