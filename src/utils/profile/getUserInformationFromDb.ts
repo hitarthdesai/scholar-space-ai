@@ -13,7 +13,6 @@ export async function getUserInformationFromDb({
     .select({
       name: users.name,
       email: users.email,
-      role: users.role,
       image: users.image,
     })
     .from(users)
