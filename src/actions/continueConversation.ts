@@ -28,6 +28,8 @@ import {
   userConversations,
 } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
+import { getObject } from "@/utils/storage/s3/getObject";
+import { useCodeContext } from "@/contexts/CodeContext";
 
 type ContinueConversationOutput = {
   stream: StreamableValue;
@@ -54,7 +56,7 @@ export const continueConversation = createSafeActionClient()
         message: parsedInput.prompt,
         conversationId: "",
       };
-
+      let customSystemPrompt = "";
       switch (parsedInput.type) {
         case EnumConversationType.Free: {
           if (!parsedInput.conversationId) {
@@ -72,61 +74,99 @@ export const continueConversation = createSafeActionClient()
           break;
         }
 
-        case EnumConversationType.Question:
-          {
-            const isAuthorized = await canUserAccessQuestion({
-              accessType: EnumAccessType.Read,
-              userId,
-              questionId: parsedInput.questionId,
-            });
+        case EnumConversationType.Question: {
+          const isAuthorized = await canUserAccessQuestion({
+            accessType: EnumAccessType.Read,
+            userId,
+            questionId: parsedInput.questionId,
+          });
 
-            if (!isAuthorized) {
-              throw new Error("User is not allowed to attempt this question");
-            }
-
-            await db.transaction(async (tx) => {
-              const attempts = await tx
-                .select()
-                .from(questionAttempts)
-                .where(
-                  and(
-                    eq(questionAttempts.questionId, parsedInput.questionId),
-                    eq(questionAttempts.userId, userId)
-                  )
-                );
-
-              const _conversationId = attempts.at(0)?.conversationId;
-              if (!_conversationId) {
-                const [{ id }] = await tx
-                  .insert(conversations)
-                  .values({
-                    type: parsedInput.type,
-                  })
-                  .returning({ id: conversations.id });
-
-                await tx
-                  .insert(userConversations)
-                  .values({ conversationId: id, userId });
-
-                saveMessageToDbArgs.conversationId = id;
-              } else {
-                saveMessageToDbArgs.conversationId = _conversationId;
-              }
-
-              if (attempts.length === 0) {
-                await tx.insert(questionAttempts).values([
-                  {
-                    userId,
-                    questionId: parsedInput.questionId,
-                    conversationId: saveMessageToDbArgs.conversationId,
-                    answer: "",
-                  },
-                ]);
-              }
-            });
+          if (!isAuthorized) {
+            throw new Error("User is not allowed to attempt this question");
           }
 
+          await db.transaction(async (tx) => {
+            const attempts = await tx
+              .select()
+              .from(questionAttempts)
+              .where(
+                and(
+                  eq(questionAttempts.questionId, parsedInput.questionId),
+                  eq(questionAttempts.userId, userId)
+                )
+              );
+
+            const _conversationId = attempts.at(0)?.conversationId;
+            if (!_conversationId) {
+              const [{ id }] = await tx
+                .insert(conversations)
+                .values({
+                  type: parsedInput.type,
+                })
+                .returning({ id: conversations.id });
+
+              await tx
+                .insert(userConversations)
+                .values({ conversationId: id, userId });
+
+              saveMessageToDbArgs.conversationId = id;
+            } else {
+              saveMessageToDbArgs.conversationId = _conversationId;
+            }
+
+            if (attempts.length === 0) {
+              await tx.insert(questionAttempts).values([
+                {
+                  userId,
+                  questionId: parsedInput.questionId,
+                  conversationId: saveMessageToDbArgs.conversationId,
+                  answer: "",
+                },
+              ]);
+            }
+          });
+
+          const question =
+            (await getObject({
+              fileName: `questions/${parsedInput.questionId}/question.txt`,
+            })) ?? "";
+
+          const currentUserCode = await getObject({
+            fileName: `questionAttempts/${parsedInput.questionId}/${userId}`,
+          });
+
+          const starterCode =
+            (await getObject({
+              fileName: `questions/${parsedInput.questionId}/starterCode.txt`,
+            })) ?? "";
+          const { output } = useCodeContext();
+          customSystemPrompt = `You are an AI coding tutor assisting a student with a programming question. Your role is to guide and support the student's learning process without providing direct solutions. Use the following context to inform your responses:
+
+          Question: ${question}
+
+          Starter Code:
+          ${starterCode}
+
+          Current User Code:
+          ${currentUserCode || "The student hasn't written any code yet."}
+
+          Code Output:
+          ${output || "No output available yet."}
+
+          Guidelines:
+          1. Do not provide the final answer or complete solution to the question.
+          2. Offer hints, explanations, and suggestions to help the student understand the problem and develop their own solution.
+          3. If the student's code has errors, guide them to identify and fix the issues themselves.
+          4. Encourage good coding practices and explain programming concepts when relevant.
+          5. Be prepared to discuss general programming topics or engage in conversation related to the current code.
+          6. If the student seems stuck, ask probing questions to help them think through the problem.
+          7. Provide positive reinforcement for correct steps and good attempts.
+          8. If the student asks about topics unrelated to programming, politely redirect the conversation back to the coding task at hand.
+
+          Remember, your goal is to facilitate learning and problem-solving skills, not to solve the problem for the student.`;
+
           break;
+        }
       }
 
       const { conversationId } = await saveMessageToDb({
@@ -147,7 +187,10 @@ export const continueConversation = createSafeActionClient()
         const { textStream } = await streamText({
           model: groq("llama-3.1-70b-versatile"),
           messages: history.get(),
-          system: SYSTEM_PROMPT,
+          system:
+            parsedInput.type === EnumConversationType.Question
+              ? customSystemPrompt
+              : SYSTEM_PROMPT,
         });
 
         for await (const text of textStream) {
