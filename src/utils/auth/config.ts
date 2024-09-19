@@ -15,8 +15,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       from: "onboarding@scholarspaceai.tech",
     }),
   ],
-  // TODO: Creating `teacher` accounts may not be functional. Need to test this.
-  // @ts-expect-error There's some issues around passing custom schemas to the adapter
   adapter: DrizzleAdapter(db, {
     usersTable: users,
     accountsTable: accounts,
