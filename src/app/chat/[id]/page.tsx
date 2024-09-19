@@ -22,6 +22,7 @@ export default async function ChatPage({
   const isUserAuthorizedToViewConversation = await doesConversationBelongToUser(
     { userId, conversationId }
   );
+  console.log({ isUserAuthorizedToViewConversation });
   if (!isUserAuthorizedToViewConversation) {
     return <NotAuthorizedToViewPage />;
   }

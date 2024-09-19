@@ -21,5 +21,7 @@ export async function doesConversationBelongToUser({
       )
     );
 
+  console.log(_userConversations);
+
   return _userConversations.length > 0;
 }

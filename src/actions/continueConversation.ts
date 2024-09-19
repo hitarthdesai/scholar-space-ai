@@ -58,12 +58,20 @@ export const continueConversation = createSafeActionClient()
       switch (parsedInput.type) {
         case EnumConversationType.Free: {
           if (!parsedInput.conversationId) {
-            const [{ id }] = await db
-              .insert(conversations)
-              .values({
-                type: parsedInput.type,
-              })
-              .returning({ id: conversations.id });
+            const id = await db.transaction(async (tx) => {
+              const [{ id }] = await tx
+                .insert(conversations)
+                .values({
+                  type: parsedInput.type,
+                })
+                .returning({ id: conversations.id });
+
+              await tx
+                .insert(userConversations)
+                .values({ conversationId: id, userId });
+
+              return id;
+            });
             saveMessageToDbArgs.conversationId = id;
           } else {
             saveMessageToDbArgs.conversationId = parsedInput.conversationId;
