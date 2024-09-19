@@ -83,9 +83,13 @@ export default function ProfileForm({
     },
   });
 
-  const handleSave = form.handleSubmit((data) => {
+  const handleSave = form.handleSubmit(async (data) => {
     setClickedButton("save");
-    executeAsync(data);
+    try {
+      await executeAsync(data);
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   const handleCancel = () => {
