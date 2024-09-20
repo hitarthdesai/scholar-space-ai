@@ -19,7 +19,7 @@ export const runCode = createSafeActionClient()
       const session = await auth();
       const userId = session?.user?.id;
 
-      let code = await getObject({
+      const code = await getObject({
         fileName: `questionAttempts/${questionId}/${userId}`,
       });
       if (!code) {
