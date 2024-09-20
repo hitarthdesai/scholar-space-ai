@@ -6,7 +6,7 @@ import {
   runCodeInputSchema,
 } from "@/schemas/questionSchema";
 import { createSafeActionClient } from "next-safe-action";
-import fetch from "node-fetch";
+import { getCodeOutput } from "./getCodeOutput";
 
 export const runCode = createSafeActionClient()
   .schema(runCodeInputSchema)
@@ -15,23 +15,7 @@ export const runCode = createSafeActionClient()
       // TODO: We will use this later on to get solutions, etc from the database
       const { code } = parsedInput;
 
-      const url = new URL(process.env.PISTON_URL ?? "");
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          language: "python",
-          version: "3.10.0",
-          files: [
-            {
-              name: "main",
-              content: code,
-            },
-          ],
-        }),
-      });
+      const res = await getCodeOutput(code);
 
       const { code: status, output } = codeExecutionResultSchema.parse(
         await res.json()
