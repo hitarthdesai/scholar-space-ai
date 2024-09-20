@@ -2,7 +2,7 @@ export const EnumPage = {
   Classroom: "Classroom",
   Assignment: "Assignment",
   Question: "Question",
-  ClassroomInvitations: "ClassroomInvitations",
+  ClassroomParticipants: "ClassroomParticipants",
 } as const;
 
 export type Page = (typeof EnumPage)[keyof typeof EnumPage];

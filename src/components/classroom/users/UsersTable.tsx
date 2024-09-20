@@ -6,7 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
   getPaginationRowModel,
 } from "@tanstack/react-table";
 
@@ -19,12 +19,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { columns } from "./UsersTableColumns";
+import {
+  type ClassroomParticipantStatus,
+  type ClassroomRole,
+} from "@/schemas/classroomSchema";
 
 export type User = {
   id: string;
-  name: string;
+  name: string | null;
   email: string;
-  status: string;
+  role: ClassroomRole;
+  status: ClassroomParticipantStatus;
 };
 
 type UsersTableProps = {

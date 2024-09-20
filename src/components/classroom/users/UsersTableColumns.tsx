@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
-import { ColumnDef } from "@tanstack/react-table";
+import { type ColumnDef } from "@tanstack/react-table";
 import { type User } from "./UsersTable";
 
 export const columns: ColumnDef<User>[] = [
@@ -40,7 +40,7 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") as string;
+      const status = row.getValue("status");
       return (
         <Badge variant={status === "accepted" ? "default" : "destructive"}>
           {status}

@@ -70,6 +70,42 @@ export const EnumAddClassroomResult = {
 const createClassroomResultSchema = z.nativeEnum(EnumAddClassroomResult);
 export type CreateClassroomResult = z.infer<typeof createClassroomResultSchema>;
 
+export const addEditParticipantSheetPropsSchema = z.union([
+  z.object({
+    mode: z.literal(EnumFormMode.Add),
+    classroomId: z.string().min(1),
+  }),
+  z.object({
+    mode: z.literal(EnumFormMode.Edit),
+    classroom: classroomSchema,
+  }),
+]);
+
+export type AddEditParticipantSheetProps = z.infer<
+  typeof addEditParticipantSheetPropsSchema
+>;
+
+export const inviteParticipantFormSchema = z.object({
+  classroomId: z.string().min(1),
+  email: z.string().email(),
+  role: classroomRoleSchema,
+});
+
+export type InviteParticipantForm = z.infer<typeof inviteParticipantFormSchema>;
+
+export const EnumInviteParticipantResult = {
+  ParticpantInvited: "participantInvited",
+  ParticipantAlreadyAdded: "participantAlreadyAdded",
+  InviteeNotRegistered: "inviteeNotRegistered",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const inviteParticipantResultSchema = z.nativeEnum(EnumInviteParticipantResult);
+export type InviteParticipantResult = z.infer<
+  typeof inviteParticipantResultSchema
+>;
+
 export const userClassroomSchema = classroomSchema.extend({
   role: classroomRoleSchema,
   status: classroomParticipantStatusSchema,
