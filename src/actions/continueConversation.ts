@@ -147,19 +147,12 @@ export const continueConversation = createSafeActionClient()
             (await getObject({
               fileName: `questions/${parsedInput.questionId}/starterCode.txt`,
             })) ?? "";
-          const { output } = useCodeContext();
+
           customSystemPrompt = `You are an AI coding tutor assisting a student with a programming question. Your role is to guide and support the student's learning process without providing direct solutions. Use the following context to inform your responses:
 
           Question: ${question}
-
-          Starter Code:
-          ${starterCode}
-
-          Current User Code:
-          ${currentUserCode || "The student hasn't written any code yet."}
-
-          Code Output:
-          ${output || "No output available yet."}
+          Current User Code: ${currentUserCode || "The student has not written any code yet."}
+          Starter Code: ${starterCode}
 
           Guidelines:
           1. Do not provide the final answer or complete solution to the question.
@@ -190,33 +183,44 @@ export const continueConversation = createSafeActionClient()
         { role: EnumMessageRole.User, content: parsedInput.prompt },
       ]);
 
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      (async () => {
-        const { textStream } = await streamText({
-          model: groq("llama-3.1-70b-versatile"),
-          messages: history.get(),
-          system:
-            parsedInput.type === EnumConversationType.Question
-              ? customSystemPrompt
-              : SYSTEM_PROMPT,
-        });
+      const streamPromise = (async () => {
+        try {
+          const { textStream } = await streamText({
+            model: groq("llama-3.1-70b-versatile"),
+            messages: history.get(),
+            system:
+              parsedInput.type === EnumConversationType.Question
+                ? customSystemPrompt
+                : SYSTEM_PROMPT,
+          });
 
-        for await (const text of textStream) {
-          stream.update(text);
-          fullResponse += text;
+          for await (const text of textStream) {
+            stream.update(text);
+            fullResponse += text;
+          }
+
+          history.update([
+            ...history.get(),
+            { role: EnumMessageRole.Assistant, content: fullResponse },
+          ]);
+
+          await saveMessageToDb({
+            ...saveMessageToDbArgs,
+            by: EnumMessageRole.Assistant,
+            message: fullResponse,
+          });
+        } catch (error) {
+          console.error("Error in streaming:", error);
+          stream.error(error);
+        } finally {
+          stream.done();
         }
-        history.done([
-          ...history.get(),
-          { role: EnumMessageRole.Assistant, content: stream.value },
-        ]);
-
-        await saveMessageToDb({
-          ...saveMessageToDbArgs,
-          by: EnumMessageRole.Assistant,
-          message: fullResponse,
-        });
-        stream.done();
       })();
+
+      // Handle the promise
+      streamPromise.catch((error) => {
+        console.error("Unhandled error in streaming:", error);
+      });
 
       return { stream: stream.value, newConversationId: conversationId };
     }
