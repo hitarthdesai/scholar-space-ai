@@ -29,7 +29,6 @@ import {
 } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { getObject } from "@/utils/storage/s3/getObject";
-import { useCodeContext } from "@/contexts/CodeContext";
 
 type ContinueConversationOutput = {
   stream: StreamableValue;
@@ -151,7 +150,7 @@ export const continueConversation = createSafeActionClient()
           customSystemPrompt = `You are an AI coding tutor assisting a student with a programming question. Your role is to guide and support the student's learning process without providing direct solutions. Use the following context to inform your responses:
 
           Question: ${question}
-          Current User Code: ${currentUserCode || "The student has not written any code yet."}
+          Current User Code: ${currentUserCode ?? "The student has not written any code yet."}
           Starter Code: ${starterCode}
 
           Guidelines:

@@ -124,13 +124,13 @@ export type DeleteQuestionResult = z.infer<typeof deleteQuestionResultSchema>;
 
 export const runCodeInputSchema = z.object({
   questionId: z.string().min(1),
-  code: z.string().min(1),
 });
 
 export const EnumRunCodeResult = {
   CodeRanSuccessfully: "codeRanSuccessfully",
   CodeRanWithErrors: "codeRanWithErrors",
   Error: "error",
+  InsufficientCodeLength: "insufficientCodeLength",
 } as const;
 
 const runCodeResultSchema = z.nativeEnum(EnumRunCodeResult);

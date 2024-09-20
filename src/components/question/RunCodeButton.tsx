@@ -21,7 +21,7 @@ export function RunCodeButton() {
   });
 
   const handleClick = useCallback(async () => {
-    await executeAsync({ questionId, code });
+    await executeAsync({ questionId });
   }, [questionId, code, executeAsync]);
 
   return (
