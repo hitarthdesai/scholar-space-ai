@@ -4,7 +4,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getS3Client } from "./getS3Client";
 
-type PutObjectProps = {
+type GetObjectProps = {
   fileName: string;
 };
 
@@ -14,7 +14,7 @@ type PutObjectProps = {
  * @param props Name of the file to be retrieved
  * @returns boolean indicating success or failure
  */
-export async function getObject({ fileName }: PutObjectProps) {
+export async function getObject({ fileName }: GetObjectProps) {
   try {
     const s3 = getS3Client();
     const params: GetObjectCommandInput = {
@@ -28,7 +28,7 @@ export async function getObject({ fileName }: PutObjectProps) {
     const contents = await data.Body?.transformToString();
     return contents;
   } catch (e) {
-    console.error("Error in putObject", e);
+    console.error("Error in getObject", e);
     return undefined;
   }
 }
