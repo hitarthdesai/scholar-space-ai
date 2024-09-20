@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogoutButton } from "./LogoutButton";
+import { ClientHeader } from "./HighlightHeader";
 
 export async function LoggedInHeader() {
   const session = await auth();
@@ -27,19 +28,8 @@ export async function LoggedInHeader() {
           </span>
         </Link>
       </div>
-      {/* TODO: Bring back nav menu on mobile screens */}
-      <div className="hidden flex-row items-center justify-center gap-4 sm:flex lg:gap-6">
-        {/* TODO: Highlight active item in here */}
-        {navLinks.map((link, index) => (
-          <Link
-            key={index}
-            href={link.href}
-            className="border-white hover:border-b hover:text-xl"
-          >
-            {link.label}
-          </Link>
-        ))}
-      </div>
+
+      <ClientHeader navLinks={navLinks} />
       {/* On small screens i.e. below lg, show another menu whose active item is the current page url, and remaining items are `navLinks` */}
       {/* <div className="flex flex-row items-center justify-center gap-1"> */}
       {/* Contains an avatar showing user's profile photo */}
