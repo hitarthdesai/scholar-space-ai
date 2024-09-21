@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogoutButton } from "./LogoutButton";
-import { ClientHeader } from "./HighlightHeader";
+import { HeaderLinks } from "./HeaderLinks";
 
 export async function LoggedInHeader() {
   const session = await auth();
@@ -29,7 +29,7 @@ export async function LoggedInHeader() {
         </Link>
       </div>
 
-      <ClientHeader navLinks={navLinks} />
+      <HeaderLinks navLinks={navLinks} />
       {/* On small screens i.e. below lg, show another menu whose active item is the current page url, and remaining items are `navLinks` */}
       {/* <div className="flex flex-row items-center justify-center gap-1"> */}
       {/* Contains an avatar showing user's profile photo */}
