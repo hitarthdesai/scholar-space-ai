@@ -10,17 +10,7 @@ export function LinkHighlight({ href }: LinkHighlightProps) {
   const pathname = usePathname();
   const isCurrentPathname = href === pathname;
 
-  return (
-    <div className="w-full">
-      {isCurrentPathname ? (
-        <span
-          className={`block border-b-2 ${
-            isCurrentPathname ? "border-white" : "border-transparent"
-          }`}
-        ></span>
-      ) : (
-        <></>
-      )}
-    </div>
-  );
+  if (!isCurrentPathname) return null;
+
+  return <div className="w-full border-b-2 border-white" />;
 }
