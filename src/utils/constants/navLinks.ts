@@ -1,5 +1,4 @@
 export type NavLink = {
-  // had to export type to use across files
   href: string;
   label: string;
 };

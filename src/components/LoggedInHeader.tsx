@@ -28,7 +28,6 @@ export async function LoggedInHeader() {
           </span>
         </Link>
       </div>
-
       <HeaderLinks navLinks={navLinks} />
       {/* On small screens i.e. below lg, show another menu whose active item is the current page url, and remaining items are `navLinks` */}
       {/* <div className="flex flex-row items-center justify-center gap-1"> */}

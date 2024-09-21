@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { LinkHighlight } from "./LinkHighlight";
+import { type NavLink } from "@/utils/constants/navLinks";
 
 type HeaderLinksProps = {
-  navLinks: { href: string; label: string }[];
+  navLinks: NavLink[];
 };
 
 export function HeaderLinks({ navLinks }: HeaderLinksProps) {
