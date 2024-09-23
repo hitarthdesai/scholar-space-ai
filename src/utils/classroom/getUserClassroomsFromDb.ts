@@ -1,14 +1,37 @@
+import {
+  ClassroomParticipantStatus,
+  ClassroomRole,
+} from "@/schemas/classroomSchema";
 import { db } from "@/server/db";
 import { classrooms, classroomParticpants } from "@/server/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 
 type GetUserClassroomsFromDbProps = {
   userId: string;
+  query?: string;
+  role?: ClassroomRole;
+  status?: ClassroomParticipantStatus;
 };
 
 export async function getUserClassroomsFromDb({
   userId,
+  query,
+  role,
+  status,
 }: GetUserClassroomsFromDbProps) {
+  const whereClauses = [eq(classroomParticpants.userId, userId)];
+  if (!!query) {
+    whereClauses.push(
+      sql`LOWER(${classrooms.name}) LIKE LOWER(CONCAT('%', ${query}, '%'))`
+    );
+  }
+  if (!!role) {
+    whereClauses.push(eq(classroomParticpants.role, role));
+  }
+  if (!!status) {
+    whereClauses.push(eq(classroomParticpants.status, status));
+  }
+
   return db
     .select({
       id: classrooms.id,
@@ -21,6 +44,6 @@ export async function getUserClassroomsFromDb({
       classroomParticpants,
       eq(classrooms.id, classroomParticpants.classroomId)
     )
-    .where(eq(classroomParticpants.userId, userId))
+    .where(and(...whereClauses))
     .orderBy(desc(classrooms.created_at));
 }

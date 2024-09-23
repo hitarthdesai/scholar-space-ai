@@ -146,3 +146,11 @@ export const EnumEditClassroomResult = {
 
 const editClassroomResultSchema = z.nativeEnum(EnumEditClassroomResult);
 export type EditClassroomResult = z.infer<typeof editClassroomResultSchema>;
+
+export const filterClassroomsFormSchema = z.object({
+  query: z.string().optional(),
+  role: classroomRoleSchema.optional(),
+  status: classroomParticipantStatusSchema.optional(),
+});
+
+export type FilterClassroomsForm = z.infer<typeof filterClassroomsFormSchema>;
