@@ -55,6 +55,7 @@ export const continueConversation = createSafeActionClient()
         message: parsedInput.prompt,
         conversationId: "",
       };
+
       switch (parsedInput.type) {
         case EnumConversationType.Free: {
           if (!parsedInput.conversationId) {
