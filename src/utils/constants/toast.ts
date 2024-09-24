@@ -7,12 +7,16 @@ import {
   EnumEditAssignmentResult,
 } from "@/schemas/assignmentSchema";
 import {
+  AcceptInviteResult,
   type CreateClassroomResult,
   type DeleteClassroomResult,
   type EditClassroomResult,
+  EnumAcceptInviteResult,
   EnumAddClassroomResult,
   EnumDeleteClassroomResult,
   EnumEditClassroomResult,
+  EnumInviteParticipantResult,
+  type InviteParticipantResult,
 } from "@/schemas/classroomSchema";
 import { EnumLoginResult, type LoginResult } from "@/schemas/loginSchema";
 import {
@@ -199,3 +203,29 @@ export const toastDescriptionUpdateUserInformation: Record<
   [EnumUpdateUserInformationResult.Error]:
     "Unable to edit this profile. Please try again later.",
 };
+
+export const toastDescriptionInviteParticipant: Record<
+  InviteParticipantResult,
+  string
+> = {
+  [EnumInviteParticipantResult.ParticpantInvited]:
+    "The participant has been invited successfully.",
+  [EnumInviteParticipantResult.ParticipantAlreadyAdded]:
+    "A user with thie email is already added to this classroom.",
+  [EnumInviteParticipantResult.InviteeNotRegistered]:
+    "The invitee is not registered to the platform.",
+  [EnumInviteParticipantResult.NotAuthorized]:
+    "You are not authorized to invite participants to this classroom.",
+  [EnumInviteParticipantResult.Error]:
+    "Unable to invite the participant to this classroom. Please try again later.",
+};
+
+export const toastDescriptionAcceptInvite: Record<AcceptInviteResult, string> =
+  {
+    [EnumAcceptInviteResult.InviteAccepted]:
+      "You have successfully accepted the invite.",
+    [EnumAcceptInviteResult.NotAuthorized]:
+      "You are not authorized to accept this invite.",
+    [EnumAcceptInviteResult.Error]:
+      "Unable to accept this invite. Please try again later.",
+  };

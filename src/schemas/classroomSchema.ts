@@ -70,6 +70,42 @@ export const EnumAddClassroomResult = {
 const createClassroomResultSchema = z.nativeEnum(EnumAddClassroomResult);
 export type CreateClassroomResult = z.infer<typeof createClassroomResultSchema>;
 
+export const addEditParticipantSheetPropsSchema = z.union([
+  z.object({
+    mode: z.literal(EnumFormMode.Add),
+    classroomId: z.string().min(1),
+  }),
+  z.object({
+    mode: z.literal(EnumFormMode.Edit),
+    classroom: classroomSchema,
+  }),
+]);
+
+export type AddEditParticipantSheetProps = z.infer<
+  typeof addEditParticipantSheetPropsSchema
+>;
+
+export const inviteParticipantFormSchema = z.object({
+  classroomId: z.string().min(1),
+  email: z.string().email(),
+  role: classroomRoleSchema,
+});
+
+export type InviteParticipantForm = z.infer<typeof inviteParticipantFormSchema>;
+
+export const EnumInviteParticipantResult = {
+  ParticpantInvited: "participantInvited",
+  ParticipantAlreadyAdded: "participantAlreadyAdded",
+  InviteeNotRegistered: "inviteeNotRegistered",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const inviteParticipantResultSchema = z.nativeEnum(EnumInviteParticipantResult);
+export type InviteParticipantResult = z.infer<
+  typeof inviteParticipantResultSchema
+>;
+
 export const userClassroomSchema = classroomSchema.extend({
   role: classroomRoleSchema,
   status: classroomParticipantStatusSchema,
@@ -110,3 +146,38 @@ export const EnumEditClassroomResult = {
 
 const editClassroomResultSchema = z.nativeEnum(EnumEditClassroomResult);
 export type EditClassroomResult = z.infer<typeof editClassroomResultSchema>;
+
+export const filterClassroomsFormSchema = z.object({
+  query: z.string().optional(),
+  role: classroomRoleSchema.optional(),
+  status: classroomParticipantStatusSchema.optional(),
+});
+
+export type FilterClassroomsForm = z.infer<typeof filterClassroomsFormSchema>;
+
+export const acceptInviteFormSchema = z.object({
+  confirm: z.boolean(),
+});
+
+export type AcceptInviteForm = z.infer<typeof acceptInviteFormSchema>;
+
+export const EnumAcceptInviteResult = {
+  InviteAccepted: "inviteAccepted",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const acceptInviteResultSchema = z.nativeEnum(EnumAcceptInviteResult);
+export type AcceptInviteResult = z.infer<typeof acceptInviteResultSchema>;
+
+export const rejectInviteFormSchema = z.object({
+  confirm: z.boolean(),
+});
+
+export type RejectInviteForm = z.infer<typeof rejectInviteFormSchema>;
+
+export const EnumRejectInviteResult = {
+  InviteRejected: "inviteRejected",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
