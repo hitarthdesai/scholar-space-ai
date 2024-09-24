@@ -5,7 +5,7 @@ import {
   runCodeInputSchema,
 } from "@/schemas/questionSchema";
 import { createSafeActionClient } from "next-safe-action";
-import { getCodeOutput } from "./getCodeOutput";
+import { getCodeOutput } from "../utils/chat/getCodeOutput";
 import { getObject } from "@/utils/storage/s3/getObject";
 import { auth } from "@/utils/auth/config";
 
