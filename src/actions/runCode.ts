@@ -18,6 +18,10 @@ export const runCode = createSafeActionClient()
       const session = await auth();
       const userId = session?.user?.id;
 
+      if (!userId) {
+        return { type: EnumRunCodeResult.Error };
+      }
+
       const code = await getObject({
         fileName: `questionAttempts/${questionId}/${userId}`,
       });

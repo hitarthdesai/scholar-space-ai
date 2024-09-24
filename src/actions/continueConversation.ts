@@ -28,6 +28,7 @@ import {
 } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { getSystemPromptByConversationType } from "@/utils/chat/getSystemPromptByConversationType";
+import { type GetSystemPromptByConversationTypeInput } from "@/schemas/chatSchema";
 
 type ContinueConversationOutput = {
   stream: StreamableValue;
@@ -150,7 +151,7 @@ export const continueConversation = createSafeActionClient()
 
       const streamPromise = (async () => {
         try {
-          const args =
+          const getSystemPromptArgs: GetSystemPromptByConversationTypeInput =
             parsedInput.type === EnumConversationType.Free
               ? { type: parsedInput.type }
               : {
@@ -161,7 +162,8 @@ export const continueConversation = createSafeActionClient()
           const { textStream } = await streamText({
             model: groq("llama-3.1-70b-versatile"),
             messages: history.get(),
-            system: await getSystemPromptByConversationType(args),
+            system:
+              await getSystemPromptByConversationType(getSystemPromptArgs),
           });
 
           for await (const text of textStream) {
@@ -187,7 +189,6 @@ export const continueConversation = createSafeActionClient()
         }
       })();
 
-      // Handle the promise
       streamPromise.catch((error) => {
         console.error("Unhandled error in streaming:", error);
       });

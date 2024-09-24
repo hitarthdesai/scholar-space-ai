@@ -1,12 +1,11 @@
 import { getObject } from "@/utils/storage/s3/getObject";
 import {
   EnumConversationType,
-  type GetSystemPromptByConversationType,
+  type GetSystemPromptByConversationTypeInput,
 } from "@/schemas/chatSchema";
-import { doesConversationBelongToUser } from "./doesConversationBelongToUser";
 
 export async function getSystemPromptByConversationType(
-  params: GetSystemPromptByConversationType
+  params: GetSystemPromptByConversationTypeInput
 ) {
   let systemPrompt = "";
   switch (params.type) {

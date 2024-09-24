@@ -112,7 +112,7 @@ export type ContinueConversationInput = z.infer<
   typeof continueConversationInputSchema
 >;
 
-export const GetSystemPromptByConversationTypeSchema = z.union([
+export const getSystemPromptByConversationTypeInputSchema = z.union([
   z.object({
     type: z.literal(EnumConversationType.Free),
   }),
@@ -123,8 +123,8 @@ export const GetSystemPromptByConversationTypeSchema = z.union([
   }),
 ]);
 
-export type GetSystemPromptByConversationType = z.infer<
-  typeof GetSystemPromptByConversationTypeSchema
+export type GetSystemPromptByConversationTypeInput = z.infer<
+  typeof getSystemPromptByConversationTypeInputSchema
 >;
 
 export type AIState = Message[];
