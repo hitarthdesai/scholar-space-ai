@@ -8,7 +8,7 @@ import { useCodeContext } from "@/contexts/CodeContext";
 import { useCallback } from "react";
 
 export function RunCodeButton() {
-  const { code, setOutput, questionId } = useCodeContext();
+  const { setOutput, questionId } = useCodeContext();
   const { executeAsync } = useAction(runCode, {
     onSettled({ result: { data } }) {
       if (!data) return;
@@ -21,8 +21,8 @@ export function RunCodeButton() {
   });
 
   const handleClick = useCallback(async () => {
-    await executeAsync({ questionId, code });
-  }, [questionId, code, executeAsync]);
+    await executeAsync({ questionId });
+  }, [questionId, executeAsync]);
 
   return (
     <Button
