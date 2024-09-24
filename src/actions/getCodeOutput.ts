@@ -1,3 +1,4 @@
+import { codeExecutionResultSchema } from "@/schemas/codeSchema";
 import fetch from "node-fetch";
 
 export async function getCodeOutput(code: string) {
@@ -18,5 +19,8 @@ export async function getCodeOutput(code: string) {
       ],
     }),
   });
-  return res;
+  const { code: status, output } = codeExecutionResultSchema.parse(
+    await res.json()
+  ).run;
+  return { status, output };
 }

@@ -1,6 +1,5 @@
 "use server";
 
-import { codeExecutionResultSchema } from "@/schemas/codeSchema";
 import {
   EnumRunCodeResult,
   runCodeInputSchema,
@@ -14,7 +13,6 @@ export const runCode = createSafeActionClient()
   .schema(runCodeInputSchema)
   .action(async ({ parsedInput }) => {
     try {
-      // TODO: We will use this later on to get solutions, etc from the database
       const { questionId } = parsedInput;
       const session = await auth();
       const userId = session?.user?.id;
@@ -26,11 +24,7 @@ export const runCode = createSafeActionClient()
         return { type: EnumRunCodeResult.InsufficientCodeLength };
       }
 
-      const res = await getCodeOutput(code);
-
-      const { code: status, output } = codeExecutionResultSchema.parse(
-        await res.json()
-      ).run;
+      const { status, output } = await getCodeOutput(code);
 
       if (status === 1) {
         return { type: EnumRunCodeResult.CodeRanWithErrors, output };
