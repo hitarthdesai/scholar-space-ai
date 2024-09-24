@@ -154,3 +154,30 @@ export const filterClassroomsFormSchema = z.object({
 });
 
 export type FilterClassroomsForm = z.infer<typeof filterClassroomsFormSchema>;
+
+export const acceptInviteFormSchema = z.object({
+  confirm: z.boolean(),
+});
+
+export type AcceptInviteForm = z.infer<typeof acceptInviteFormSchema>;
+
+export const EnumAcceptInviteResult = {
+  InviteAccepted: "inviteAccepted",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const acceptInviteResultSchema = z.nativeEnum(EnumAcceptInviteResult);
+export type AcceptInviteResult = z.infer<typeof acceptInviteResultSchema>;
+
+export const rejectInviteFormSchema = z.object({
+  confirm: z.boolean(),
+});
+
+export type RejectInviteForm = z.infer<typeof rejectInviteFormSchema>;
+
+export const EnumRejectInviteResult = {
+  InviteRejected: "inviteRejected",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
