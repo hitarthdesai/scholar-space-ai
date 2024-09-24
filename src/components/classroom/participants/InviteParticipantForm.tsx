@@ -41,10 +41,10 @@ type AddParticipantFormProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export const InviteParticipantForm = ({
+export function InviteParticipantForm({
   classroomId,
   setIsOpen,
-}: AddParticipantFormProps) => {
+}: AddParticipantFormProps) {
   const inviteParticipantDefaultValues: InviteParticipantFormType = {
     classroomId,
     email: "",
@@ -153,4 +153,4 @@ export const InviteParticipantForm = ({
       </SheetFooter>
     </Form>
   );
-};
+}

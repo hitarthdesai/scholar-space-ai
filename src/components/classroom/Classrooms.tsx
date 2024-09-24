@@ -1,5 +1,6 @@
 import {
   EnumClassroomRole,
+  type FilterClassroomsForm as FilterClassroomsFormType,
   type UserClassroom,
 } from "@/schemas/classroomSchema";
 import { Card } from "../ui/card";
@@ -8,15 +9,12 @@ import { AddEditClassroomSheet } from "./AddEditClassroomSheet";
 import { EnumFormMode } from "@/schemas/formSchema";
 import { PlusIcon } from "lucide-react";
 import { ClassroomCard } from "./ClassroomCard";
-import {
-  FilterClassroomsForm,
-  type FilterClassroomsFormProps,
-} from "./FilterClassroomsForm";
+import { FilterClassroomsForm } from "./FilterClassroomsForm";
 import { ComponentNoneIcon, Pencil1Icon } from "@radix-ui/react-icons";
 
 type ClassroomsProps = {
   classrooms: UserClassroom[];
-  searchParams: FilterClassroomsFormProps;
+  searchParams: FilterClassroomsFormType;
 };
 
 export function Classrooms({ classrooms, searchParams }: ClassroomsProps) {

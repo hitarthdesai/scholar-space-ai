@@ -1,7 +1,7 @@
 import { Classrooms } from "@/components/classroom/Classrooms";
 import {
-  ClassroomParticipantStatus,
-  ClassroomRole,
+  type ClassroomParticipantStatus,
+  type ClassroomRole,
 } from "@/schemas/classroomSchema";
 import { auth } from "@/utils/auth/config";
 import { getUserClassroomsFromDb } from "@/utils/classroom/getUserClassroomsFromDb";

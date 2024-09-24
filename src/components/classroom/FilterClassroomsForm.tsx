@@ -9,8 +9,8 @@ import {
   SelectItem,
 } from "../ui/select";
 import {
-  ClassroomParticipantStatus,
-  ClassroomRole,
+  type ClassroomParticipantStatus,
+  type ClassroomRole,
   EnumClassroomParticpantStatus,
   EnumClassroomRole,
   type FilterClassroomsForm as FilterClassroomsFormType,
@@ -19,12 +19,6 @@ import { Input } from "../ui/input";
 import { useDebouncedCallback } from "use-debounce";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-
-export type FilterClassroomsFormProps = {
-  query?: string;
-  role?: ClassroomRole;
-  status?: ClassroomParticipantStatus;
-};
 
 const allOptionsValue = "all";
 type FilterClassroomsFormValues = {
@@ -37,7 +31,7 @@ export function FilterClassroomsForm({
   query,
   role,
   status,
-}: FilterClassroomsFormProps) {
+}: FilterClassroomsFormType) {
   const router = useRouter();
   const form = useForm<FilterClassroomsFormValues>({
     defaultValues: {
@@ -82,9 +76,9 @@ export function FilterClassroomsForm({
                 <Input
                   {...field}
                   placeholder="Classroom name"
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     field.onChange(e);
-                    debouncedSubmit();
+                    await debouncedSubmit();
                   }}
                 />
               </FormControl>
@@ -97,9 +91,9 @@ export function FilterClassroomsForm({
           render={({ field }) => (
             <FormItem className="min-w-28 max-w-28">
               <Select
-                onValueChange={(e) => {
+                onValueChange={async (e) => {
                   field.onChange(e);
-                  debouncedSubmit();
+                  await debouncedSubmit();
                 }}
                 defaultValue={field.value}
               >
@@ -131,9 +125,9 @@ export function FilterClassroomsForm({
           render={({ field }) => (
             <FormItem className="min-w-28 max-w-28">
               <Select
-                onValueChange={(e) => {
+                onValueChange={async (e) => {
                   field.onChange(e);
-                  debouncedSubmit();
+                  await debouncedSubmit();
                 }}
                 defaultValue={field.value}
               >

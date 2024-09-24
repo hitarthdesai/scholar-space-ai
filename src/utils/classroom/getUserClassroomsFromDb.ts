@@ -1,6 +1,6 @@
 import {
-  ClassroomParticipantStatus,
-  ClassroomRole,
+  type ClassroomParticipantStatus,
+  type ClassroomRole,
 } from "@/schemas/classroomSchema";
 import { db } from "@/server/db";
 import { classrooms, classroomParticpants } from "@/server/db/schema";

@@ -1,5 +1,5 @@
-import { AddEditParticipantSheet } from "@/components/classroom/users/AddEditParticpantSheet";
-import { UsersTable } from "@/components/classroom/users/UsersTable";
+import { AddEditParticipantSheet } from "@/components/classroom/participants/AddEditParticpantSheet";
+import { UsersTable } from "@/components/classroom/participants/UsersTable";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 import { Button } from "@/components/ui/button";
