@@ -1,7 +1,7 @@
 import { getObject } from "@/utils/storage/s3/getObject";
 import {
   EnumConversationType,
-  GetSystemPromptByConversationType,
+  type GetSystemPromptByConversationType,
 } from "@/schemas/chatSchema";
 
 export async function getSystemPromptByConversationType(
