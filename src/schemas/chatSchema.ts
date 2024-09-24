@@ -112,6 +112,21 @@ export type ContinueConversationInput = z.infer<
   typeof continueConversationInputSchema
 >;
 
+export const getSystemPromptByConversationTypeInputSchema = z.union([
+  z.object({
+    type: z.literal(EnumConversationType.Free),
+  }),
+  z.object({
+    type: z.literal(EnumConversationType.Question),
+    userId: z.string(),
+    questionId: z.string(),
+  }),
+]);
+
+export type GetSystemPromptByConversationTypeInput = z.infer<
+  typeof getSystemPromptByConversationTypeInputSchema
+>;
+
 export type AIState = Message[];
 export type UIState = Message[];
 export type Actions = {

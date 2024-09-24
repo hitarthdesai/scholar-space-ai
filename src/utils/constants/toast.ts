@@ -39,6 +39,10 @@ import {
   EnumEditQuestionResult,
   EnumResetCodeResult,
 } from "@/schemas/questionSchema";
+import {
+  type UpdateUserInformationResult,
+  EnumUpdateUserInformationResult,
+} from "@/schemas/userSchema";
 
 export const toastDescriptionAuth: Record<LoginResult, string> = {
   [EnumLoginResult.EmailSent]: "User registered successfully.",
@@ -188,6 +192,18 @@ export const toastDescriptionResetCode: Record<ResetCodeResult, string> = {
   [EnumResetCodeResult.Error]: "Unable to reset code. Please try again later.",
 };
 
+export const toastDescriptionUpdateUserInformation: Record<
+  UpdateUserInformationResult,
+  string
+> = {
+  [EnumUpdateUserInformationResult.UserInformationUpdated]:
+    "Profile edited successfully",
+  [EnumUpdateUserInformationResult.NotAuthorized]:
+    "You are not authorized to edit this profile.",
+  [EnumUpdateUserInformationResult.Error]:
+    "Unable to edit this profile. Please try again later.",
+};
+
 export const toastDescriptionInviteParticipant: Record<
   InviteParticipantResult,
   string
@@ -213,5 +229,3 @@ export const toastDescriptionAcceptInvite: Record<AcceptInviteResult, string> =
     [EnumAcceptInviteResult.Error]:
       "Unable to accept this invite. Please try again later.",
   };
-
-export const toastDescriptionRejectInvite: Record<RejectInviteRes, string> = {
