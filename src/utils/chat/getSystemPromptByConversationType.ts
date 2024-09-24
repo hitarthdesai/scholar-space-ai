@@ -3,6 +3,7 @@ import {
   EnumConversationType,
   type GetSystemPromptByConversationType,
 } from "@/schemas/chatSchema";
+import { doesConversationBelongToUser } from "./doesConversationBelongToUser";
 
 export async function getSystemPromptByConversationType(
   params: GetSystemPromptByConversationType
@@ -21,24 +22,31 @@ export async function getSystemPromptByConversationType(
           fileName: `questions/${params.questionId}/question.txt`,
         })) ?? "";
 
-      const currentUserCode = await getObject({
-        fileName: `questionAttempts/${params.questionId}/${params.userId}`,
-      });
+      const currentUserCode =
+        (await getObject({
+          fileName: `questionAttempts/${params.questionId}/${params.userId}`,
+        })) ?? "The student has not written any code yet.";
 
       const starterCode =
         (await getObject({
           fileName: `questions/${params.questionId}/starterCode.txt`,
         })) ?? "";
 
+      const questionOutput =
+        (await getObject({
+          fileName: `questionAttemptOutputs/${params.questionId}/${params.userId}`,
+        })) ?? "The student has not run their code yet.";
+
       systemPrompt = `You are an AI coding tutor assisting a student with a programming question. Your role is to guide and support the student's learning process without providing direct solutions. Use the following context to inform your responses:
 
           Question: ${question}
-          Current User Code: ${currentUserCode ?? "The student has not written any code yet."}
+          Current User Code: ${currentUserCode}
           Starter Code: ${starterCode}
+          Question Output: ${questionOutput}
 
           Guidelines:
           1. Do not provide the final answer or complete solution to the question.
-          2. Offer hints, explanations, and suggestions to help the student understand the problem and develop their own solution.
+          2. Offer explanations and suggestions to help the student understand the problem and develop their own solution.
           3. If the student's code has errors, guide them to identify and fix the issues themselves.
           4. Encourage good coding practices and explain programming concepts when relevant.
           5. Be prepared to discuss general programming topics or engage in conversation related to the current code.

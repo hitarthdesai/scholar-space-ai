@@ -8,6 +8,7 @@ import { createSafeActionClient } from "next-safe-action";
 import { getCodeOutput } from "../utils/chat/getCodeOutput";
 import { getObject } from "@/utils/storage/s3/getObject";
 import { auth } from "@/utils/auth/config";
+import { putObject } from "@/utils/storage/s3/putObject";
 
 export const runCode = createSafeActionClient()
   .schema(runCodeInputSchema)
@@ -28,6 +29,18 @@ export const runCode = createSafeActionClient()
 
       if (status === 1) {
         return { type: EnumRunCodeResult.CodeRanWithErrors, output };
+      }
+
+      const fileName = `questionAttemptOutputs/${questionId}/${userId}`;
+      const buffer = Buffer.from(output ?? "", "utf-8");
+      const didSaveSucceed = await putObject({
+        body: buffer,
+        fileName,
+        contentType: "text/plain",
+      });
+
+      if (!didSaveSucceed) {
+        return { type: EnumRunCodeResult.Error };
       }
 
       return { type: EnumRunCodeResult.CodeRanSuccessfully, output };
