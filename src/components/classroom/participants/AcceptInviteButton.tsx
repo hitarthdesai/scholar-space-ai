@@ -9,7 +9,7 @@ export function AcceptInviteButton({ classroomId }: AcceptInviteButtonProps) {
   return (
     <AcceptInviteDialog
       trigger={
-        <Button className="rounded-md" variant="outline" name="Accept Invite">
+        <Button className="grow rounded-md" name="Accept Invite">
           Accept
         </Button>
       }
