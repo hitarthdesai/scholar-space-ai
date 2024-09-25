@@ -10,6 +10,7 @@ import {
   type UserClassroom,
 } from "@/schemas/classroomSchema";
 import { Badge } from "../ui/badge";
+import { RejectInviteButton } from "./participants/RejectInviteButton";
 
 export type ClassroomCardProps = {
   classroom: UserClassroom;
@@ -66,9 +67,7 @@ export function ClassroomCard({ classroom }: ClassroomCardProps) {
         )}
         {status === EnumClassroomParticpantStatus.Invited && (
           <div className="flex w-full gap-4">
-            <Button className="grow" variant="destructive">
-              Reject
-            </Button>
+            <RejectInviteButton classroomId={id} />
             <Button className="grow">Accept</Button>
           </div>
         )}

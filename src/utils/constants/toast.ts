@@ -8,10 +8,12 @@ import {
 } from "@/schemas/assignmentSchema";
 import {
   AcceptInviteResult,
+  RejectInviteResult,
   type CreateClassroomResult,
   type DeleteClassroomResult,
   type EditClassroomResult,
   EnumAcceptInviteResult,
+  EnumRejectInviteResult,
   EnumAddClassroomResult,
   EnumDeleteClassroomResult,
   EnumEditClassroomResult,
@@ -228,4 +230,14 @@ export const toastDescriptionAcceptInvite: Record<AcceptInviteResult, string> =
       "You are not authorized to accept this invite.",
     [EnumAcceptInviteResult.Error]:
       "Unable to accept this invite. Please try again later.",
+  };
+
+export const toastDescriptionRejectInvite: Record<RejectInviteResult, string> =
+  {
+    [EnumRejectInviteResult.InviteRejected]:
+      "You have successfully rejected the invite.",
+    [EnumRejectInviteResult.NotAuthorized]:
+      "You are not authorized to reject this invite.",
+    [EnumRejectInviteResult.Error]:
+      "Unable to reject this invite. Please try again later.",
   };
