@@ -100,7 +100,6 @@ export function AcceptInviteForm({
       </form>
       <SheetFooter>
         <LoadingButton
-          disabled={!confirmValue}
           isLoading={isExecuting}
           type="submit"
           form={FormIds.AcceptInvite}
