@@ -5,6 +5,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { AddEditParticipantSheet } from "./AddEditParticpantSheet";
 import { EnumFormMode } from "@/schemas/formSchema";
 import { ClassroomParticipant } from "@/schemas/classroomSchema";
+import { roleBadgeStyles, statusBadgeStyles } from "@/utils/constants/misc";
 
 type GetColumnsProps = {
   classroomId: string;
@@ -37,12 +38,20 @@ export const getColumns = ({
     header: "Email",
   },
   {
+    accessorKey: "role",
+    header: "Role",
+    cell: ({ row }) => {
+      const role = row.original.role;
+      return <Badge className={roleBadgeStyles[role]}>{role}</Badge>;
+    },
+  },
+  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
       const status = row.original.status;
       return (
-        <Badge variant={status === "accepted" ? "default" : "destructive"}>
+        <Badge variant="outline" className={statusBadgeStyles[status]}>
           {status}
         </Badge>
       );

@@ -152,7 +152,7 @@ export function EditParticipantForm({
           type="submit"
           form={FormIds.EditParticipant}
         >
-          Invite
+          Edit
         </LoadingButton>
       </SheetFooter>
     </Form>
