@@ -14,13 +14,14 @@ import {
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import {
-  inviteParticipantFormSchema,
-  EnumInviteParticipantResult,
   EnumClassroomRole,
-  type InviteParticipantForm as InviteParticipantFormType,
+  type EditParticipantForm as EditParticipantFormType,
+  editParticipantFormSchema,
+  EnumEditParticipantResult,
+  type ClassroomParticipant,
 } from "@/schemas/classroomSchema";
 import { toast } from "@/components/ui/use-toast";
-import { toastDescriptionInviteParticipant } from "@/utils/constants/toast";
+import { toastDescriptionEditParticipant } from "@/utils/constants/toast";
 
 import { FormIds } from "@/utils/constants/form";
 import { type Dispatch, type SetStateAction } from "react";
@@ -34,78 +35,81 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { inviteParticipant } from "@/actions/inviteParticipant";
+import { editParticipant } from "@/actions/editParticipant";
 
-type AddParticipantFormProps = {
+type EditParticipantFormProps = {
   classroomId: string;
+  participant: ClassroomParticipant;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export function InviteParticipantForm({
+export function EditParticipantForm({
   classroomId,
+  participant,
   setIsOpen,
-}: AddParticipantFormProps) {
-  const inviteParticipantDefaultValues: InviteParticipantFormType = {
+}: EditParticipantFormProps) {
+  const editParticipantDefaultValues: EditParticipantFormType = {
     classroomId,
-    email: "",
-    role: EnumClassroomRole.Student,
+    participantId: participant.id,
+    role: participant.role,
   };
 
   const router = useRouter();
-  const form = useForm<InviteParticipantFormType>({
-    resolver: zodResolver(inviteParticipantFormSchema),
-    defaultValues: inviteParticipantDefaultValues,
+  const form = useForm<EditParticipantFormType>({
+    resolver: zodResolver(editParticipantFormSchema),
+    defaultValues: editParticipantDefaultValues,
   });
 
-  const { executeAsync, isExecuting: isInviting } = useAction(
-    inviteParticipant,
-    {
-      onSuccess({ data }) {
-        if (!data?.type) return;
+  const { executeAsync, isExecuting: isEditing } = useAction(editParticipant, {
+    onSuccess({ data }) {
+      if (!data?.type) return;
 
-        const isErroneous =
-          data.type !== EnumInviteParticipantResult.ParticpantInvited;
+      const isErroneous =
+        data.type !== EnumEditParticipantResult.ParticpantEdited;
 
-        toast({
-          title: isErroneous
-            ? "Error in inviting participant"
-            : "Participant invited successfully",
-          description: toastDescriptionInviteParticipant[data.type],
-          variant: isErroneous ? "destructive" : "default",
-        });
+      toast({
+        title: isErroneous
+          ? "Error in editing participant"
+          : "Participant edited successfully",
+        description: toastDescriptionEditParticipant[data.type],
+        variant: isErroneous ? "destructive" : "default",
+      });
 
-        if (!isErroneous) {
-          form.reset();
-          setIsOpen(false);
-          router.refresh();
-        }
-      },
-    }
-  );
+      if (!isErroneous) {
+        form.reset();
+        setIsOpen(false);
+        router.refresh();
+      }
+    },
+  });
 
   return (
     <Form {...form}>
       <form
-        id={FormIds.InviteParticipant}
+        id={FormIds.EditParticipant}
         onSubmit={form.handleSubmit(executeAsync)}
         className="flex h-full flex-col gap-2"
       >
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input required {...field} />
-              </FormControl>
-              <FormDescription>
-                The participant&apos;s email address
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <FormItem>
+          <FormLabel>Name</FormLabel>
+          <FormControl>
+            <Input disabled defaultValue={participant.name ?? ""} />
+          </FormControl>
+          <FormDescription>The participant&apos;s name</FormDescription>
+          <FormMessage />
+        </FormItem>
+
+        <FormItem>
+          <FormLabel>Email</FormLabel>
+          <FormControl>
+            <Input disabled defaultValue={participant.email} />
+          </FormControl>
+          <FormDescription>
+            The participant&apos;s email address
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+
         <FormField
           control={form.control}
           name="role"
@@ -143,10 +147,10 @@ export function InviteParticipantForm({
       </form>
       <SheetFooter>
         <LoadingButton
-          disabled={isInviting}
-          isLoading={isInviting}
+          disabled={isEditing}
+          isLoading={isEditing}
           type="submit"
-          form={FormIds.InviteParticipant}
+          form={FormIds.EditParticipant}
         >
           Invite
         </LoadingButton>

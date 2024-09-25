@@ -10,7 +10,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { SheetFooter } from "@/components/ui/sheet";
 import { toast } from "@/components/ui/use-toast";
@@ -20,6 +19,7 @@ import {
   type AcceptInviteForm as AcceptInviteFormType,
 } from "@/schemas/classroomSchema";
 import { FormIds } from "@/utils/constants/form";
+import { toastDescriptionInviteParticipant } from "@/utils/constants/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { useAction } from "next-safe-action/hooks";

@@ -38,6 +38,13 @@ export const classroomSchema = z.object({
 
 export type Classroom = z.infer<typeof classroomSchema>;
 
+export const userClassroomSchema = classroomSchema.extend({
+  role: classroomRoleSchema,
+  status: classroomParticipantStatusSchema,
+});
+
+export type UserClassroom = z.infer<typeof userClassroomSchema>;
+
 export const addEditClassroomSheetPropsSchema = z.union([
   z.object({
     mode: z.literal(EnumFormMode.Add),
@@ -70,6 +77,16 @@ export const EnumAddClassroomResult = {
 const createClassroomResultSchema = z.nativeEnum(EnumAddClassroomResult);
 export type CreateClassroomResult = z.infer<typeof createClassroomResultSchema>;
 
+export const classroomParticpantSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1).nullable(),
+  email: z.string().email(),
+  role: classroomRoleSchema,
+  status: classroomParticipantStatusSchema,
+});
+
+export type ClassroomParticipant = z.infer<typeof classroomParticpantSchema>;
+
 export const addEditParticipantSheetPropsSchema = z.union([
   z.object({
     mode: z.literal(EnumFormMode.Add),
@@ -77,7 +94,8 @@ export const addEditParticipantSheetPropsSchema = z.union([
   }),
   z.object({
     mode: z.literal(EnumFormMode.Edit),
-    classroom: classroomSchema,
+    participant: userClassroomSchema,
+    classroomId: z.string().min(1),
   }),
 ]);
 
@@ -106,12 +124,23 @@ export type InviteParticipantResult = z.infer<
   typeof inviteParticipantResultSchema
 >;
 
-export const userClassroomSchema = classroomSchema.extend({
+export const editParticipantFormSchema = z.object({
   role: classroomRoleSchema,
-  status: classroomParticipantStatusSchema,
+  classroomId: z.string().min(1),
+  participantId: z.string().min(1),
 });
 
-export type UserClassroom = z.infer<typeof userClassroomSchema>;
+export type EditParticipantForm = z.infer<typeof editParticipantFormSchema>;
+
+export const EnumEditParticipantResult = {
+  ParticpantEdited: "participantEdited",
+  NotAParticipant: "notAParticipant",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const editParticipantResultSchema = z.nativeEnum(EnumEditParticipantResult);
+export type EditParticipantResult = z.infer<typeof editParticipantResultSchema>;
 
 export const deleteClassroomInputSchema = z.object({
   classroomId: z.string().min(1),

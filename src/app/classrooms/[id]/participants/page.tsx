@@ -56,11 +56,11 @@ export default async function Participants({
         >
           <Button className="flex flex-col items-center justify-center sm:flex-row">
             <UserPlus className="mr-2 h-4 w-4" />
-            Add Participant
+            Invite Participant
           </Button>
         </AddEditParticipantSheet>
       </div>
-      <UsersTable users={participants} />
+      <UsersTable classroomId={classroomId} users={participants} />
     </div>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -18,26 +17,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { columns } from "./UsersTableColumns";
-import {
-  type ClassroomParticipantStatus,
-  type ClassroomRole,
-} from "@/schemas/classroomSchema";
-
-export type User = {
-  id: string;
-  name: string | null;
-  email: string;
-  role: ClassroomRole;
-  status: ClassroomParticipantStatus;
-};
+import { getColumns } from "./UsersTableColumns";
+import { type ClassroomParticipant } from "@/schemas/classroomSchema";
+import { useMemo, useState } from "react";
 
 type UsersTableProps = {
-  users: User[];
+  classroomId: string;
+  users: ClassroomParticipant[];
 };
 
-export function UsersTable({ users }: UsersTableProps) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+export function UsersTable({ classroomId, users }: UsersTableProps) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const columns = useMemo(() => getColumns({ classroomId }), [classroomId]);
 
   const table = useReactTable({
     data: users,

@@ -1,18 +1,18 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, PencilIcon } from "lucide-react";
 import { type ColumnDef } from "@tanstack/react-table";
-import { type User } from "./UsersTable";
+import { AddEditParticipantSheet } from "./AddEditParticpantSheet";
+import { EnumFormMode } from "@/schemas/formSchema";
+import { ClassroomParticipant } from "@/schemas/classroomSchema";
 
-export const columns: ColumnDef<User>[] = [
+type GetColumnsProps = {
+  classroomId: string;
+};
+
+export const getColumns = ({
+  classroomId,
+}: GetColumnsProps): ColumnDef<ClassroomParticipant>[] => [
   {
     accessorKey: "index",
     header: "#",
@@ -40,7 +40,7 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status");
+      const status = row.original.status;
       return (
         <Badge variant={status === "accepted" ? "default" : "destructive"}>
           {status}
@@ -52,28 +52,24 @@ export const columns: ColumnDef<User>[] = [
     id: "actions",
     cell: ({ row }) => {
       const user = row.original;
+      const participant = {
+        ...user,
+        name: user.name ?? "",
+      };
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(user.email)}
-            >
-              Copy email
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View details</DropdownMenuItem>
-            <DropdownMenuItem>Edit user</DropdownMenuItem>
-            <DropdownMenuItem>Delete user</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <AddEditParticipantSheet
+          mode={EnumFormMode.Edit}
+          classroomId={classroomId}
+          participant={participant}
+        >
+          <Button
+            variant="ghost"
+            className="flex h-full items-center justify-center"
+          >
+            <PencilIcon className="h-3 w-3" />
+          </Button>
+        </AddEditParticipantSheet>
       );
     },
   },
