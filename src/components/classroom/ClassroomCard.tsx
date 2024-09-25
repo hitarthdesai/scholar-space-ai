@@ -10,6 +10,7 @@ import {
   type UserClassroom,
 } from "@/schemas/classroomSchema";
 import { Badge } from "../ui/badge";
+import { AcceptInviteButton } from "./participants/AcceptInviteButton";
 
 export type ClassroomCardProps = {
   classroom: UserClassroom;
@@ -69,7 +70,7 @@ export function ClassroomCard({ classroom }: ClassroomCardProps) {
             <Button className="grow" variant="destructive">
               Reject
             </Button>
-            <Button className="grow">Accept</Button>
+            <AcceptInviteButton classroomId={id} />
           </div>
         )}
         {status === EnumClassroomParticpantStatus.Pending && (

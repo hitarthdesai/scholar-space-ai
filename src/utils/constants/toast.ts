@@ -228,4 +228,6 @@ export const toastDescriptionAcceptInvite: Record<AcceptInviteResult, string> =
       "You are not authorized to accept this invite.",
     [EnumAcceptInviteResult.Error]:
       "Unable to accept this invite. Please try again later.",
+    [EnumAcceptInviteResult.NotConfirmed]:
+      "You must confirm the invite to accept it.",
   };
