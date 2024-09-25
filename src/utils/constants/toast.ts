@@ -7,7 +7,7 @@ import {
   EnumEditAssignmentResult,
 } from "@/schemas/assignmentSchema";
 import {
-  AcceptInviteResult,
+  type AcceptInviteResult,
   type CreateClassroomResult,
   type DeleteClassroomResult,
   type EditClassroomResult,

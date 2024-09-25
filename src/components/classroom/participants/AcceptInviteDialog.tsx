@@ -5,12 +5,10 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { FormIds } from "@/utils/constants/form";
 import { type ReactNode, useState } from "react";
 import { AcceptInviteForm } from "./AcceptInviteForm";
 
