@@ -19,9 +19,13 @@ import {
   editParticipantFormSchema,
   EnumEditParticipantResult,
   type ClassroomParticipant,
+  EnumRemoveParticipantResult,
 } from "@/schemas/classroomSchema";
 import { toast } from "@/components/ui/use-toast";
-import { toastDescriptionEditParticipant } from "@/utils/constants/toast";
+import {
+  toastDescriptionEditParticipant,
+  toastDescriptionRemoveParticipant,
+} from "@/utils/constants/toast";
 
 import { FormIds } from "@/utils/constants/form";
 import { type Dispatch, type SetStateAction } from "react";
@@ -36,6 +40,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { editParticipant } from "@/actions/editParticipant";
+import { removeParticipant } from "@/actions/removeParticipant";
 
 type EditParticipantFormProps = {
   classroomId: string;
@@ -60,34 +65,65 @@ export function EditParticipantForm({
     defaultValues: editParticipantDefaultValues,
   });
 
-  const { executeAsync, isExecuting: isEditing } = useAction(editParticipant, {
-    onSuccess({ data }) {
-      if (!data?.type) return;
+  const { executeAsync: executeEdit, isExecuting: isEditing } = useAction(
+    editParticipant,
+    {
+      onSuccess({ data }) {
+        if (!data?.type) return;
 
-      const isErroneous =
-        data.type !== EnumEditParticipantResult.ParticpantEdited;
+        const isErroneous =
+          data.type !== EnumEditParticipantResult.ParticpantEdited;
 
-      toast({
-        title: isErroneous
-          ? "Error in editing participant"
-          : "Participant edited successfully",
-        description: toastDescriptionEditParticipant[data.type],
-        variant: isErroneous ? "destructive" : "default",
-      });
+        toast({
+          title: isErroneous
+            ? "Error in editing participant"
+            : "Participant edited successfully",
+          description: toastDescriptionEditParticipant[data.type],
+          variant: isErroneous ? "destructive" : "default",
+        });
 
-      if (!isErroneous) {
-        form.reset();
-        setIsOpen(false);
-        router.refresh();
-      }
-    },
-  });
+        if (!isErroneous) {
+          form.reset();
+          setIsOpen(false);
+          router.refresh();
+        }
+      },
+    }
+  );
+
+  const { executeAsync: executeRemove, isExecuting: isRemoving } = useAction(
+    removeParticipant,
+    {
+      onSuccess({ data }) {
+        if (!data?.type) return;
+
+        const isErroneous =
+          data.type !== EnumRemoveParticipantResult.ParticpantRemoved;
+
+        toast({
+          title: isErroneous
+            ? "Error in removing participant"
+            : "Participant removed successfully",
+          description: toastDescriptionRemoveParticipant[data.type],
+          variant: isErroneous ? "destructive" : "default",
+        });
+
+        if (!isErroneous) {
+          form.reset();
+          setIsOpen(false);
+          router.refresh();
+        }
+      },
+    }
+  );
+
+  const disableActions = isEditing || isRemoving;
 
   return (
     <Form {...form}>
       <form
         id={FormIds.EditParticipant}
-        onSubmit={form.handleSubmit(executeAsync)}
+        onSubmit={form.handleSubmit(executeEdit)}
         className="flex h-full flex-col gap-2"
       >
         <FormItem>
@@ -145,7 +181,20 @@ export function EditParticipantForm({
           )}
         />
       </form>
-      <SheetFooter>
+      <SheetFooter className="flex w-full items-center justify-between">
+        <LoadingButton
+          disabled={disableActions}
+          isLoading={isRemoving}
+          variant="destructive"
+          onClick={async () =>
+            executeRemove({
+              classroomId,
+              participantId: participant.id,
+            })
+          }
+        >
+          Remove
+        </LoadingButton>
         <LoadingButton
           disabled={isEditing}
           isLoading={isEditing}

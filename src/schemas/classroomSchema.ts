@@ -142,6 +142,27 @@ export const EnumEditParticipantResult = {
 const editParticipantResultSchema = z.nativeEnum(EnumEditParticipantResult);
 export type EditParticipantResult = z.infer<typeof editParticipantResultSchema>;
 
+export const removeParticipantInputSchema = z.object({
+  classroomId: z.string().min(1),
+  participantId: z.string().min(1),
+});
+
+export type RemoveParticipantInput = z.infer<
+  typeof removeParticipantInputSchema
+>;
+
+export const EnumRemoveParticipantResult = {
+  ParticpantRemoved: "participantRemoved",
+  NotAParticipant: "notAParticipant",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const removeParticipantResultSchema = z.nativeEnum(EnumRemoveParticipantResult);
+export type RemoveParticipantResult = z.infer<
+  typeof removeParticipantResultSchema
+>;
+
 export const deleteClassroomInputSchema = z.object({
   classroomId: z.string().min(1),
 });

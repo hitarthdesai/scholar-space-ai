@@ -19,6 +19,8 @@ import {
   EnumInviteParticipantResult,
   EnumEditParticipantResult,
   type InviteParticipantResult,
+  type RemoveParticipantResult,
+  EnumRemoveParticipantResult,
 } from "@/schemas/classroomSchema";
 import { EnumLoginResult, type LoginResult } from "@/schemas/loginSchema";
 import {
@@ -234,6 +236,20 @@ export const toastDescriptionEditParticipant: Record<
     "You are not authorized to edit participants of this classroom.",
   [EnumEditParticipantResult.Error]:
     "Unable to edit this participant. Please try again later.",
+};
+
+export const toastDescriptionRemoveParticipant: Record<
+  RemoveParticipantResult,
+  string
+> = {
+  [EnumRemoveParticipantResult.ParticpantRemoved]:
+    "The participant has been removed successfully.",
+  [EnumRemoveParticipantResult.NotAParticipant]:
+    "This user is not a participant of this classroom.",
+  [EnumRemoveParticipantResult.NotAuthorized]:
+    "You are not authorized to remove participants of this classroom.",
+  [EnumRemoveParticipantResult.Error]:
+    "Unable to remove this participant. Please try again later.",
 };
 
 export const toastDescriptionAcceptInvite: Record<AcceptInviteResult, string> =
