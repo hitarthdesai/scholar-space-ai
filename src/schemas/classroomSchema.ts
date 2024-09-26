@@ -94,7 +94,7 @@ export const addEditParticipantSheetPropsSchema = z.union([
   }),
   z.object({
     mode: z.literal(EnumFormMode.Edit),
-    participant: userClassroomSchema,
+    participant: classroomParticpantSchema,
     classroomId: z.string().min(1),
   }),
 ]);
