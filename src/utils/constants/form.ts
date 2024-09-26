@@ -1,5 +1,6 @@
 export const FormIds = {
   InviteParticipant: "addParticipantForm",
+  EditParticipant: "editParticipantForm",
   AcceptInvite: "acceptInviteForm",
   RejectInvite: "rejectInviteForm",
   AddClassroom: "createClassroomForm",

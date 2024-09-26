@@ -39,6 +39,13 @@ export const classroomSchema = z.object({
 
 export type Classroom = z.infer<typeof classroomSchema>;
 
+export const userClassroomSchema = classroomSchema.extend({
+  role: classroomRoleSchema,
+  status: classroomParticipantStatusSchema,
+});
+
+export type UserClassroom = z.infer<typeof userClassroomSchema>;
+
 export const addEditClassroomSheetPropsSchema = z.union([
   z.object({
     mode: z.literal(EnumFormMode.Add),
@@ -71,6 +78,16 @@ export const EnumAddClassroomResult = {
 const createClassroomResultSchema = z.nativeEnum(EnumAddClassroomResult);
 export type CreateClassroomResult = z.infer<typeof createClassroomResultSchema>;
 
+export const classroomParticpantSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1).nullable(),
+  email: z.string().email(),
+  role: classroomRoleSchema,
+  status: classroomParticipantStatusSchema,
+});
+
+export type ClassroomParticipant = z.infer<typeof classroomParticpantSchema>;
+
 export const addEditParticipantSheetPropsSchema = z.union([
   z.object({
     mode: z.literal(EnumFormMode.Add),
@@ -78,7 +95,8 @@ export const addEditParticipantSheetPropsSchema = z.union([
   }),
   z.object({
     mode: z.literal(EnumFormMode.Edit),
-    classroom: classroomSchema,
+    participant: classroomParticpantSchema,
+    classroomId: z.string().min(1),
   }),
 ]);
 
@@ -107,12 +125,46 @@ export type InviteParticipantResult = z.infer<
   typeof inviteParticipantResultSchema
 >;
 
-export const userClassroomSchema = classroomSchema.extend({
+export const editParticipantFormSchema = z.object({
   role: classroomRoleSchema,
-  status: classroomParticipantStatusSchema,
+  classroomId: z.string().min(1),
+  participantId: z.string().min(1),
 });
 
-export type UserClassroom = z.infer<typeof userClassroomSchema>;
+export type EditParticipantForm = z.infer<typeof editParticipantFormSchema>;
+
+export const EnumEditParticipantResult = {
+  ParticpantEdited: "participantEdited",
+  LastAdmin: "lastAdmin",
+  NotAParticipant: "notAParticipant",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const editParticipantResultSchema = z.nativeEnum(EnumEditParticipantResult);
+export type EditParticipantResult = z.infer<typeof editParticipantResultSchema>;
+
+export const removeParticipantInputSchema = z.object({
+  classroomId: z.string().min(1),
+  participantId: z.string().min(1),
+});
+
+export type RemoveParticipantInput = z.infer<
+  typeof removeParticipantInputSchema
+>;
+
+export const EnumRemoveParticipantResult = {
+  ParticpantRemoved: "participantRemoved",
+  LastAdmin: "lastAdmin",
+  NotAParticipant: "notAParticipant",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const removeParticipantResultSchema = z.nativeEnum(EnumRemoveParticipantResult);
+export type RemoveParticipantResult = z.infer<
+  typeof removeParticipantResultSchema
+>;
 
 export const deleteClassroomInputSchema = z.object({
   classroomId: z.string().min(1),
@@ -158,6 +210,7 @@ export type FilterClassroomsForm = z.infer<typeof filterClassroomsFormSchema>;
 
 export const acceptInviteFormSchema = z.object({
   confirm: z.boolean(),
+  classroomId: z.string().min(1),
 });
 
 export type AcceptInviteForm = z.infer<typeof acceptInviteFormSchema>;
@@ -166,6 +219,7 @@ export const EnumAcceptInviteResult = {
   InviteAccepted: "inviteAccepted",
   NotAuthorized: "notAuthorized",
   Error: "error",
+  NotConfirmed: "notConfirmed",
 } as const;
 
 const acceptInviteResultSchema = z.nativeEnum(EnumAcceptInviteResult);

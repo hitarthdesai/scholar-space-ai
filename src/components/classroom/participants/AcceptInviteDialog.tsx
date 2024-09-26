@@ -8,17 +8,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { RejectInviteForm } from "./RejectInviteForm";
 import { type PropsWithChildren, useState } from "react";
+import { AcceptInviteForm } from "./AcceptInviteForm";
 
-type RejectInviteDialogProps = {
+type AcceptInviteDialogProps = {
   classroomId: string;
 };
 
-export function RejectInviteDialog({
+export function AcceptInviteDialog({
   classroomId,
   children,
-}: PropsWithChildren<RejectInviteDialogProps>) {
+}: PropsWithChildren<AcceptInviteDialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -26,12 +26,12 @@ export function RejectInviteDialog({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-w-72 sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Reject Invite</DialogTitle>
+          <DialogTitle>Accept Invite</DialogTitle>
           <DialogDescription>
-            Reject the invite to join this classroom.
+            Accept the invite to join the classroom.
           </DialogDescription>
         </DialogHeader>
-        <RejectInviteForm classroomId={classroomId} setIsOpen={setIsOpen} />
+        <AcceptInviteForm classroomId={classroomId} setIsOpen={setIsOpen} />
       </DialogContent>
     </Dialog>
   );

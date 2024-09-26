@@ -10,23 +10,12 @@ import {
   type UserClassroom,
 } from "@/schemas/classroomSchema";
 import { Badge } from "../ui/badge";
+import { AcceptInviteDialog } from "./participants/AcceptInviteDialog";
 import { RejectInviteDialog } from "./participants/RejectInviteDialog";
+import { roleBadgeStyles, statusBadgeStyles } from "@/utils/constants/misc";
 
 export type ClassroomCardProps = {
   classroom: UserClassroom;
-};
-
-const roleBadgeStyles = {
-  [EnumClassroomRole.Admin]: "bg-red-500 text-white",
-  [EnumClassroomRole.Student]: "bg-blue-500 text-white",
-  [EnumClassroomRole.Teacher]: "bg-green-500",
-  [EnumClassroomRole.TeachingAssistant]: "bg-yellow-500",
-};
-
-const statusBadgeStyles = {
-  [EnumClassroomParticpantStatus.Accepted]: "border-green-500 text-green-500",
-  [EnumClassroomParticpantStatus.Pending]: "border-yellow-500 text-yellow-500",
-  [EnumClassroomParticpantStatus.Invited]: "border-red-500 text-red-500",
 };
 
 export function ClassroomCard({ classroom }: ClassroomCardProps) {
@@ -67,20 +56,25 @@ export function ClassroomCard({ classroom }: ClassroomCardProps) {
         )}
         {status === EnumClassroomParticpantStatus.Invited && (
           <div className="flex w-full gap-4">
-            <RejectInviteDialog
-              trigger={
-                <Button className="grow rounded-md" variant="destructive">
-                  Reject
-                </Button>
-              }
-              classroomId={id}
-            />
-            <Button className="grow">Accept</Button>
+            <RejectInviteDialog classroomId={id}>
+              <Button className="grow rounded-md" variant="destructive">
+                Reject
+              </Button>
+            </RejectInviteDialog>
+
+            <AcceptInviteDialog classroomId={id}>
+              <Button className="grow rounded-md">Accept</Button>
+            </AcceptInviteDialog>
           </div>
         )}
         {status === EnumClassroomParticpantStatus.Pending && (
           <div className="flex w-full gap-4 rounded-md border px-1 py-2 text-xs">
             The request to join is pending approval
+          </div>
+        )}
+        {status === EnumClassroomParticpantStatus.Rejected && (
+          <div className="flex w-full gap-4 rounded-md border px-1 py-2 text-xs">
+            You denied joining this classroom
           </div>
         )}
       </CardFooter>

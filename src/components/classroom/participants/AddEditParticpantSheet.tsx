@@ -12,11 +12,11 @@ import { type PropsWithChildren, useState } from "react";
 import { EnumFormMode } from "@/schemas/formSchema";
 import { type AddEditParticipantSheetProps } from "@/schemas/classroomSchema";
 import { InviteParticipantForm } from "./InviteParticipantForm";
-import { EditClassroomForm } from "../EditClassroomForm";
 import {
   classroomParticipantSheetDescription,
   classroomParticipantSheetTitle,
 } from "@/utils/constants/classroom";
+import { EditParticipantForm } from "./EditParticipantForm";
 
 export function AddEditParticipantSheet({
   children,
@@ -38,7 +38,7 @@ export function AddEditParticipantSheet({
         {mode === EnumFormMode.Add ? (
           <InviteParticipantForm {...props} setIsOpen={setIsOpen} />
         ) : (
-          <EditClassroomForm {...props} setIsOpen={setIsOpen} />
+          <EditParticipantForm {...props} setIsOpen={setIsOpen} />
         )}
       </SheetContent>
     </Sheet>

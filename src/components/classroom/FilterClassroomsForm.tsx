@@ -146,6 +146,9 @@ export function FilterClassroomsForm({
                   <SelectItem value={EnumClassroomParticpantStatus.Pending}>
                     Pending
                   </SelectItem>
+                  <SelectItem value={EnumClassroomParticpantStatus.Rejected}>
+                    Rejected
+                  </SelectItem>
                   <SelectItem value={allOptionsValue}>All</SelectItem>
                 </SelectContent>
               </Select>
