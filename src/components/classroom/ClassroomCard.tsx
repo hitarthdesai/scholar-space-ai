@@ -70,10 +70,9 @@ export function ClassroomCard({ classroom }: ClassroomCardProps) {
             <Button className="grow" variant="destructive">
               Reject
             </Button>
-            <AcceptInviteDialog
-              trigger={<Button className="grow rounded-md">Accept</Button>}
-              classroomId={id}
-            />
+            <AcceptInviteDialog classroomId={id}>
+              <Button className="grow rounded-md">Accept</Button>
+            </AcceptInviteDialog>
           </div>
         )}
         {status === EnumClassroomParticpantStatus.Pending && (

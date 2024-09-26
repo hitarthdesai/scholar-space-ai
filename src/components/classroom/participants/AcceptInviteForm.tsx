@@ -23,7 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 type AcceptInviteFormProps = {
   classroomId: string;
@@ -43,11 +43,6 @@ export function AcceptInviteForm({
   const form = useForm<AcceptInviteFormType>({
     resolver: zodResolver(acceptInviteFormSchema),
     defaultValues: acceptInviteDefaultValues,
-  });
-
-  const confirmValue = useWatch({
-    control: form.control,
-    name: "confirm",
   });
 
   const { executeAsync, isExecuting } = useAction(acceptInvite, {
