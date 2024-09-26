@@ -44,7 +44,7 @@ export default async function Participants({
   const participants = await getClassroomParticipantsFromDb({ classroomId });
   const numberOfParticipants = participants.length;
 
-  const canAddParticipants = await canUserManageParticipants({
+  const canAddOrEditParticipants = await canUserManageParticipants({
     classroomId,
     userId,
   });
@@ -56,7 +56,7 @@ export default async function Participants({
         <h2 className="text-2xl font-bold">
           Class Participants ({numberOfParticipants})
         </h2>
-        {canAddParticipants && (
+        {canAddOrEditParticipants && (
           <AddEditParticipantSheet
             mode={EnumFormMode.Add}
             classroomId={classroomId}
@@ -68,7 +68,11 @@ export default async function Participants({
           </AddEditParticipantSheet>
         )}
       </div>
-      <UsersTable classroomId={classroomId} users={participants} />
+      <UsersTable
+        classroomId={classroomId}
+        canAddOrEditParticipants={canAddOrEditParticipants}
+        users={participants}
+      />
     </div>
   );
 }

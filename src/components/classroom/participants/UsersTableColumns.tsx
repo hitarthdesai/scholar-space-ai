@@ -9,10 +9,12 @@ import { roleBadgeStyles, statusBadgeStyles } from "@/utils/constants/misc";
 
 type GetColumnsProps = {
   classroomId: string;
+  canAddOrEditParticipants: boolean;
 };
 
 export const getColumns = ({
   classroomId,
+  canAddOrEditParticipants,
 }: GetColumnsProps): ColumnDef<ClassroomParticipant>[] => [
   {
     accessorKey: "index",
@@ -67,18 +69,22 @@ export const getColumns = ({
       };
 
       return (
-        <AddEditParticipantSheet
-          mode={EnumFormMode.Edit}
-          classroomId={classroomId}
-          participant={participant}
-        >
-          <Button
-            variant="ghost"
-            className="flex h-full items-center justify-center"
-          >
-            <PencilIcon className="h-3 w-3" />
-          </Button>
-        </AddEditParticipantSheet>
+        <>
+          {canAddOrEditParticipants && (
+            <AddEditParticipantSheet
+              mode={EnumFormMode.Edit}
+              classroomId={classroomId}
+              participant={participant}
+            >
+              <Button
+                variant="ghost"
+                className="flex h-full items-center justify-center"
+              >
+                <PencilIcon className="h-3 w-3" />
+              </Button>
+            </AddEditParticipantSheet>
+          )}
+        </>
       );
     },
   },

@@ -23,12 +23,20 @@ import { useMemo, useState } from "react";
 
 type UsersTableProps = {
   classroomId: string;
+  canAddOrEditParticipants: boolean;
   users: ClassroomParticipant[];
 };
 
-export function UsersTable({ classroomId, users }: UsersTableProps) {
+export function UsersTable({
+  classroomId,
+  canAddOrEditParticipants,
+  users,
+}: UsersTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const columns = useMemo(() => getColumns({ classroomId }), [classroomId]);
+  const columns = useMemo(
+    () => getColumns({ classroomId, canAddOrEditParticipants }),
+    [classroomId, canAddOrEditParticipants]
+  );
 
   const table = useReactTable({
     data: users,

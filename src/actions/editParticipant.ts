@@ -1,6 +1,7 @@
 "use server";
 
 import {
+  EnumClassroomParticpantStatus,
   EnumClassroomRole,
   EnumEditParticipantResult,
   editParticipantFormSchema,
@@ -31,42 +32,43 @@ export const editParticipant = createSafeActionClient()
         return { type: EnumEditParticipantResult.NotAuthorized };
       }
 
-      return await db.transaction(async (tx) => {
-        const participant = await tx
-          .update(classroomParticpants)
-          .set({
-            role,
-          })
-          .where(
-            and(
-              eq(classroomParticpants.classroomId, classroomId),
-              eq(classroomParticpants.userId, participantId)
+      const admins = await db
+        .select()
+        .from(classroomParticpants)
+        .where(
+          and(
+            eq(classroomParticpants.classroomId, classroomId),
+            eq(classroomParticpants.role, EnumClassroomRole.Admin),
+            eq(
+              classroomParticpants.status,
+              EnumClassroomParticpantStatus.Accepted
             )
-          );
+          )
+        );
 
-        if (participant.rowsAffected === 0) {
-          return { type: EnumEditParticipantResult.NotAParticipant };
-        }
+      if (admins.length === 1 && admins[0].userId === participantId) {
+        return { type: EnumEditParticipantResult.LastAdmin };
+      }
 
-        const admins = await tx
-          .select()
-          .from(classroomParticpants)
-          .where(
-            and(
-              eq(classroomParticpants.classroomId, classroomId),
-              eq(classroomParticpants.role, EnumClassroomRole.Admin)
-            )
-          );
+      const participant = await db
+        .update(classroomParticpants)
+        .set({
+          role,
+        })
+        .where(
+          and(
+            eq(classroomParticpants.classroomId, classroomId),
+            eq(classroomParticpants.userId, participantId)
+          )
+        );
 
-        if (admins.length === 0) {
-          tx.rollback();
-          return { type: EnumEditParticipantResult.LastAdmin };
-        }
+      if (participant.rowsAffected === 0) {
+        return { type: EnumEditParticipantResult.NotAParticipant };
+      }
 
-        return {
-          type: EnumEditParticipantResult.ParticpantEdited,
-        };
-      });
+      return {
+        type: EnumEditParticipantResult.ParticpantEdited,
+      };
     } catch (e) {
       console.error(e);
       return { type: EnumEditParticipantResult.Error };

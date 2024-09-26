@@ -4,6 +4,7 @@ import {
   removeParticipantInputSchema,
   EnumRemoveParticipantResult,
   EnumClassroomRole,
+  EnumClassroomParticpantStatus,
 } from "@/schemas/classroomSchema";
 import { db } from "@/server/db";
 import { classroomParticpants } from "@/server/db/schema";
@@ -31,39 +32,40 @@ export const removeParticipant = createSafeActionClient()
         return { type: EnumRemoveParticipantResult.NotAuthorized };
       }
 
-      return await db.transaction(async (tx) => {
-        const participant = await db
-          .delete(classroomParticpants)
-          .where(
-            and(
-              eq(classroomParticpants.classroomId, classroomId),
-              eq(classroomParticpants.userId, participantId)
+      const admins = await db
+        .select()
+        .from(classroomParticpants)
+        .where(
+          and(
+            eq(classroomParticpants.classroomId, classroomId),
+            eq(classroomParticpants.role, EnumClassroomRole.Admin),
+            eq(
+              classroomParticpants.status,
+              EnumClassroomParticpantStatus.Accepted
             )
-          );
+          )
+        );
 
-        if (participant.rowsAffected === 0) {
-          return { type: EnumRemoveParticipantResult.NotAParticipant };
-        }
+      if (admins.length === 1 && admins[0].userId === participantId) {
+        return { type: EnumRemoveParticipantResult.LastAdmin };
+      }
 
-        const admins = await tx
-          .select()
-          .from(classroomParticpants)
-          .where(
-            and(
-              eq(classroomParticpants.classroomId, classroomId),
-              eq(classroomParticpants.role, EnumClassroomRole.Admin)
-            )
-          );
+      const participant = await db
+        .delete(classroomParticpants)
+        .where(
+          and(
+            eq(classroomParticpants.classroomId, classroomId),
+            eq(classroomParticpants.userId, participantId)
+          )
+        );
 
-        if (admins.length === 0) {
-          tx.rollback();
-          return { type: EnumRemoveParticipantResult.LastAdmin };
-        }
+      if (participant.rowsAffected === 0) {
+        return { type: EnumRemoveParticipantResult.NotAParticipant };
+      }
 
-        return {
-          type: EnumRemoveParticipantResult.ParticpantRemoved,
-        };
-      });
+      return {
+        type: EnumRemoveParticipantResult.ParticpantRemoved,
+      };
     } catch (e) {
       console.error(e);
       return { type: EnumRemoveParticipantResult.Error };
