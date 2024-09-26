@@ -19,6 +19,7 @@ export const EnumClassroomParticpantStatus = {
   Accepted: "accepted",
   Pending: "pending",
   Invited: "invited",
+  Rejected: "rejected",
 } as const;
 
 const classroomParticipantStatusSchema = z.nativeEnum(
@@ -226,6 +227,7 @@ export type AcceptInviteResult = z.infer<typeof acceptInviteResultSchema>;
 
 export const rejectInviteFormSchema = z.object({
   confirm: z.boolean(),
+  classroomId: z.string().min(1),
 });
 
 export type RejectInviteForm = z.infer<typeof rejectInviteFormSchema>;
@@ -234,4 +236,8 @@ export const EnumRejectInviteResult = {
   InviteRejected: "inviteRejected",
   NotAuthorized: "notAuthorized",
   Error: "error",
+  NotConfirmed: "notConfirmed",
 } as const;
+
+const rejectInviteResultSchema = z.nativeEnum(EnumRejectInviteResult);
+export type RejectInviteResult = z.infer<typeof rejectInviteResultSchema>;

@@ -40,6 +40,7 @@ export const classroomParticpants = sqliteTable(
         EnumClassroomParticpantStatus.Accepted,
         EnumClassroomParticpantStatus.Invited,
         EnumClassroomParticpantStatus.Pending,
+        EnumClassroomParticpantStatus.Rejected,
       ],
     }).notNull(),
   },

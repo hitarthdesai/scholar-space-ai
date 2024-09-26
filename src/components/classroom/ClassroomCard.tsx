@@ -11,6 +11,7 @@ import {
 } from "@/schemas/classroomSchema";
 import { Badge } from "../ui/badge";
 import { AcceptInviteDialog } from "./participants/AcceptInviteDialog";
+import { RejectInviteDialog } from "./participants/RejectInviteDialog";
 import { roleBadgeStyles, statusBadgeStyles } from "@/utils/constants/misc";
 
 export type ClassroomCardProps = {
@@ -55,9 +56,12 @@ export function ClassroomCard({ classroom }: ClassroomCardProps) {
         )}
         {status === EnumClassroomParticpantStatus.Invited && (
           <div className="flex w-full gap-4">
-            <Button className="grow" variant="destructive">
-              Reject
-            </Button>
+            <RejectInviteDialog classroomId={id}>
+              <Button className="grow rounded-md" variant="destructive">
+                Reject
+              </Button>
+            </RejectInviteDialog>
+
             <AcceptInviteDialog classroomId={id}>
               <Button className="grow rounded-md">Accept</Button>
             </AcceptInviteDialog>
@@ -66,6 +70,11 @@ export function ClassroomCard({ classroom }: ClassroomCardProps) {
         {status === EnumClassroomParticpantStatus.Pending && (
           <div className="flex w-full gap-4 rounded-md border px-1 py-2 text-xs">
             The request to join is pending approval
+          </div>
+        )}
+        {status === EnumClassroomParticpantStatus.Rejected && (
+          <div className="flex w-full gap-4 rounded-md border px-1 py-2 text-xs">
+            You denied joining this classroom
           </div>
         )}
       </CardFooter>

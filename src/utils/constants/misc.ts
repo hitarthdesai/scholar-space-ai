@@ -12,6 +12,7 @@ export const roleBadgeStyles = {
 
 export const statusBadgeStyles = {
   [EnumClassroomParticpantStatus.Accepted]: "border-green-500 text-green-500",
-  [EnumClassroomParticpantStatus.Pending]: "border-yellow-500 text-yellow-500",
-  [EnumClassroomParticpantStatus.Invited]: "border-red-500 text-red-500",
+  [EnumClassroomParticpantStatus.Pending]: "border-yellow-300 text-yellow-300",
+  [EnumClassroomParticpantStatus.Invited]: "border-yellow-700 text-yellow-700",
+  [EnumClassroomParticpantStatus.Rejected]: "border-red-500 text-red-500",
 };
