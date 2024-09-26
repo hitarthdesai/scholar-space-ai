@@ -11,12 +11,16 @@ import {
   type CreateClassroomResult,
   type DeleteClassroomResult,
   type EditClassroomResult,
+  type EditParticipantResult,
   EnumAcceptInviteResult,
   EnumAddClassroomResult,
   EnumDeleteClassroomResult,
   EnumEditClassroomResult,
   EnumInviteParticipantResult,
+  EnumEditParticipantResult,
   type InviteParticipantResult,
+  type RemoveParticipantResult,
+  EnumRemoveParticipantResult,
 } from "@/schemas/classroomSchema";
 import { EnumLoginResult, type LoginResult } from "@/schemas/loginSchema";
 import {
@@ -218,6 +222,38 @@ export const toastDescriptionInviteParticipant: Record<
     "You are not authorized to invite participants to this classroom.",
   [EnumInviteParticipantResult.Error]:
     "Unable to invite the participant to this classroom. Please try again later.",
+};
+
+export const toastDescriptionEditParticipant: Record<
+  EditParticipantResult,
+  string
+> = {
+  [EnumEditParticipantResult.ParticpantEdited]:
+    "The participant has been edited successfully.",
+  [EnumEditParticipantResult.LastAdmin]:
+    "You cannot change the role of the last admin of a classroom.",
+  [EnumEditParticipantResult.NotAParticipant]:
+    "This user is not a participant of this classroom.",
+  [EnumEditParticipantResult.NotAuthorized]:
+    "You are not authorized to edit participants of this classroom.",
+  [EnumEditParticipantResult.Error]:
+    "Unable to edit this participant. Please try again later.",
+};
+
+export const toastDescriptionRemoveParticipant: Record<
+  RemoveParticipantResult,
+  string
+> = {
+  [EnumRemoveParticipantResult.ParticpantRemoved]:
+    "The participant has been removed successfully.",
+  [EnumRemoveParticipantResult.LastAdmin]:
+    "You cannot remove the last admin of a classroom.",
+  [EnumRemoveParticipantResult.NotAParticipant]:
+    "This user is not a participant of this classroom.",
+  [EnumRemoveParticipantResult.NotAuthorized]:
+    "You are not authorized to remove participants of this classroom.",
+  [EnumRemoveParticipantResult.Error]:
+    "Unable to remove this participant. Please try again later.",
 };
 
 export const toastDescriptionAcceptInvite: Record<AcceptInviteResult, string> =

@@ -88,7 +88,7 @@ export function InviteParticipantForm({
       <form
         id={FormIds.InviteParticipant}
         onSubmit={form.handleSubmit(executeAsync)}
-        className="h-full"
+        className="flex h-full flex-col gap-2"
       >
         <FormField
           control={form.control}
