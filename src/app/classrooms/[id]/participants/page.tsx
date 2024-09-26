@@ -8,6 +8,7 @@ import { EnumFormMode } from "@/schemas/formSchema";
 import { auth } from "@/utils/auth/config";
 import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { canUserAccessClassroom } from "@/utils/classroom/canUserAccessClassroom";
+import { canUserManageParticipants } from "@/utils/classroom/canUserManageParticipants";
 import { getClassroomParticipantsFromDb } from "@/utils/classroom/getClassroomParticipantsFromDb";
 import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
@@ -43,6 +44,11 @@ export default async function Participants({
   const participants = await getClassroomParticipantsFromDb({ classroomId });
   const numberOfParticipants = participants.length;
 
+  const canAddParticipants = await canUserManageParticipants({
+    classroomId,
+    userId,
+  });
+
   return (
     <div className="flex h-full w-full flex-col gap-4 p-4">
       <PageBreadcrumbs breadcrumbs={breadcrumbs} />
@@ -50,15 +56,17 @@ export default async function Participants({
         <h2 className="text-2xl font-bold">
           Class Participants ({numberOfParticipants})
         </h2>
-        <AddEditParticipantSheet
-          mode={EnumFormMode.Add}
-          classroomId={classroomId}
-        >
-          <Button className="flex flex-col items-center justify-center sm:flex-row">
-            <UserPlus className="mr-2 h-4 w-4" />
-            Invite Participant
-          </Button>
-        </AddEditParticipantSheet>
+        {canAddParticipants && (
+          <AddEditParticipantSheet
+            mode={EnumFormMode.Add}
+            classroomId={classroomId}
+          >
+            <Button className="flex flex-col items-center justify-center sm:flex-row">
+              <UserPlus className="mr-2 h-4 w-4" />
+              Invite Participant
+            </Button>
+          </AddEditParticipantSheet>
+        )}
       </div>
       <UsersTable classroomId={classroomId} users={participants} />
     </div>

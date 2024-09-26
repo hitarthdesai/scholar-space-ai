@@ -230,6 +230,8 @@ export const toastDescriptionEditParticipant: Record<
 > = {
   [EnumEditParticipantResult.ParticpantEdited]:
     "The participant has been edited successfully.",
+  [EnumEditParticipantResult.LastAdmin]:
+    "You cannot change the role of the last admin of a classroom.",
   [EnumEditParticipantResult.NotAParticipant]:
     "This user is not a participant of this classroom.",
   [EnumEditParticipantResult.NotAuthorized]:
@@ -244,6 +246,8 @@ export const toastDescriptionRemoveParticipant: Record<
 > = {
   [EnumRemoveParticipantResult.ParticpantRemoved]:
     "The participant has been removed successfully.",
+  [EnumRemoveParticipantResult.LastAdmin]:
+    "You cannot remove the last admin of a classroom.",
   [EnumRemoveParticipantResult.NotAParticipant]:
     "This user is not a participant of this classroom.",
   [EnumRemoveParticipantResult.NotAuthorized]:

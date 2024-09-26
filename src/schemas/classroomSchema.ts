@@ -134,6 +134,7 @@ export type EditParticipantForm = z.infer<typeof editParticipantFormSchema>;
 
 export const EnumEditParticipantResult = {
   ParticpantEdited: "participantEdited",
+  LastAdmin: "lastAdmin",
   NotAParticipant: "notAParticipant",
   NotAuthorized: "notAuthorized",
   Error: "error",
@@ -153,6 +154,7 @@ export type RemoveParticipantInput = z.infer<
 
 export const EnumRemoveParticipantResult = {
   ParticpantRemoved: "participantRemoved",
+  LastAdmin: "lastAdmin",
   NotAParticipant: "notAParticipant",
   NotAuthorized: "notAuthorized",
   Error: "error",
