@@ -44,7 +44,7 @@ import { removeParticipant } from "@/actions/removeParticipant";
 
 type EditParticipantFormProps = {
   classroomId: string;
-  participant: ClassroomParticipant;
+  participant: ClassroomParticipant & { name: string };
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
