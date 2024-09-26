@@ -6,7 +6,7 @@ import {
   editParticipantFormSchema,
 } from "@/schemas/classroomSchema";
 import { db } from "@/server/db";
-import { classroomParticpants, users } from "@/server/db/schema";
+import { classroomParticpants } from "@/server/db/schema";
 import { auth } from "@/utils/auth/config";
 import { canUserManageParticipants } from "@/utils/classroom/canUserManageParticipants";
 import { and, eq } from "drizzle-orm";

@@ -4,7 +4,7 @@ import { ArrowUpDown, PencilIcon } from "lucide-react";
 import { type ColumnDef } from "@tanstack/react-table";
 import { AddEditParticipantSheet } from "./AddEditParticpantSheet";
 import { EnumFormMode } from "@/schemas/formSchema";
-import { ClassroomParticipant } from "@/schemas/classroomSchema";
+import { type ClassroomParticipant } from "@/schemas/classroomSchema";
 import { roleBadgeStyles, statusBadgeStyles } from "@/utils/constants/misc";
 
 type GetColumnsProps = {
