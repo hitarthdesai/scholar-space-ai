@@ -6,7 +6,7 @@ import {
   EnumAcceptInviteResult,
 } from "@/schemas/classroomSchema";
 import { db } from "@/server/db";
-import { classroomParticpants, users } from "@/server/db/schema";
+import { classroomParticpants } from "@/server/db/schema";
 import { auth } from "@/utils/auth/config";
 import { and, eq } from "drizzle-orm";
 import { createSafeActionClient } from "next-safe-action";
@@ -19,6 +19,10 @@ export const acceptInvite = createSafeActionClient()
       const userId = session?.user?.id;
       if (!userId) {
         return { type: EnumAcceptInviteResult.NotAuthorized };
+      }
+
+      if (!parsedInput.confirm) {
+        return { type: EnumAcceptInviteResult.NotConfirmed };
       }
 
       const invite = await db

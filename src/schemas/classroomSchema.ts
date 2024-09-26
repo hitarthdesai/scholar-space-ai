@@ -157,6 +157,7 @@ export type FilterClassroomsForm = z.infer<typeof filterClassroomsFormSchema>;
 
 export const acceptInviteFormSchema = z.object({
   confirm: z.boolean(),
+  classroomId: z.string().min(1),
 });
 
 export type AcceptInviteForm = z.infer<typeof acceptInviteFormSchema>;
@@ -165,6 +166,7 @@ export const EnumAcceptInviteResult = {
   InviteAccepted: "inviteAccepted",
   NotAuthorized: "notAuthorized",
   Error: "error",
+  NotConfirmed: "notConfirmed",
 } as const;
 
 const acceptInviteResultSchema = z.nativeEnum(EnumAcceptInviteResult);
