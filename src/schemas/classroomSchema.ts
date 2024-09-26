@@ -182,6 +182,7 @@ export const EnumRejectInviteResult = {
   InviteRejected: "inviteRejected",
   NotAuthorized: "notAuthorized",
   Error: "error",
+  NotConfirmed: "notConfirmed",
 } as const;
 
 const rejectInviteResultSchema = z.nativeEnum(EnumRejectInviteResult);

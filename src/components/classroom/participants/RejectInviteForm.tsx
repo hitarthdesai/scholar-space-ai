@@ -53,8 +53,8 @@ export function RejectInviteForm({
 
       toast({
         title: isErroneous
-          ? "Error in inviting participant"
-          : "Participant invited successfully",
+          ? "Error in rejecting invite"
+          : "Invite rejected successfully",
         description: toastDescriptionRejectInvite[data.type],
         variant: isErroneous ? "destructive" : "default",
       });

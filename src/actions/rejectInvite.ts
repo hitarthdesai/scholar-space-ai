@@ -20,7 +20,9 @@ export const rejectInvite = createSafeActionClient()
       if (!userId) {
         return { type: EnumRejectInviteResult.NotAuthorized };
       }
-
+      if (!parsedInput.confirm) {
+        return { type: EnumRejectInviteResult.NotConfirmed };
+      }
       const invite = await db
         .update(classroomParticpants)
         .set({
