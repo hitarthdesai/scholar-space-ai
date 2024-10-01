@@ -19,7 +19,7 @@ export const saveCode = createSafeActionClient()
       }
 
       const { questionId, code } = parsedInput;
-      const fileName = `questionAttempts/${questionId}/${userId}`;
+      const fileName = `questionAttempts/${questionId}/${userId}/solution`;
       const buffer = Buffer.from(code, "utf-8");
       const didSaveSucceed = await putObject({
         body: buffer,

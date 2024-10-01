@@ -23,7 +23,7 @@ export const runCode = createSafeActionClient()
       }
 
       const code = await getObject({
-        fileName: `questionAttempts/${questionId}/${userId}`,
+        fileName: `questionAttempts/${questionId}/${userId}/solution`,
       });
       if (!code) {
         return { type: EnumRunCodeResult.InsufficientCodeLength };
@@ -35,7 +35,7 @@ export const runCode = createSafeActionClient()
         return { type: EnumRunCodeResult.CodeRanWithErrors, output };
       }
 
-      const fileName = `questionAttemptOutputs/${questionId}/${userId}`;
+      const fileName = `questionAttempts/${questionId}/${userId}/output`;
       const buffer = Buffer.from(output ?? "", "utf-8");
       const didSaveSucceed = await putObject({
         body: buffer,
