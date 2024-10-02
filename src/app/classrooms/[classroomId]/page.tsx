@@ -1,4 +1,5 @@
 import { Classroom } from "@/components/classroom/Classroom";
+import { ClassroomSidebar } from "@/components/classroom/ClassroomSidebar";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
@@ -36,11 +37,14 @@ export default async function ClassroomPage({
   });
 
   return (
-    <div className="flex h-full w-full flex-col p-4">
-      <PageBreadcrumbs breadcrumbs={breadcrumbs} />
-      <main className="flex h-full w-full grow flex-col">
-        <Classroom id={classroomId} />
-      </main>
+    <div className="flex h-full w-full justify-center p-4">
+      <ClassroomSidebar classroomId={classroomId} />
+      <div className="flex h-full w-full flex-col">
+        <PageBreadcrumbs breadcrumbs={breadcrumbs} />
+        <main className="flex h-full w-full grow flex-col items-center justify-center">
+          Classroom Home Page
+        </main>
+      </div>
     </div>
   );
 }
