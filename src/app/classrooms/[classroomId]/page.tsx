@@ -1,4 +1,3 @@
-import { Classroom } from "@/components/classroom/Classroom";
 import { ClassroomSidebar } from "@/components/classroom/ClassroomSidebar";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
@@ -37,9 +36,11 @@ export default async function ClassroomPage({
   });
 
   return (
-    <div className="flex h-full w-full justify-center p-4">
-      <ClassroomSidebar classroomId={classroomId} />
-      <div className="flex h-full w-full flex-col">
+    <div className="grid h-full w-full grid-cols-[auto_1fr] grid-rows-2 gap-4 p-4">
+      <div className="col-span-1 row-span-2">
+        <ClassroomSidebar classroomId={classroomId} />
+      </div>
+      <div className="row-span-2 flex h-full w-full grow flex-col">
         <PageBreadcrumbs breadcrumbs={breadcrumbs} />
         <main className="flex h-full w-full grow flex-col items-center justify-center">
           Classroom Home Page
