@@ -13,11 +13,13 @@ import assert from "assert";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 
-type AssignmentQuestionsProps = {
-  assignmentId: string;
+type QuestionTitleProps = {
+  id: string;
+  name: string;
+  href: string;
 };
 
-function QuestionTitle({ id, name }: { id: string; name: string }) {
+function QuestionTitle({ id, name, href }: QuestionTitleProps) {
   const namePromise = db
     .select({ name: questions.name, id: questions.id })
     .from(questions)
@@ -38,7 +40,7 @@ function QuestionTitle({ id, name }: { id: string; name: string }) {
 
   return (
     <li className="flex flex-row items-center">
-      <Link href={`/questions/${id}`}>
+      <Link href={href}>
         <Button variant="link">{name}</Button>
       </Link>
       <AddEditQuestionSheet mode={EnumFormMode.Edit} editPromise={editPromise}>
@@ -50,7 +52,13 @@ function QuestionTitle({ id, name }: { id: string; name: string }) {
   );
 }
 
+type AssignmentQuestionsProps = {
+  classroomId: string;
+  assignmentId: string;
+};
+
 export async function AssignmentQuestions({
+  classroomId,
   assignmentId,
 }: AssignmentQuestionsProps) {
   const session = await auth();
@@ -87,9 +95,10 @@ export async function AssignmentQuestions({
 
   return (
     <ol className="flex flex-col">
-      {questions.map(({ id, name }) => (
-        <QuestionTitle key={id} id={id} name={name} />
-      ))}
+      {questions.map(({ id, name }) => {
+        const href = `/classrooms/${classroomId}/assignments/${assignmentId}/questions/${id}`;
+        return <QuestionTitle key={id} id={id} href={href} name={name} />;
+      })}
       {isAuthorizedToAddOrDelete && (
         <li>
           <AddEditQuestionSheet

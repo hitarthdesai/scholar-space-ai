@@ -55,6 +55,7 @@ export async function Classroom({ id }: ClassroomProps) {
         {assignments.map((assignment) => (
           <li key={assignment.id} className="min-w-72 max-w-72">
             <AssignmentCard
+              classroomId={id}
               assignment={assignment}
               isAuthorizedToEditAssignment={
                 isAuthorizedToCreateOrDeleteAssignment
