@@ -7,12 +7,18 @@ import { canUserAccessAssignment } from "./canUserAccessAssignment";
 
 type CanUserAccessQuestionProps = {
   questionId: string;
+  /** Ensure assignment associated to given questionId has this assignmentId */
+  assignmentId?: string;
+  /** Ensure classroom associated to given assignmentId has this classroomId */
+  classroomId?: string;
   userId: string;
   accessType: AccessType;
 };
 
 export async function canUserAccessQuestion({
   questionId,
+  assignmentId,
+  classroomId,
   userId,
   accessType,
 }: CanUserAccessQuestionProps) {
@@ -28,10 +34,13 @@ export async function canUserAccessQuestion({
     .parse(data);
 
   if (assignments.length === 0) return false;
-  const assignmentId = assignments[0].assignmentId;
+  const _assignmentId = assignments[0].assignmentId;
+
+  if (assignmentId && _assignmentId !== assignmentId) return false;
 
   const isAuthorized = await canUserAccessAssignment({
-    assignmentId,
+    assignmentId: _assignmentId,
+    classroomId,
     userId,
     accessType,
   });

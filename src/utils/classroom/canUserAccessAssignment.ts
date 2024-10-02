@@ -7,12 +7,15 @@ import { canUserAccessClassroom } from "./canUserAccessClassroom";
 
 type CanUserAccessAssignmentProps = {
   assignmentId: string;
+  /** Ensure classroom associated to given assignmentId has this classroomId */
+  classroomId?: string;
   userId: string;
   accessType: AccessType;
 };
 
 export async function canUserAccessAssignment({
   assignmentId,
+  classroomId,
   userId,
   accessType,
 }: CanUserAccessAssignmentProps): Promise<boolean> {
@@ -28,10 +31,12 @@ export async function canUserAccessAssignment({
     .parse(data);
 
   if (classrooms.length === 0) return false;
-  const classroomId = classrooms[0].classroomId;
+  const _classroomId = classrooms[0].classroomId;
+
+  if (classroomId && _classroomId !== classroomId) return false;
 
   const isAuthorized = await canUserAccessClassroom({
-    classroomId,
+    classroomId: _classroomId,
     userId,
     accessType,
   });
