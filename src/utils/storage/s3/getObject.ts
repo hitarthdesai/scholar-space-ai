@@ -18,7 +18,7 @@ export async function getObject({ fileName }: GetObjectProps) {
   try {
     const s3 = getS3Client();
     const params: GetObjectCommandInput = {
-      Bucket: process.env.AWS_S3_BUCKET!,
+      Bucket: process.env.WEBAPP_AWS_S3_BUCKET!,
       Key: fileName,
     };
 

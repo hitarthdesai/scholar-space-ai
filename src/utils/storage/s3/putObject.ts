@@ -1,4 +1,7 @@
-import { PutObjectCommand, type PutObjectCommandInput } from "@aws-sdk/client-s3";
+import {
+  PutObjectCommand,
+  type PutObjectCommandInput,
+} from "@aws-sdk/client-s3";
 import { getS3Client } from "./getS3Client";
 
 type PutObjectProps = {
@@ -21,7 +24,7 @@ export async function putObject({
   try {
     const s3 = getS3Client();
     const params: PutObjectCommandInput = {
-      Bucket: process.env.AWS_S3_BUCKET!,
+      Bucket: process.env.WEBAPP_AWS_S3_BUCKET!,
       Key: fileName,
       ContentType: contentType,
       Body: body,
