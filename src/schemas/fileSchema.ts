@@ -29,7 +29,7 @@ export type AddEditFileSheetProps = z.infer<typeof addEditFileSheetPropsSchema>;
 
 export const addFileFormSchema = z.object({
   classroomId: z.string(),
-  file: z.any(),
+  file: z.string(),
   name: z.string().min(FILE_NAME_MIN_LENGTH).max(FILE_NAME_MAX_LENGTH),
 });
 

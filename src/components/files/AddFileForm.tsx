@@ -50,16 +50,19 @@ type ReadFileStatus =
   (typeof EnumReadFileStatus)[keyof typeof EnumReadFileStatus];
 
 export const AddFileForm = ({ classroomId, setIsOpen }: AddFileFormProps) => {
-  const [_, setFileStatus] = useState<ReadFileStatus>(
+  const fileStatusUseStateReturn = useState<ReadFileStatus>(
     EnumReadFileStatus.PendingUpload
   );
+  const setFileStatus = fileStatusUseStateReturn[1];
   const [fileName, setFileName] = useState<string>("");
+
   const router = useRouter();
   const form = useForm<AddFileFormType>({
     resolver: zodResolver(addFileFormSchema),
     defaultValues: addFileFormDefaultValues,
     values: {
       classroomId,
+      file: "",
       name: fileName,
     },
   });
@@ -94,7 +97,7 @@ export const AddFileForm = ({ classroomId, setIsOpen }: AddFileFormProps) => {
         <FormField
           control={form.control}
           name="file"
-          render={({ field: { value, onChange, ...fieldProps } }) => (
+          render={({ field: { onChange, ...fieldProps } }) => (
             <FormItem>
               <FormLabel>File</FormLabel>
               <FormControl>

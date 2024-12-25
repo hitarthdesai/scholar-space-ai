@@ -50,9 +50,9 @@ import {
   EnumUpdateUserInformationResult,
 } from "@/schemas/userSchema";
 import {
-  AddFileResult,
-  DeleteFileResult,
-  EditFileResult,
+  type AddFileResult,
+  type DeleteFileResult,
+  type EditFileResult,
   EnumAddFileResult,
   EnumDeleteFileResult,
   EnumEditFileResult,

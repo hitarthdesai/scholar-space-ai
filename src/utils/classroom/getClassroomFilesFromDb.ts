@@ -1,5 +1,4 @@
 import { db } from "@/server/db";
-import { classroomParticpants, users } from "@/server/db/schema";
 import { classroomFiles, files } from "@/server/db/schema/file";
 import { eq } from "drizzle-orm";
 
