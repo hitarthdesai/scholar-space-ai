@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import { type PropsWithChildren, useState } from "react";
 import { EnumFormMode } from "@/schemas/formSchema";
-import { type AddEditClassroomSheetProps } from "@/schemas/classroomSchema";
+import { type AddEditFileSheetProps } from "@/schemas/fileSchema";
 import { AddFileForm } from "./AddFileForm";
 import { EditFileForm } from "./EditFileForm";
 import { fileSheetDescription, fileSheetTitle } from "@/utils/constants/file";
@@ -18,7 +18,7 @@ import { fileSheetDescription, fileSheetTitle } from "@/utils/constants/file";
 export function AddEditFileSheet({
   children,
   ...props
-}: PropsWithChildren<AddEditClassroomSheetProps>) {
+}: PropsWithChildren<AddEditFileSheetProps>) {
   const { mode } = props;
   const [isOpen, setIsOpen] = useState(false);
 

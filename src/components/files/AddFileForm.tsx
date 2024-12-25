@@ -19,7 +19,7 @@ import {
   type AddFileForm as AddFileFormType,
 } from "@/schemas/fileSchema";
 import { toast } from "@/components/ui/use-toast";
-import { toastDescriptionAddClassroom } from "@/utils/constants/toast";
+import { toastDescriptionAddFile } from "@/utils/constants/toast";
 
 import { addFile } from "@/actions/addFile";
 import { FormIds } from "@/utils/constants/form";
@@ -29,10 +29,12 @@ import { SheetFooter } from "../ui/sheet";
 import { LoadingButton } from "../ui/loading-button";
 
 type AddFileFormProps = {
+  classroomId: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const addFileFormDefaultValues: AddFileFormType = {
+  classroomId: "",
   file: "",
   name: "",
 };
@@ -44,17 +46,22 @@ const EnumReadFileStatus = {
   Error: "error",
 } as const;
 
-type ReadFileStatus = $Values<typeof EnumReadFileStatus>;
+type ReadFileStatus =
+  (typeof EnumReadFileStatus)[keyof typeof EnumReadFileStatus];
 
-export const AddFileForm = ({ setIsOpen }: AddFileFormProps) => {
-  const [fileStatus, setFileStatus] = useState<ReadFileStatus>(
+export const AddFileForm = ({ classroomId, setIsOpen }: AddFileFormProps) => {
+  const [_, setFileStatus] = useState<ReadFileStatus>(
     EnumReadFileStatus.PendingUpload
   );
-
+  const [fileName, setFileName] = useState<string>("");
   const router = useRouter();
   const form = useForm<AddFileFormType>({
     resolver: zodResolver(addFileFormSchema),
     defaultValues: addFileFormDefaultValues,
+    values: {
+      classroomId,
+      name: fileName,
+    },
   });
 
   const { executeAsync, isExecuting: isAdding } = useAction(addFile, {
@@ -65,7 +72,7 @@ export const AddFileForm = ({ setIsOpen }: AddFileFormProps) => {
 
       toast({
         title: isErroneous ? "Error in adding file" : "File added successfully",
-        description: toastDescriptionAddClassroom[data.type],
+        description: toastDescriptionAddFile[data.type],
         variant: isErroneous ? "destructive" : "default",
       });
 
@@ -77,7 +84,6 @@ export const AddFileForm = ({ setIsOpen }: AddFileFormProps) => {
     },
   });
 
-  console.log("fileStatus", fileStatus);
   return (
     <Form {...form}>
       <form
@@ -113,11 +119,8 @@ export const AddFileForm = ({ setIsOpen }: AddFileFormProps) => {
                         return;
                       }
 
-                      onChange({
-                        name: file.name,
-                        type: file.type,
-                        data: result,
-                      });
+                      onChange(result);
+                      setFileName(file.name);
                       setFileStatus(EnumReadFileStatus.Success);
                     };
 
@@ -135,6 +138,7 @@ export const AddFileForm = ({ setIsOpen }: AddFileFormProps) => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="name"

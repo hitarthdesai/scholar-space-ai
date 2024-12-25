@@ -49,6 +49,7 @@ import {
   type UpdateUserInformationResult,
   EnumUpdateUserInformationResult,
 } from "@/schemas/userSchema";
+import { AddFileResult, EnumAddFileResult } from "@/schemas/fileSchema";
 
 export const toastDescriptionAuth: Record<LoginResult, string> = {
   [EnumLoginResult.EmailSent]: "User registered successfully.",
@@ -281,3 +282,11 @@ export const toastDescriptionRejectInvite: Record<RejectInviteResult, string> =
     [EnumRejectInviteResult.NotConfirmed]:
       "You must confirm the rejection of the invite.",
   };
+
+export const toastDescriptionAddFile: Record<AddFileResult, string> = {
+  [EnumAddFileResult.Error]: "Error adding file",
+  [EnumAddFileResult.NotAuthorized]:
+    "You are not authorized to add files to this classroom",
+  [EnumAddFileResult.NotUploaded]: "Your file could not be uploaded",
+  [EnumAddFileResult.FileAdded]: "Your file has been added successfully",
+};

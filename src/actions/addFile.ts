@@ -3,11 +3,12 @@
 import { addFileFormSchema, EnumAddFileResult } from "@/schemas/fileSchema";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { auth } from "@/utils/auth/config";
-import { addQuestionToDb } from "@/utils/classroom/addQuestionToDb";
-import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { putObject } from "@/utils/storage/s3/putObject";
 import { randomUUID } from "crypto";
 import { createSafeActionClient } from "next-safe-action";
+import { canUserAccessClassroom } from "@/utils/classroom/canUserAccessClassroom";
+import { addFileToDb } from "@/utils/classroom/addFileToDb";
+import { attachFileToClassroomInDb } from "@/utils/classroom/attachFileToClassroomInDb";
 
 export const addFile = createSafeActionClient()
   .schema(addFileFormSchema)
@@ -19,54 +20,46 @@ export const addFile = createSafeActionClient()
         return { type: EnumAddFileResult.NotAuthorized };
       }
 
-      const { file, name } = parsedInput;
+      const { classroomId, file, name } = parsedInput;
+      console.log("YOOOOOO file", file);
+      const isAuthorized = await canUserAccessClassroom({
+        classroomId,
+        userId,
+        accessType: EnumAccessType.Write,
+      });
+      if (!isAuthorized) {
+        return { type: EnumAddFileResult.NotAuthorized };
+      }
 
-      console.log(file, name);
+      const newFileId = randomUUID();
+      const fileName = `classrooms/${classroomId}/files/${newFileId}`;
+      const didFileUploadSucceed = await putObject({
+        body: Buffer.from(file, "base64"),
+        fileName,
+        contentType: "text/plain",
+      });
+      if (!didFileUploadSucceed) {
+        return { type: EnumAddFileResult.NotUploaded };
+      }
+
+      await addFileToDb({
+        fileId: newFileId,
+        userId,
+        name,
+      });
+
+      console.log("ADDED FILE");
+
+      await attachFileToClassroomInDb({
+        fileId: newFileId,
+        classroomId,
+      });
+
+      console.log("ATTACHED FILE TO CLASSROOM");
+
       return { type: EnumAddFileResult.FileAdded };
-
-      //   const isAuthorized = await canUserAccessAssignment({
-      //     assignmentId,
-      //     userId,
-      //     accessType: EnumAccessType.Write,
-      //   });
-      //   if (!isAuthorized) {
-      //     return { type: EnumAddFileResult.NotAuthorized };
-      //   }
-
-      //   const newQuestionId = randomUUID();
-      //   const questionTextFileName = `questions/${newQuestionId}/question.txt`;
-      //   const questionTextBuffer = Buffer.from(question, "utf-8");
-      //   const didQuestionTextUploadSucceed = await putObject({
-      //     body: questionTextBuffer,
-      //     fileName: questionTextFileName,
-      //     contentType: "text/plain",
-      //   });
-
-      //   if (!didQuestionTextUploadSucceed) {
-      //     return { type: EnumAddFileResult.NotUploaded };
-      //   }
-
-      //   const starterCodeFileName = `questions/${newQuestionId}/starterCode.txt`;
-      //   const starterCodeBuffer = Buffer.from(starterCode, "utf-8");
-      //   const didStarterCodeUploadSucceed = await putObject({
-      //     body: starterCodeBuffer,
-      //     fileName: starterCodeFileName,
-      //     contentType: "text/plain",
-      //   });
-
-      //   if (!didStarterCodeUploadSucceed) {
-      //     return { type: EnumAddFileResult.NotUploaded };
-      //   }
-
-      //   await addQuestionToDb({
-      //     questionId: newQuestionId,
-      //     name,
-      //     assignmentId,
-      //   });
-
-      //   return { type: EnumAddFileResult.QuestionAdded };
     } catch (e) {
-      console.error(e);
+      throw new Error(e);
       return { type: EnumAddFileResult.Error };
     }
   });

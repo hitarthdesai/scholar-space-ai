@@ -1,4 +1,3 @@
-import { AssignmentCard } from "@/components/classroom/AssignmentCard";
 import { ClassroomSidebar } from "@/components/classroom/ClassroomSidebar";
 import { AddEditFileSheet } from "@/components/files/AddEditFileSheet";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
@@ -11,7 +10,9 @@ import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { canUserAccessClassroom } from "@/utils/classroom/canUserAccessClassroom";
 import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
-import { BookPlus, BookPlusIcon } from "lucide-react";
+import { FilePlusIcon } from "lucide-react";
+import { FilesTable } from "./FilesTable";
+import { getClassroomFilesFromDb } from "@/utils/classroom/getClassroomFilesFromDb";
 
 type PageProps = {
   params: {
@@ -38,8 +39,9 @@ export default async function Files({ params: { classroomId } }: PageProps) {
     classroomId,
   });
 
-  const numberOfFiles = 0;
-  const doesNotHaveFiles = false;
+  const files = await getClassroomFilesFromDb({ classroomId });
+  const numberOfFiles = files.length;
+  const doesNotHaveFiles = numberOfFiles == 0;
 
   const isAuthorizedToCreateOrDeleteFiles = await canUserAccessClassroom({
     classroomId,
@@ -50,13 +52,13 @@ export default async function Files({ params: { classroomId } }: PageProps) {
   if (doesNotHaveFiles) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-3">
-        <BookPlusIcon className="h-16 w-16" />
+        <FilePlusIcon className="h-16 w-16" />
         <div className="flex max-w-60 text-center md:min-w-max">
           <p>There are no files for this classroom.</p>
         </div>
         {isAuthorizedToCreateOrDeleteFiles && (
-          <AddEditFileSheet mode={EnumFormMode.Add}>
-            <Button>Create an assignment</Button>
+          <AddEditFileSheet mode={EnumFormMode.Add} classroomId={classroomId}>
+            <Button>Add a file</Button>
           </AddEditFileSheet>
         )}
       </div>
@@ -68,33 +70,22 @@ export default async function Files({ params: { classroomId } }: PageProps) {
       <ClassroomSidebar classroomId={classroomId} />
       <div className="flex h-full w-full flex-col gap-4">
         <PageBreadcrumbs breadcrumbs={breadcrumbs} />
-        <h2 className="text-2xl font-bold">Class Files ({numberOfFiles})</h2>
-        <ul className="flex flex-wrap gap-4">
-          {/* {files.map((assignment) => (
-            <li key={assignment.id} className="min-w-72 max-w-72">
-              <AssignmentCard
-                classroomId={classroomId}
-                assignment={assignment}
-                isAuthorizedToEditAssignment={isAuthorizedToCreateOrDeleteFiles}
-              />
-            </li>
-          ))} */}
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Class Files ({numberOfFiles})</h2>
           {isAuthorizedToCreateOrDeleteFiles && (
-            <li className="min-w-72 max-w-72">
-              <AddEditFileSheet
-                mode={EnumFormMode.Add}
-                // classroomId={classroomId}
-              >
-                <Button
-                  variant="ghost"
-                  className="flex h-full min-w-72 max-w-72 items-center justify-center border border-dashed"
-                >
-                  <BookPlus className="h-16 w-16" />
-                </Button>
-              </AddEditFileSheet>
-            </li>
+            <AddEditFileSheet mode={EnumFormMode.Add} classroomId={classroomId}>
+              <Button className="flex flex-col items-center justify-center sm:flex-row">
+                <FilePlusIcon className="mr-2 h-4 w-4" />
+                Add File
+              </Button>
+            </AddEditFileSheet>
           )}
-        </ul>
+        </div>
+        <FilesTable
+          files={files}
+          canAddOrEditFiles={isAuthorizedToCreateOrDeleteFiles}
+          classroomId={classroomId}
+        />
       </div>
     </div>
   );
