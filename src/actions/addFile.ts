@@ -21,7 +21,6 @@ export const addFile = createSafeActionClient()
       }
 
       const { classroomId, file, name } = parsedInput;
-      console.log("YOOOOOO file", file);
       const isAuthorized = await canUserAccessClassroom({
         classroomId,
         userId,
@@ -48,18 +47,14 @@ export const addFile = createSafeActionClient()
         name,
       });
 
-      console.log("ADDED FILE");
-
       await attachFileToClassroomInDb({
         fileId: newFileId,
         classroomId,
       });
 
-      console.log("ATTACHED FILE TO CLASSROOM");
-
       return { type: EnumAddFileResult.FileAdded };
     } catch (e) {
-      throw new Error(e);
+      console.error(e);
       return { type: EnumAddFileResult.Error };
     }
   });

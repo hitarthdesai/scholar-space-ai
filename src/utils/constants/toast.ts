@@ -49,7 +49,14 @@ import {
   type UpdateUserInformationResult,
   EnumUpdateUserInformationResult,
 } from "@/schemas/userSchema";
-import { AddFileResult, EnumAddFileResult } from "@/schemas/fileSchema";
+import {
+  AddFileResult,
+  DeleteFileResult,
+  EditFileResult,
+  EnumAddFileResult,
+  EnumDeleteFileResult,
+  EnumEditFileResult,
+} from "@/schemas/fileSchema";
 
 export const toastDescriptionAuth: Record<LoginResult, string> = {
   [EnumLoginResult.EmailSent]: "User registered successfully.",
@@ -289,4 +296,18 @@ export const toastDescriptionAddFile: Record<AddFileResult, string> = {
     "You are not authorized to add files to this classroom",
   [EnumAddFileResult.NotUploaded]: "Your file could not be uploaded",
   [EnumAddFileResult.FileAdded]: "Your file has been added successfully",
+};
+
+export const toastDescriptionEditFile: Record<EditFileResult, string> = {
+  [EnumEditFileResult.Error]: "Error editing file",
+  [EnumEditFileResult.NotAuthorized]:
+    "You are not authorized to edit files in this classroom",
+  [EnumEditFileResult.FileEdited]: "Your file has been edited successfully",
+};
+
+export const toastDescriptionDeleteFile: Record<DeleteFileResult, string> = {
+  [EnumDeleteFileResult.Error]: "Error deleting file",
+  [EnumDeleteFileResult.NotAuthorized]:
+    "You are not authorized to delete files in this classroom",
+  [EnumDeleteFileResult.FileDeleted]: "Your file has been deleted successfully",
 };

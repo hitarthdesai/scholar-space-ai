@@ -57,10 +57,14 @@ export const getColumns = ({
   },
   {
     id: "actions",
-    cell: () => (
+    cell: ({ row }) => (
       <>
         {canAddOrEditFiles && (
-          <AddEditFileSheet mode={EnumFormMode.Add} classroomId={classroomId}>
+          <AddEditFileSheet
+            mode={EnumFormMode.Edit}
+            classroomId={classroomId}
+            file={row.original}
+          >
             <Button
               variant="ghost"
               className="flex h-full items-center justify-center"

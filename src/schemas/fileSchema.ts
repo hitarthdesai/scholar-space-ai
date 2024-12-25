@@ -20,6 +20,8 @@ export const addEditFileSheetPropsSchema = z.union([
   }),
   z.object({
     mode: z.literal(EnumFormMode.Edit),
+    classroomId: z.string(),
+    file: file,
   }),
 ]);
 
@@ -33,6 +35,19 @@ export const addFileFormSchema = z.object({
 
 export type AddFileForm = z.infer<typeof addFileFormSchema>;
 
+export const editFileFormSchema = z.object({
+  newName: z.string(),
+  fileId: z.string(),
+});
+
+export type EditFileForm = z.infer<typeof editFileFormSchema>;
+
+export const deleteFileFormSchema = z.object({
+  fileId: z.string(),
+});
+
+export type DeleteFileForm = z.infer<typeof deleteFileFormSchema>;
+
 export const EnumAddFileResult = {
   FileAdded: "fileAdded",
   NotAuthorized: "notAuthorized",
@@ -42,3 +57,21 @@ export const EnumAddFileResult = {
 
 const addFileResultSchema = z.nativeEnum(EnumAddFileResult);
 export type AddFileResult = z.infer<typeof addFileResultSchema>;
+
+export const EnumEditFileResult = {
+  FileEdited: "fileEdited",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const editFileResultSchema = z.nativeEnum(EnumEditFileResult);
+export type EditFileResult = z.infer<typeof editFileResultSchema>;
+
+export const EnumDeleteFileResult = {
+  FileDeleted: "fileDeleted",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const deleteFileResultSchema = z.nativeEnum(EnumDeleteFileResult);
+export type DeleteFileResult = z.infer<typeof deleteFileResultSchema>;

@@ -13,58 +13,57 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import {
-  editClassroomFormSchema,
-  EnumEditClassroomResult,
-  type EditClassroomForm as EditClassroomFormType,
-  type Classroom,
-  EnumDeleteClassroomResult,
-} from "@/schemas/classroomSchema";
 import { toast } from "@/components/ui/use-toast";
 import {
-  toastDescriptionDeleteClassroom,
-  toastDescriptionEditClassroom,
+  toastDescriptionDeleteFile,
+  toastDescriptionEditFile,
 } from "@/utils/constants/toast";
 
-import { editClassroom } from "@/actions/editClassroom";
+import { editFile } from "@/actions/editFile";
 import { FormIds } from "@/utils/constants/form";
 import { type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { SheetFooter } from "../ui/sheet";
 import { LoadingButton } from "../ui/loading-button";
-import { deleteClassroom } from "@/actions/deleteClassroom";
+import { deleteFile } from "@/actions/deleteFile";
+import {
+  type EditFileForm as EditFileFormType,
+  editFileFormSchema,
+  EnumDeleteFileResult,
+  EnumEditFileResult,
+  type File,
+} from "@/schemas/fileSchema";
 
 type EditFileFormProps = {
-  classroom: Classroom;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  file: File;
 };
 
-export const EditFileForm = ({ classroom, setIsOpen }: EditFileFormProps) => {
+export const EditFileForm = ({ file, setIsOpen }: EditFileFormProps) => {
   const router = useRouter();
 
-  const editClassroomFormDefaultValues: EditClassroomFormType = {
-    newName: classroom.name,
-    classroomId: classroom.id,
+  const editClassroomFormDefaultValues: EditFileFormType = {
+    newName: file.name,
+    fileId: file.id,
   };
 
-  const form = useForm<EditClassroomFormType>({
-    resolver: zodResolver(editClassroomFormSchema),
+  const form = useForm<EditFileFormType>({
+    resolver: zodResolver(editFileFormSchema),
     defaultValues: editClassroomFormDefaultValues,
   });
 
   const { executeAsync: executeEdit, isExecuting: isEditing } = useAction(
-    editClassroom,
+    editFile,
     {
       onSuccess({ data }) {
         if (!data?.type) return;
 
-        const isErroneous =
-          data.type !== EnumEditClassroomResult.ClassroomEdited;
+        const isErroneous = data.type !== EnumEditFileResult.FileEdited;
         toast({
           title: isErroneous
             ? "Error in editing classroom"
             : "Classroom edited successfully",
-          description: toastDescriptionEditClassroom[data.type],
+          description: toastDescriptionEditFile[data.type],
           variant: isErroneous ? "destructive" : "default",
         });
 
@@ -78,18 +77,17 @@ export const EditFileForm = ({ classroom, setIsOpen }: EditFileFormProps) => {
   );
 
   const { executeAsync: executeDelete, isExecuting: isDeleting } = useAction(
-    deleteClassroom,
+    deleteFile,
     {
       onSuccess({ data }) {
         if (!data?.type) return;
 
-        const isErroneous =
-          data.type !== EnumDeleteClassroomResult.ClassroomDeleted;
+        const isErroneous = data.type !== EnumDeleteFileResult.FileDeleted;
         toast({
           title: isErroneous
-            ? "Error in deleting classroom"
-            : "Classroom deleted successfully",
-          description: toastDescriptionDeleteClassroom[data.type],
+            ? "Error in deleting file"
+            : "File deleted successfully",
+          description: toastDescriptionDeleteFile[data.type],
           variant: isErroneous ? "destructive" : "default",
         });
 
@@ -106,7 +104,7 @@ export const EditFileForm = ({ classroom, setIsOpen }: EditFileFormProps) => {
   return (
     <Form {...form}>
       <form
-        id={FormIds.EditClassroom}
+        id={FormIds.EditFile}
         onSubmit={form.handleSubmit(executeEdit)}
         className="h-full"
       >
@@ -119,7 +117,7 @@ export const EditFileForm = ({ classroom, setIsOpen }: EditFileFormProps) => {
               <FormControl>
                 <Input required {...field} />
               </FormControl>
-              <FormDescription>Updated name of the classroom</FormDescription>
+              <FormDescription>Updated name of the file</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -131,7 +129,7 @@ export const EditFileForm = ({ classroom, setIsOpen }: EditFileFormProps) => {
           isLoading={isDeleting}
           variant="destructive"
           onClick={async () => {
-            await executeDelete({ classroomId: classroom.id });
+            await executeDelete({ fileId: file.id });
           }}
         >
           Delete
@@ -140,7 +138,7 @@ export const EditFileForm = ({ classroom, setIsOpen }: EditFileFormProps) => {
           disabled={disableActions}
           isLoading={isEditing}
           type="submit"
-          form={FormIds.EditClassroom}
+          form={FormIds.EditFile}
         >
           Save
         </LoadingButton>
