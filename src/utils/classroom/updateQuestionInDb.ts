@@ -2,15 +2,15 @@ import { db } from "@/server/db";
 import { questions } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 
-type UpdateQuestionToDbProps = {
+type UpdateQuestionInDbProps = {
   questionId: string;
   name: string;
 };
 
-export async function updateQuestionToDb({
+export async function updateQuestionInDb({
   name,
   questionId,
-}: UpdateQuestionToDbProps) {
+}: UpdateQuestionInDbProps) {
   return db
     .update(questions)
     .set({

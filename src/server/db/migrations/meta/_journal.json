@@ -92,6 +92,13 @@
       "when": 1726619787331,
       "tag": "0012_shallow_shaman",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1735148628453,
+      "tag": "0013_steep_guardian",
+      "breakpoints": true
     }
   ]
 }

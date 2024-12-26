@@ -9,7 +9,7 @@ import { auth } from "@/utils/auth/config";
 import { putObject } from "@/utils/storage/s3/putObject";
 import { createSafeActionClient } from "next-safe-action";
 import { canUserAccessQuestion } from "@/utils/classroom/canUserAccessQuestion";
-import { updateQuestionToDb } from "@/utils/classroom/updateQuestionInDb";
+import { updateQuestionInDb } from "@/utils/classroom/updateQuestionInDb";
 
 export const editQuestion = createSafeActionClient()
   .schema(editQuestionFormSchema)
@@ -61,7 +61,7 @@ export const editQuestion = createSafeActionClient()
       }
 
       if (!!name) {
-        await updateQuestionToDb({
+        await updateQuestionInDb({
           name,
           questionId,
         });
