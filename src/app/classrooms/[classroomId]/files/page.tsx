@@ -66,27 +66,24 @@ export default async function Files({ params: { classroomId } }: PageProps) {
   }
 
   return (
-    <div className="flex h-full w-full justify-center p-4">
-      <ClassroomSidebar classroomId={classroomId} />
-      <div className="flex h-full w-full flex-col gap-4">
-        <PageBreadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Class Files ({numberOfFiles})</h2>
-          {isAuthorizedToCreateOrDeleteFiles && (
-            <AddEditFileSheet mode={EnumFormMode.Add} classroomId={classroomId}>
-              <Button className="flex flex-col items-center justify-center sm:flex-row">
-                <FilePlusIcon className="mr-2 h-4 w-4" />
-                Add File
-              </Button>
-            </AddEditFileSheet>
-          )}
-        </div>
-        <FilesTable
-          files={files}
-          canAddOrEditFiles={isAuthorizedToCreateOrDeleteFiles}
-          classroomId={classroomId}
-        />
+    <div className="flex h-full w-full flex-col gap-4 pt-2.5">
+      <PageBreadcrumbs breadcrumbs={breadcrumbs} />
+      <div className="mb-2 flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Class Files ({numberOfFiles})</h2>
+        {isAuthorizedToCreateOrDeleteFiles && (
+          <AddEditFileSheet mode={EnumFormMode.Add} classroomId={classroomId}>
+            <Button className="flex flex-col items-center justify-center sm:flex-row">
+              <FilePlusIcon className="mr-2 h-4 w-4" />
+              Add File
+            </Button>
+          </AddEditFileSheet>
+        )}
       </div>
+      <FilesTable
+        files={files}
+        canAddOrEditFiles={isAuthorizedToCreateOrDeleteFiles}
+        classroomId={classroomId}
+      />
     </div>
   );
 }

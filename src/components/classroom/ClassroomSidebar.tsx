@@ -4,6 +4,17 @@ import { MenuIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { LinkHighlight } from "../LinkHighlight";
+import { type NavLink } from "@/utils/constants/navLinks";
+
+const getClassroomSidebarLinks: (classroomId: string) => NavLink[] = (
+  classroomId
+) => [
+  { label: "Home", href: `/classrooms/${classroomId}` },
+  { label: "Assignments", href: `/classrooms/${classroomId}/assignments` },
+  { label: "Files", href: `/classrooms/${classroomId}/files` },
+  { label: "Participants", href: `/classrooms/${classroomId}/participants` },
+];
 
 type ClassroomSidebarProps = {
   classroomId: string;
@@ -13,24 +24,16 @@ export const ClassroomSidebarContent = ({
   classroomId,
 }: ClassroomSidebarProps) => {
   return (
-    <aside className="flex h-full min-w-40 max-w-40 flex-col border-r">
-      <div className="flex items-center gap-2">
-        <XIcon className="invisible m-1 h-4 w-4" />
-      </div>
+    <aside className="mr-4 mt-2 flex h-full min-w-40 max-w-40 flex-col border-r pl-2">
       <ul className="flex flex-col gap-2">
-        <li>
-          <Link href={`/classrooms/${classroomId}`}>Home</Link>
-        </li>
-        <li>
-          <Link href={`/classrooms/${classroomId}/assignments`}>
-            Assignments
-          </Link>
-        </li>
-        <li>
-          <Link href={`/classrooms/${classroomId}/participants`}>
-            Participants
-          </Link>
-        </li>
+        {getClassroomSidebarLinks(classroomId).map((link) => (
+          <li className="max-w-fit">
+            <Link href={link.href}>
+              {link.label}
+              <LinkHighlight href={link.href} />
+            </Link>
+          </li>
+        ))}
       </ul>
     </aside>
   );
