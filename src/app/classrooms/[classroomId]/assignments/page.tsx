@@ -1,6 +1,5 @@
 import { AddEditAssignmentSheet } from "@/components/assignment/AddEditAssignmentSheet";
 import { AssignmentCard } from "@/components/classroom/AssignmentCard";
-import { ClassroomSidebar } from "@/components/classroom/ClassroomSidebar";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 import { Button } from "@/components/ui/button";
@@ -71,42 +70,39 @@ export default async function Assignments({
   }
 
   return (
-    <div className="flex h-full w-full justify-center p-4">
-      <ClassroomSidebar classroomId={classroomId} />
-      <div className="flex h-full w-full flex-col gap-4">
-        <PageBreadcrumbs breadcrumbs={breadcrumbs} />
-        <h2 className="text-2xl font-bold">
-          Class Assignments ({numberOfAssignments})
-        </h2>
-        <ul className="flex flex-wrap gap-4">
-          {assignments.map((assignment) => (
-            <li key={assignment.id} className="min-w-72 max-w-72">
-              <AssignmentCard
-                classroomId={classroomId}
-                assignment={assignment}
-                isAuthorizedToEditAssignment={
-                  isAuthorizedToCreateOrDeleteAssignment
-                }
-              />
-            </li>
-          ))}
-          {isAuthorizedToCreateOrDeleteAssignment && (
-            <li className="min-w-72 max-w-72">
-              <AddEditAssignmentSheet
-                mode={EnumFormMode.Add}
-                classroomId={classroomId}
+    <div className="flex h-full w-full flex-col gap-4">
+      <PageBreadcrumbs breadcrumbs={breadcrumbs} />
+      <h2 className="text-2xl font-bold">
+        Class Assignments ({numberOfAssignments})
+      </h2>
+      <ul className="flex flex-wrap gap-4">
+        {assignments.map((assignment) => (
+          <li key={assignment.id} className="min-w-72 max-w-72">
+            <AssignmentCard
+              classroomId={classroomId}
+              assignment={assignment}
+              isAuthorizedToEditAssignment={
+                isAuthorizedToCreateOrDeleteAssignment
+              }
+            />
+          </li>
+        ))}
+        {isAuthorizedToCreateOrDeleteAssignment && (
+          <li className="min-w-72 max-w-72">
+            <AddEditAssignmentSheet
+              mode={EnumFormMode.Add}
+              classroomId={classroomId}
+            >
+              <Button
+                variant="ghost"
+                className="flex h-full min-w-72 max-w-72 items-center justify-center border border-dashed"
               >
-                <Button
-                  variant="ghost"
-                  className="flex h-full min-w-72 max-w-72 items-center justify-center border border-dashed"
-                >
-                  <BookPlus className="h-16 w-16" />
-                </Button>
-              </AddEditAssignmentSheet>
-            </li>
-          )}
-        </ul>
-      </div>
+                <BookPlus className="h-16 w-16" />
+              </Button>
+            </AddEditAssignmentSheet>
+          </li>
+        )}
+      </ul>
     </div>
   );
 }

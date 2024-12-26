@@ -1,4 +1,3 @@
-import { ClassroomSidebar } from "@/components/classroom/ClassroomSidebar";
 import { AddEditParticipantSheet } from "@/components/classroom/participants/AddEditParticpantSheet";
 import { UsersTable } from "@/components/classroom/participants/UsersTable";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
@@ -51,32 +50,29 @@ export default async function Participants({
   });
 
   return (
-    <div className="flex h-full w-full justify-center p-4">
-      <ClassroomSidebar classroomId={classroomId} />
-      <div className="flex h-full w-full flex-col gap-4">
-        <PageBreadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">
-            Class Participants ({numberOfParticipants})
-          </h2>
-          {canAddOrEditParticipants && (
-            <AddEditParticipantSheet
-              mode={EnumFormMode.Add}
-              classroomId={classroomId}
-            >
-              <Button className="flex flex-col items-center justify-center sm:flex-row">
-                <UserPlus className="mr-2 h-4 w-4" />
-                Invite Participant
-              </Button>
-            </AddEditParticipantSheet>
-          )}
-        </div>
-        <UsersTable
-          classroomId={classroomId}
-          canAddOrEditParticipants={canAddOrEditParticipants}
-          users={participants}
-        />
+    <div className="flex h-full w-full flex-col gap-4">
+      <PageBreadcrumbs breadcrumbs={breadcrumbs} />
+      <div className="mb-2 flex items-center justify-between">
+        <h2 className="text-2xl font-bold">
+          Class Participants ({numberOfParticipants})
+        </h2>
+        {canAddOrEditParticipants && (
+          <AddEditParticipantSheet
+            mode={EnumFormMode.Add}
+            classroomId={classroomId}
+          >
+            <Button className="flex flex-col items-center justify-center sm:flex-row">
+              <UserPlus className="mr-2 h-4 w-4" />
+              Invite Participant
+            </Button>
+          </AddEditParticipantSheet>
+        )}
       </div>
+      <UsersTable
+        classroomId={classroomId}
+        canAddOrEditParticipants={canAddOrEditParticipants}
+        users={participants}
+      />
     </div>
   );
 }
