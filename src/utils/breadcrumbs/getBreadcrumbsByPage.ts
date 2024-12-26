@@ -1,4 +1,4 @@
-import { type Breadcrumb } from "./types";
+import { Breadcrumbs } from "./types";
 import { EnumPage } from "../constants/page";
 import { db } from "@/server/db";
 import {
@@ -7,9 +7,9 @@ import {
   classrooms,
   questions,
 } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
-type GetBreadcrumbsByPageProps =
+export type GetBreadcrumbsByPageProps =
   | {
       page: (typeof EnumPage)["Classroom"];
       classroomId: string;
@@ -28,22 +28,25 @@ type GetBreadcrumbsByPageProps =
     }
   | {
       page: (typeof EnumPage)["Assignment"];
+      classroomId: string;
       assignmentId: string;
     }
   | {
       page: (typeof EnumPage)["Question"];
+      classroomId: string;
+      assignmentId: string;
       questionId: string;
     };
 
 export async function getBreadcrumbsByPage(
   props: GetBreadcrumbsByPageProps
-): Promise<Breadcrumb[]> {
+): Promise<Breadcrumbs> {
   switch (props.page) {
     case EnumPage.Classroom:
     case EnumPage.ClassroomParticipants:
     case EnumPage.ClassroomAssignments:
     case EnumPage.ClassroomFiles:
-      const [{ classroomId, classroomName }] = await db
+      const [{ classroomName }] = await db
         .select({
           classroomId: classrooms.id,
           classroomName: classrooms.name,
@@ -51,7 +54,7 @@ export async function getBreadcrumbsByPage(
         .from(classrooms)
         .where(eq(classrooms.id, props.classroomId));
 
-      const breadcrumbs = [
+      const links = [
         {
           label: "Home",
           href: "/",
@@ -59,62 +62,41 @@ export async function getBreadcrumbsByPage(
         {
           label: "Classrooms",
           href: "/classrooms",
-        },
-        {
-          label: classroomName,
-          href: `/classrooms/${classroomId}`,
         },
       ];
 
-      switch (props.page) {
-        case EnumPage.ClassroomParticipants: {
-          breadcrumbs.push({
-            label: "Participants",
-            href: `/classrooms/${classroomId}/participants`,
-          });
-          return breadcrumbs;
-        }
-
-        case EnumPage.ClassroomAssignments: {
-          breadcrumbs.push({
-            label: "Assignments",
-            href: `/classrooms/${classroomId}/assignments`,
-          });
-          return breadcrumbs;
-        }
-
-        case EnumPage.ClassroomFiles: {
-          breadcrumbs.push({
-            label: "Files",
-            href: `/classrooms/${classroomId}/files`,
-          });
-          return breadcrumbs;
-        }
-
-        default:
-          return breadcrumbs;
+      if (props.page !== EnumPage.Classroom) {
+        links.push({
+          label: classroomName,
+          href: `/classrooms/${props.classroomId}`,
+        });
       }
 
-    case EnumPage.Assignment: {
-      const [{ classroomId, classroomName, assignmentId, assignmentName }] =
-        await db
-          .select({
-            classroomId: classroomAssignments.classroomId,
-            classroomName: classrooms.name,
-            assignmentId: assignments.id,
-            assignmentName: assignments.name,
-          })
-          .from(classroomAssignments)
-          .innerJoin(
-            classrooms,
-            eq(classroomAssignments.classroomId, classrooms.id)
-          )
-          .innerJoin(
-            assignments,
-            eq(classroomAssignments.assignmentId, props.assignmentId)
-          );
+      return links;
 
-      return [
+    case EnumPage.Assignment: {
+      const [{ classroomName, assignmentName }] = await db
+        .select({
+          classroomName: classrooms.name,
+          assignmentName: assignments.name,
+        })
+        .from(classroomAssignments)
+        .innerJoin(
+          classrooms,
+          eq(classroomAssignments.classroomId, classrooms.id)
+        )
+        .innerJoin(
+          assignments,
+          eq(classroomAssignments.assignmentId, assignments.id)
+        )
+        .where(
+          and(
+            eq(classroomAssignments.classroomId, props.classroomId),
+            eq(classroomAssignments.assignmentId, props.assignmentId)
+          )
+        );
+
+      const links = [
         {
           label: "Home",
           href: "/",
@@ -125,36 +107,22 @@ export async function getBreadcrumbsByPage(
         },
         {
           label: classroomName,
-          href: `/classrooms/${classroomId}`,
+          href: `/classrooms/${props.classroomId}`,
         },
         {
           label: "Assignments",
-          href: `/classrooms/${classroomId}/assignments`,
-        },
-        {
-          label: assignmentName,
-          href: `/assignments/${assignmentId}`,
+          href: `/classrooms/${props.classroomId}/assignments`,
         },
       ];
+
+      return links;
     }
 
     case EnumPage.Question: {
-      const [
-        {
-          classroomId,
-          classroomName,
-          assignmentId,
-          assignmentName,
-          questionid,
-          questionName,
-        },
-      ] = await db
+      const [{ classroomName, assignmentName, questionName }] = await db
         .select({
-          classroomId: classroomAssignments.classroomId,
           classroomName: classrooms.name,
-          assignmentId: questions.assignmentId,
           assignmentName: assignments.name,
-          questionid: questions.id,
           questionName: questions.name,
         })
         .from(classroomAssignments)
@@ -167,9 +135,15 @@ export async function getBreadcrumbsByPage(
           eq(classroomAssignments.assignmentId, assignments.id)
         )
         .innerJoin(questions, eq(assignments.id, questions.assignmentId))
-        .where(eq(questions.id, props.questionId));
+        .where(
+          and(
+            eq(classroomAssignments.classroomId, props.classroomId),
+            eq(classroomAssignments.assignmentId, props.assignmentId),
+            eq(questions.id, props.questionId)
+          )
+        );
 
-      return [
+      const links = [
         {
           label: "Home",
           href: "/",
@@ -180,17 +154,15 @@ export async function getBreadcrumbsByPage(
         },
         {
           label: classroomName,
-          href: `/classrooms/${classroomId}`,
+          href: `/classrooms/${props.classroomId}`,
         },
         {
           label: assignmentName,
-          href: `/assignments/${assignmentId}`,
-        },
-        {
-          label: questionName,
-          href: `/questions/${questionid}`,
+          href: `/classrooms/${props.classroomId}/assignments/${props.assignmentId}`,
         },
       ];
+
+      return links;
     }
 
     default:

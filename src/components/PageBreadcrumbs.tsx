@@ -1,4 +1,4 @@
-import { type Breadcrumb as BreadcrumbType } from "@/utils/breadcrumbs/types";
+import { type Breadcrumbs } from "@/utils/breadcrumbs/types";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,24 +11,14 @@ import Link from "next/link";
 import { Fragment } from "react";
 
 type PageBreadcrumbsProps = {
-  breadcrumbs: BreadcrumbType[];
+  breadcrumbs: Breadcrumbs;
 };
 
 export function PageBreadcrumbs({ breadcrumbs }: PageBreadcrumbsProps) {
-  const breadcrumbsCount = breadcrumbs.length;
-
   return (
     <Breadcrumb className="w-full">
       <BreadcrumbList>
-        {breadcrumbs.map(({ href, label }, index) => {
-          if (index === breadcrumbsCount - 1) {
-            return (
-              <BreadcrumbItem key={href}>
-                <BreadcrumbPage>{label}</BreadcrumbPage>
-              </BreadcrumbItem>
-            );
-          }
-
+        {breadcrumbs.links.map(({ href, label }) => {
           return (
             <Fragment key={href}>
               <BreadcrumbItem>
@@ -40,6 +30,9 @@ export function PageBreadcrumbs({ breadcrumbs }: PageBreadcrumbsProps) {
             </Fragment>
           );
         })}
+        <BreadcrumbItem>
+          <BreadcrumbPage>{breadcrumbs.item.label}</BreadcrumbPage>
+        </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
   );
