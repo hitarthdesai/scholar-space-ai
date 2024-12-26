@@ -23,7 +23,7 @@ export async function getSystemPromptByConversationType(
 
       const currentUserCode =
         (await getObject({
-          fileName: `questionAttempts/${params.questionId}/${params.userId}`,
+          fileName: `questionAttempts/${params.questionId}/${params.userId}/solution`,
         })) ?? "The student has not written any code yet.";
 
       const starterCode =
@@ -33,7 +33,7 @@ export async function getSystemPromptByConversationType(
 
       const questionOutput =
         (await getObject({
-          fileName: `questionAttemptOutputs/${params.questionId}/${params.userId}`,
+          fileName: `questionAttempts/${params.questionId}/${params.userId}/output`,
         })) ?? "The student has not run their code yet.";
 
       systemPrompt = `You are an AI coding tutor assisting a student with a programming question. Your role is to guide and support the student's learning process without providing direct solutions. Use the following context to inform your responses:

@@ -30,7 +30,7 @@ export async function Question({ questionId }: QuestionProps) {
     "";
 
   let code = await getObject({
-    fileName: `questionAttempts/${questionId}/${userId}`,
+    fileName: `questionAttempts/${questionId}/${userId}/solution`,
   });
   if (!code) {
     code =
