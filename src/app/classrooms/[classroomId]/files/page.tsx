@@ -66,7 +66,7 @@ export default async function Files({ params: { classroomId } }: PageProps) {
   }
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 pt-2.5">
+    <div className="flex h-full w-full flex-col gap-4">
       <PageBreadcrumbs breadcrumbs={breadcrumbs} />
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-2xl font-bold">Class Files ({numberOfFiles})</h2>
