@@ -1,4 +1,3 @@
-import { ClassroomSidebar } from "@/components/classroom/ClassroomSidebar";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";

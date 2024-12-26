@@ -1,4 +1,3 @@
-import { ClassroomSidebar } from "@/components/classroom/ClassroomSidebar";
 import { AddEditParticipantSheet } from "@/components/classroom/participants/AddEditParticpantSheet";
 import { UsersTable } from "@/components/classroom/participants/UsersTable";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";

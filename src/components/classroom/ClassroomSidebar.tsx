@@ -27,7 +27,7 @@ export const ClassroomSidebarContent = ({
     <aside className="mr-4 mt-2 flex h-full min-w-40 max-w-40 flex-col border-r pl-2">
       <ul className="flex flex-col gap-2">
         {getClassroomSidebarLinks(classroomId).map((link) => (
-          <li className="max-w-fit">
+          <li key={link.href} className="max-w-fit">
             <Link href={link.href}>
               {link.label}
               <LinkHighlight href={link.href} />

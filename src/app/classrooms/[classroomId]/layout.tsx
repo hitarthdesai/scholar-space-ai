@@ -1,5 +1,4 @@
 import { ClassroomSidebar } from "@/components/classroom/ClassroomSidebar";
-import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 
 export default async function ClassroomLayout({
   children,

@@ -1,6 +1,5 @@
 import { AddEditAssignmentSheet } from "@/components/assignment/AddEditAssignmentSheet";
 import { AssignmentCard } from "@/components/classroom/AssignmentCard";
-import { ClassroomSidebar } from "@/components/classroom/ClassroomSidebar";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 import { Button } from "@/components/ui/button";
