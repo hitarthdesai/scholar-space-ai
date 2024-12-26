@@ -19,6 +19,14 @@ type GetBreadcrumbsByPageProps =
       classroomId: string;
     }
   | {
+      page: (typeof EnumPage)["ClassroomAssignments"];
+      classroomId: string;
+    }
+  | {
+      page: (typeof EnumPage)["ClassroomFiles"];
+      classroomId: string;
+    }
+  | {
       page: (typeof EnumPage)["Assignment"];
       assignmentId: string;
     }
@@ -33,6 +41,8 @@ export async function getBreadcrumbsByPage(
   switch (props.page) {
     case EnumPage.Classroom:
     case EnumPage.ClassroomParticipants:
+    case EnumPage.ClassroomAssignments:
+    case EnumPage.ClassroomFiles:
       const [{ classroomId, classroomName }] = await db
         .select({
           classroomId: classrooms.id,
@@ -56,14 +66,34 @@ export async function getBreadcrumbsByPage(
         },
       ];
 
-      if (props.page === EnumPage.ClassroomParticipants) {
-        breadcrumbs.push({
-          label: "Participants",
-          href: `/classrooms/${classroomId}/participants`,
-        });
-      }
+      switch (props.page) {
+        case EnumPage.ClassroomParticipants: {
+          breadcrumbs.push({
+            label: "Participants",
+            href: `/classrooms/${classroomId}/participants`,
+          });
+          return breadcrumbs;
+        }
 
-      return breadcrumbs;
+        case EnumPage.ClassroomAssignments: {
+          breadcrumbs.push({
+            label: "Assignments",
+            href: `/classrooms/${classroomId}/assignments`,
+          });
+          return breadcrumbs;
+        }
+
+        case EnumPage.ClassroomFiles: {
+          breadcrumbs.push({
+            label: "Files",
+            href: `/classrooms/${classroomId}/files`,
+          });
+          return breadcrumbs;
+        }
+
+        default:
+          return breadcrumbs;
+      }
 
     case EnumPage.Assignment: {
       const [{ classroomId, classroomName, assignmentId, assignmentName }] =
@@ -96,6 +126,10 @@ export async function getBreadcrumbsByPage(
         {
           label: classroomName,
           href: `/classrooms/${classroomId}`,
+        },
+        {
+          label: "Assignments",
+          href: `/classrooms/${classroomId}/assignments`,
         },
         {
           label: assignmentName,

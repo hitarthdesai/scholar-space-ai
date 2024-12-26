@@ -6,6 +6,7 @@ import { AddEditAssignmentSheet } from "../assignment/AddEditAssignmentSheet";
 import Link from "next/link";
 
 type AssignmentCardProps = {
+  classroomId: string;
   assignment: {
     id: string;
     name: string;
@@ -14,6 +15,7 @@ type AssignmentCardProps = {
 };
 
 export function AssignmentCard({
+  classroomId,
   assignment,
   isAuthorizedToEditAssignment,
 }: AssignmentCardProps) {
@@ -23,7 +25,10 @@ export function AssignmentCard({
         <CardTitle>{assignment.name}</CardTitle>
       </CardHeader>
       <CardFooter className="flex items-center gap-2">
-        <Link href={`/assignments/${assignment.id}`} className="w-full grow">
+        <Link
+          href={`/classrooms/${classroomId}/assignments/${assignment.id}`}
+          className="w-full grow"
+        >
           <Button className="flex w-full items-center justify-center gap-2">
             View <BookAIcon />
           </Button>

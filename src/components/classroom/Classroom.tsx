@@ -19,8 +19,7 @@ export async function Classroom({ id }: ClassroomProps) {
   assert(!!userId, "User must be logged in to view this page");
 
   const assignments = await getClassroomAssignments({ classroomId: id });
-  const doesNotHaveAssignments =
-    assignments === null || assignments.length === 0;
+  const doesNotHaveAssignments = assignments.length === 0;
 
   const classroomRole = await getClassroomRoleFromDb({
     userId,
@@ -55,6 +54,7 @@ export async function Classroom({ id }: ClassroomProps) {
         {assignments.map((assignment) => (
           <li key={assignment.id} className="min-w-72 max-w-72">
             <AssignmentCard
+              classroomId={id}
               assignment={assignment}
               isAuthorizedToEditAssignment={
                 isAuthorizedToCreateOrDeleteAssignment

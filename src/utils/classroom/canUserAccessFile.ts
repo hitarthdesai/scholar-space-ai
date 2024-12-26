@@ -1,30 +1,30 @@
 import { type AccessType } from "@/schemas/dbTableAccessSchema";
 import { db } from "@/server/db";
-import { classroomAssignments } from "@/server/db/schema";
+import { classroomFiles } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { canUserAccessClassroom } from "./canUserAccessClassroom";
 
-type CanUserAccessAssignmentProps = {
-  assignmentId: string;
-  /** Ensure classroom associated to given assignmentId has this classroomId */
+type CanUserAccessFileProps = {
+  fileId: string;
+  /** Ensure classroom associated to given fileId has this classroomId */
   classroomId?: string;
   userId: string;
   accessType: AccessType;
 };
 
-export async function canUserAccessAssignment({
-  assignmentId,
+export async function canUserAccessFile({
+  fileId,
   classroomId,
   userId,
   accessType,
-}: CanUserAccessAssignmentProps): Promise<boolean> {
+}: CanUserAccessFileProps): Promise<boolean> {
   const data = await db
     .select({
-      classroomId: classroomAssignments.classroomId,
+      classroomId: classroomFiles.classroomId,
     })
-    .from(classroomAssignments)
-    .where(eq(classroomAssignments.assignmentId, assignmentId));
+    .from(classroomFiles)
+    .where(eq(classroomFiles.fileId, fileId));
 
   const classrooms = z
     .array(z.object({ classroomId: z.string().min(1) }))

@@ -16,12 +16,12 @@ import { UserPlus } from "lucide-react";
 
 type PageProps = {
   params: {
-    id: string;
+    classroomId: string;
   };
 };
 
 export default async function Participants({
-  params: { id: classroomId },
+  params: { classroomId },
 }: PageProps) {
   const session = await auth();
   const userId = session?.user?.id;
@@ -50,7 +50,7 @@ export default async function Participants({
   });
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-4">
+    <div className="flex h-full w-full flex-col gap-4">
       <PageBreadcrumbs breadcrumbs={breadcrumbs} />
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-2xl font-bold">

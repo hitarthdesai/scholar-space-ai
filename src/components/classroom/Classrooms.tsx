@@ -1,5 +1,4 @@
 import {
-  EnumClassroomRole,
   type FilterClassroomsForm as FilterClassroomsFormType,
   type UserClassroom,
 } from "@/schemas/classroomSchema";
@@ -30,7 +29,6 @@ export function Classrooms({ classrooms, searchParams }: ClassroomsProps) {
       </div>
       {numberOfClassrooms > 0 ? (
         <div className="flex flex-row flex-wrap justify-center gap-4 sm:justify-start">
-          {/* TODO: Group these classrooms by the role current user plays in them */}
           {classrooms.map((classroom) => {
             return <ClassroomCard key={classroom.id} classroom={classroom} />;
           })}
@@ -43,24 +41,25 @@ export function Classrooms({ classrooms, searchParams }: ClassroomsProps) {
           </Card>
         </div>
       ) : (
-        <div className="flex h-full w-full flex-col items-center justify-center gap-4">
-          <ComponentNoneIcon className="h-24 w-24 text-gray-400" aria-hidden />
-          {searchParams.role === EnumClassroomRole.Admin ? (
-            <>
-              <p className="max-w-48 text-center">
-                You don&apos;t have any classrooms yet.
-              </p>
-              <AddEditClassroomSheet mode={EnumFormMode.Add}>
-                <Button className="flex items-center justify-center gap-2">
-                  Create a classroom now <Pencil1Icon />
-                </Button>
-              </AddEditClassroomSheet>
-            </>
-          ) : (
+        <div className="flex h-full w-full flex-col items-center justify-center gap-6">
+          <div className="flex flex-col items-center justify-center gap-2">
+            <ComponentNoneIcon
+              className="h-24 w-24 text-gray-400"
+              aria-hidden
+            />
             <p className="max-w-48 text-center">
-              No classrooms found. Try using a different set of filters.
+              No classrooms found. Try using different filters.
             </p>
-          )}
+          </div>
+          <div className="relative flex w-full max-w-48 flex-col items-center justify-center text-center">
+            <hr className="absolute w-full" />
+            <span className="absolute z-50 bg-background p-1">OR</span>
+          </div>
+          <AddEditClassroomSheet mode={EnumFormMode.Add}>
+            <Button className="flex items-center justify-center gap-2">
+              Create a classroom now <Pencil1Icon />
+            </Button>
+          </AddEditClassroomSheet>
         </div>
       )}
     </>
