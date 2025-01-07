@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Button } from "../ui/button";
-import { SendHorizonalIcon } from "lucide-react"; // Make sure to import this
+import { SendHorizonalIcon } from "lucide-react";
 
 interface SubmitDialogProps {
   // Removed event handlers since they are handled within the component itself
@@ -42,10 +42,11 @@ const SubmitDialog: React.FC<SubmitDialogProps> = () => {
       </Button>
 
       {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-full max-w-sm rounded-lg bg-black p-6">
-            <h2 className="text-lg font-semibold">
-              Are you sure you want to submit?
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="pointer-events-auto w-full max-w-sm rounded-lg bg-black p-6 opacity-100">
+            <h2 className="text-center text-lg font-semibold">
+              Are you sure you want to submit? <br />
+              This cannont be undone.
             </h2>
             <div className="mt-4 flex justify-between gap-2">
               <Button
