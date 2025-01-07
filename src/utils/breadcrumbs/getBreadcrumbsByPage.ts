@@ -53,10 +53,6 @@ export async function getBreadcrumbsByPage(
 
       const breadcrumbs = [
         {
-          label: "Home",
-          href: "/",
-        },
-        {
           label: "Classrooms",
           href: "/classrooms",
         },
@@ -116,10 +112,6 @@ export async function getBreadcrumbsByPage(
 
       return [
         {
-          label: "Home",
-          href: "/",
-        },
-        {
           label: "Classrooms",
           href: "/classrooms",
         },
@@ -133,7 +125,7 @@ export async function getBreadcrumbsByPage(
         },
         {
           label: assignmentName,
-          href: `/assignments/${assignmentId}`,
+          href: `/classrooms/${classroomId}/assignments/${assignmentId}`,
         },
       ];
     }
@@ -171,10 +163,6 @@ export async function getBreadcrumbsByPage(
 
       return [
         {
-          label: "Home",
-          href: "/",
-        },
-        {
           label: "Classrooms",
           href: "/classrooms",
         },
@@ -183,12 +171,16 @@ export async function getBreadcrumbsByPage(
           href: `/classrooms/${classroomId}`,
         },
         {
+          label: "Assignments",
+          href: `/classrooms/${classroomId}/assignments`,
+        },
+        {
           label: assignmentName,
-          href: `/assignments/${assignmentId}`,
+          href: `/classrooms/${classroomId}/assignments/${assignmentId}`,
         },
         {
           label: questionName,
-          href: `/questions/${questionid}`,
+          href: `/classrooms/${classroomId}/assignments/${assignmentId}/questions/${questionid}`,
         },
       ];
     }
