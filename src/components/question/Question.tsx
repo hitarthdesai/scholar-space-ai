@@ -1,4 +1,3 @@
-import React from "react";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -16,7 +15,7 @@ import { SaveCodeButton } from "./SaveCodeButton";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
 import { ResetCodeButton } from "./ResetCodeButton";
-import SubmitDialog from "./SubmitDialog"; // Import the client-side dialog
+import { SubmitQuestionButton } from "../SubmitQuestionButton";
 
 type QuestionProps = {
   questionId: string;
@@ -59,8 +58,7 @@ export async function Question({ questionId }: QuestionProps) {
             <SolutionEditor />
           </div>
           <div className="flex w-full items-center gap-2">
-            <SubmitDialog />{" "}
-            {/* Just render the dialog without passing event handlers */}
+            <SubmitQuestionButton questionId={questionId} />
             <ResetCodeButton />
             <SaveCodeButton />
             <RunCodeButton />
