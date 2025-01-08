@@ -10,25 +10,27 @@ import { RenameConversationButton } from "./RenameConversationButton";
 import { DeleteConversationButton } from "./DeleteConversationButton";
 
 type ConversationItemProps = {
-  conversation: Conversation;
+  id: Conversation["id"];
+  name: Conversation["name"];
+  href: string;
 };
 
-function ConversationItem({ conversation }: ConversationItemProps) {
+function ConversationItem({ id, name, href }: ConversationItemProps) {
   return (
     <div
-      key={conversation.id}
+      key={id}
       className="flex items-center justify-between overflow-hidden text-ellipsis py-2 pl-4 pr-2 hover:bg-stone-800"
     >
       <div className="flex-1 overflow-hidden">
         <Link
-          href={`/chat/${conversation.id}`}
+          href={href}
           className="block overflow-hidden text-ellipsis whitespace-nowrap"
         >
-          {conversation.name}
+          {name}
         </Link>
       </div>
-      <RenameConversationButton conversationId={conversation.id} />
-      <DeleteConversationButton conversationId={conversation.id} />
+      <RenameConversationButton conversationId={id} />
+      <DeleteConversationButton conversationId={id} />
     </div>
   );
 }
@@ -93,7 +95,13 @@ export function ConversationsSidebar(props: ConversationSidebarProps) {
           {props.conversations.map((conversation) => (
             <ConversationItem
               key={conversation.id}
-              conversation={conversation}
+              id={conversation.id}
+              name={conversation.name}
+              href={
+                props.type === EnumConversationType.Classroom
+                  ? `/classrooms/${props.classroomId}/chats/${conversation.id}`
+                  : `/chat/${conversation.id}`
+              }
             />
           ))}
         </div>

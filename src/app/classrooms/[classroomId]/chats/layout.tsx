@@ -3,7 +3,7 @@ import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 import { EnumConversationType } from "@/schemas/chatSchema";
 import { auth } from "@/utils/auth/config";
 import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
-import { getUserFreeConversations } from "@/utils/chat/getUserFreeConversations";
+import { getUserClassroomConversations } from "@/utils/chat/getUserClassroomConversations";
 import { EnumPage } from "@/utils/constants/page";
 
 export default async function ChatLayout({
@@ -24,7 +24,10 @@ export default async function ChatLayout({
     classroomId: params.classroomId,
   });
 
-  const conversations = await getUserFreeConversations({ userId });
+  const conversations = await getUserClassroomConversations({
+    userId,
+    classroomId: params.classroomId,
+  });
 
   return (
     <div className="flex h-full w-full flex-col gap-4">
@@ -32,8 +35,8 @@ export default async function ChatLayout({
       <div className="relative flex h-full w-full">
         <ConversationsSidebar
           type={EnumConversationType.Classroom}
-          conversations={conversations}
           classroomId={params.classroomId}
+          conversations={conversations}
         />
         <div className="absolute left-0 top-0 z-10 h-full w-full sm:relative sm:grow">
           {children}
