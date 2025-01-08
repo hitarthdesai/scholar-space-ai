@@ -11,6 +11,7 @@ import { type continueConversation } from "@/actions/continueConversation";
 export const EnumConversationType = {
   Free: "free",
   Question: "ques",
+  Classroom: "class",
 } as const;
 
 const conversationTypeSchema = z.nativeEnum(EnumConversationType);
@@ -106,6 +107,15 @@ export const continueConversationInputSchema = z.union([
       .max(CHAT_PROMPT_INPUT_MAX_LENGTH),
     questionId: z.string(),
   }),
+  z.object({
+    type: z.literal(EnumConversationType.Classroom),
+    prompt: z
+      .string()
+      .min(CHAT_PROMPT_INPUT_MIN_LENGTH)
+      .max(CHAT_PROMPT_INPUT_MAX_LENGTH),
+    classroomId: z.string(),
+    conversationId: z.string().optional(),
+  }),
 ]);
 
 export type ContinueConversationInput = z.infer<
@@ -120,6 +130,9 @@ export const getSystemPromptByConversationTypeInputSchema = z.union([
     type: z.literal(EnumConversationType.Question),
     userId: z.string(),
     questionId: z.string(),
+  }),
+  z.object({
+    type: z.literal(EnumConversationType.Classroom),
   }),
 ]);
 
