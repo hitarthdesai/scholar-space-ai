@@ -23,6 +23,10 @@ type GetBreadcrumbsByPageProps =
       classroomId: string;
     }
   | {
+      page: (typeof EnumPage)["ClassroomChats"];
+      classroomId: string;
+    }
+  | {
       page: (typeof EnumPage)["ClassroomFiles"];
       classroomId: string;
     }
@@ -43,6 +47,7 @@ export async function getBreadcrumbsByPage(
     case EnumPage.ClassroomParticipants:
     case EnumPage.ClassroomAssignments:
     case EnumPage.ClassroomFiles:
+    case EnumPage.ClassroomChats:
       const [{ classroomId, classroomName }] = await db
         .select({
           classroomId: classrooms.id,
@@ -83,6 +88,14 @@ export async function getBreadcrumbsByPage(
           breadcrumbs.push({
             label: "Files",
             href: `/classrooms/${classroomId}/files`,
+          });
+          return breadcrumbs;
+        }
+
+        case EnumPage.ClassroomChats: {
+          breadcrumbs.push({
+            label: "Chats",
+            href: `/classrooms/${classroomId}/chats`,
           });
           return breadcrumbs;
         }

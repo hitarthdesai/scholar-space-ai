@@ -20,12 +20,16 @@ import { useAction } from "next-safe-action/hooks";
 
 export type ChatPromptInputProps =
   | {
-      type: "free";
+      type: typeof EnumConversationType.Free;
       conversationId?: string;
     }
   | {
-      type: "ques";
+      type: typeof EnumConversationType.Question;
       questionId: string;
+    }
+  | {
+      type: typeof EnumConversationType.Classroom;
+      classroomId: string;
     };
 
 export function ChatPromptInput(props: ChatPromptInputProps) {
@@ -69,6 +73,10 @@ export function ChatPromptInput(props: ChatPromptInputProps) {
 
       if (props.type === EnumConversationType.Free) {
         router.push(`/chat/${newConversationId}`);
+      } else if (props.type === EnumConversationType.Classroom) {
+        router.push(
+          `/classrooms/${props.classroomId}/chats/${newConversationId}`
+        );
       }
       router.refresh();
     },

@@ -13,6 +13,7 @@ const getClassroomSidebarLinks: (classroomId: string) => NavLink[] = (
   { label: "Home", href: `/classrooms/${classroomId}` },
   { label: "Assignments", href: `/classrooms/${classroomId}/assignments` },
   { label: "Files", href: `/classrooms/${classroomId}/files` },
+  { label: "Chat", href: `/classrooms/${classroomId}/chats` },
   { label: "Participants", href: `/classrooms/${classroomId}/participants` },
 ];
 

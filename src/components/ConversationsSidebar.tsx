@@ -4,7 +4,7 @@ import { cn } from "@/utils/cn";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { ChevronLeftIcon, Pencil1Icon } from "@radix-ui/react-icons";
-import { type Conversation } from "@/schemas/chatSchema";
+import { EnumConversationType, type Conversation } from "@/schemas/chatSchema";
 import Link from "next/link";
 import { RenameConversationButton } from "./RenameConversationButton";
 import { DeleteConversationButton } from "./DeleteConversationButton";
@@ -13,11 +13,7 @@ type ConversationItemProps = {
   conversation: Conversation;
 };
 
-type ConversationSidebarProps = {
-  conversations: Conversation[];
-};
-
-export function ConversationItem({ conversation }: ConversationItemProps) {
+function ConversationItem({ conversation }: ConversationItemProps) {
   return (
     <div
       key={conversation.id}
@@ -37,10 +33,26 @@ export function ConversationItem({ conversation }: ConversationItemProps) {
   );
 }
 
-export function ConversationsSidebar({
-  conversations,
-}: ConversationSidebarProps) {
+type ConversationSidebarPropsByConversationType =
+  | {
+      type: typeof EnumConversationType.Free;
+    }
+  | { type: typeof EnumConversationType.Question }
+  | {
+      type: typeof EnumConversationType.Classroom;
+      classroomId: string;
+    };
+
+type ConversationSidebarProps = ConversationSidebarPropsByConversationType & {
+  conversations: Conversation[];
+};
+
+export function ConversationsSidebar(props: ConversationSidebarProps) {
   const [isOpen, setIsOpen] = useState(true);
+  const newConversationHref =
+    props.type === EnumConversationType.Classroom
+      ? `/classrooms/${props.classroomId}/chats`
+      : "/chat";
 
   return (
     <aside
@@ -66,7 +78,10 @@ export function ConversationsSidebar({
         </Button>
         {isOpen && (
           <Button className="grow overflow-hidden text-ellipsis">
-            <Link href="/chat" className="flex items-center gap-2 text-nowrap">
+            <Link
+              href={newConversationHref}
+              className="flex items-center gap-2 text-nowrap"
+            >
               <p>New conversation</p>
               <Pencil1Icon />
             </Link>
@@ -75,7 +90,7 @@ export function ConversationsSidebar({
       </div>
       {isOpen && (
         <div className="h-full max-h-full overflow-y-auto pt-14">
-          {conversations.map((conversation) => (
+          {props.conversations.map((conversation) => (
             <ConversationItem
               key={conversation.id}
               conversation={conversation}

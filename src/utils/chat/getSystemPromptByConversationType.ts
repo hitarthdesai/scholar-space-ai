@@ -9,6 +9,7 @@ export async function getSystemPromptByConversationType(
 ) {
   let systemPrompt = "";
   switch (params.type) {
+    case EnumConversationType.Classroom:
     case EnumConversationType.Free: {
       systemPrompt =
         "You are a coding assistant chatbot that will only answer coding related questions. If the user asks any other questions related to any other topic, you cannot give the answer. Instead, you should respond that you are only meant to be used for coding related questions.";

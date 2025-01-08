@@ -1,4 +1,4 @@
-import { type MessageRole } from "@/schemas/chatSchema";
+import { EnumConversationType, type MessageRole } from "@/schemas/chatSchema";
 import { db } from "@/server/db";
 import { conversationMessages, messages } from "@/server/db/schema";
 

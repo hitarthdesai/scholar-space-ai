@@ -22,6 +22,7 @@ import { canUserAccessQuestion } from "@/utils/classroom/canUserAccessQuestion";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { db } from "@/server/db";
 import {
+  classroomConversations,
   conversations,
   questionAttempts,
   userConversations,
@@ -135,6 +136,36 @@ export const continueConversation = createSafeActionClient()
 
           break;
         }
+
+        case EnumConversationType.Classroom: {
+          if (!parsedInput.conversationId) {
+            const id = await db.transaction(async (tx) => {
+              const [{ id }] = await tx
+                .insert(conversations)
+                .values({
+                  type: parsedInput.type,
+                })
+                .returning({ id: conversations.id });
+
+              await tx.insert(userConversations).values({
+                userId,
+                conversationId: id,
+              });
+
+              await tx.insert(classroomConversations).values({
+                classroomId: parsedInput.classroomId,
+                conversationId: id,
+              });
+
+              return id;
+            });
+            saveMessageToDbArgs.conversationId = id;
+          } else {
+            saveMessageToDbArgs.conversationId = parsedInput.conversationId;
+          }
+
+          break;
+        }
       }
 
       const { conversationId } = await saveMessageToDb({
@@ -153,13 +184,16 @@ export const continueConversation = createSafeActionClient()
       const streamPromise = (async () => {
         try {
           const getSystemPromptArgs: GetSystemPromptByConversationTypeInput =
-            parsedInput.type === EnumConversationType.Free
-              ? { type: parsedInput.type }
-              : {
+            parsedInput.type === EnumConversationType.Question
+              ? {
                   type: parsedInput.type,
                   questionId: parsedInput.questionId,
                   userId,
-                };
+                }
+              : parsedInput.type === EnumConversationType.Classroom
+                ? { type: parsedInput.type }
+                : { type: parsedInput.type };
+
           const { textStream } = await streamText({
             model: groq("llama-3.1-70b-versatile"),
             messages: history.get(),
