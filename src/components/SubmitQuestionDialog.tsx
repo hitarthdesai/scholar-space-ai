@@ -1,16 +1,17 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { type PropsWithChildren, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { SendHorizonalIcon } from "lucide-react";
-import { useState } from "react";
 
 type SubmitQuestionDialogProps = {
   questionId: string;
@@ -18,7 +19,8 @@ type SubmitQuestionDialogProps = {
 
 export function SubmitQuestionDialog({
   questionId,
-}: SubmitQuestionDialogProps) {
+  children,
+}: PropsWithChildren<SubmitQuestionDialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmitConfirm = () => {
@@ -36,14 +38,7 @@ export function SubmitQuestionDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="mr-auto flex items-center justify-center gap-2 bg-green-700 text-white hover:bg-green-300 hover:text-black"
-        >
-          Submit <SendHorizonalIcon aria-hidden />
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-center text-xl">
@@ -59,6 +54,7 @@ export function SubmitQuestionDialog({
           >
             Cancel
           </Button>
+          <div className="flex-grow"></div>
           <Button
             onClick={handleSubmitConfirm}
             className="bg-green-700 text-white hover:bg-green-300"

@@ -58,7 +58,11 @@ export async function Question({ questionId }: QuestionProps) {
             <SolutionEditor />
           </div>
           <div className="flex w-full items-center gap-2">
-            <SubmitQuestionDialog questionId={questionId} />
+            <SubmitQuestionDialog questionId={questionId}>
+              <Button className="mr-auto flex items-center justify-center gap-2 bg-green-700 text-white hover:bg-green-300 hover:text-black">
+                Submit <SendHorizonalIcon aria-hidden />
+              </Button>
+            </SubmitQuestionDialog>
             <ResetCodeButton />
             <SaveCodeButton />
             <RunCodeButton />
