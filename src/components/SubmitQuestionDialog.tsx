@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -14,27 +13,10 @@ import { SendHorizonalIcon } from "lucide-react";
 import { useState } from "react";
 
 type SubmitQuestionDialogProps = {
-  trigger?: React.ReactNode;
   questionId: string;
 };
 
-function DefaultSubmitQuestionTrigger({
-  setIsOpen,
-}: {
-  setIsOpen: (isOpen: boolean) => void;
-}) {
-  return (
-    <Button
-      onClick={() => setIsOpen(true)}
-      className="mr-auto flex items-center justify-center gap-2 bg-green-700 text-white hover:bg-green-300 hover:text-black"
-    >
-      Submit <SendHorizonalIcon aria-hidden />
-    </Button>
-  );
-}
-
 export function SubmitQuestionDialog({
-  trigger,
   questionId,
 }: SubmitQuestionDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,7 +37,12 @@ export function SubmitQuestionDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        {trigger || <DefaultSubmitQuestionTrigger setIsOpen={setIsOpen} />}
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="mr-auto flex items-center justify-center gap-2 bg-green-700 text-white hover:bg-green-300 hover:text-black"
+        >
+          Submit <SendHorizonalIcon aria-hidden />
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -66,22 +53,18 @@ export function SubmitQuestionDialog({
           </DialogTitle>
         </DialogHeader>
         <DialogFooter className="flex justify-between">
-          <div className="flex-1">
-            <Button
-              onClick={handleSubmitCancel}
-              className="bg-gray-500 text-white hover:bg-gray-400"
-            >
-              Cancel
-            </Button>
-          </div>
-          <div className="flex-1 text-right">
-            <Button
-              onClick={handleSubmitConfirm}
-              className="bg-green-700 text-white hover:bg-green-300"
-            >
-              Confirm
-            </Button>
-          </div>
+          <Button
+            onClick={handleSubmitCancel}
+            className="bg-gray-500 text-white hover:bg-gray-400"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSubmitConfirm}
+            className="bg-green-700 text-white hover:bg-green-300"
+          >
+            Confirm
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

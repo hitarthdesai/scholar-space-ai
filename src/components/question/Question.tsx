@@ -15,7 +15,7 @@ import { SaveCodeButton } from "./SaveCodeButton";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
 import { ResetCodeButton } from "./ResetCodeButton";
-import { SubmitQuestionButton } from "../SubmitQuestionButton";
+import { SubmitQuestionDialog } from "../SubmitQuestionDialog";
 
 type QuestionProps = {
   questionId: string;
@@ -58,7 +58,7 @@ export async function Question({ questionId }: QuestionProps) {
             <SolutionEditor />
           </div>
           <div className="flex w-full items-center gap-2">
-            <SubmitQuestionButton questionId={questionId} />
+            <SubmitQuestionDialog questionId={questionId} />
             <ResetCodeButton />
             <SaveCodeButton />
             <RunCodeButton />
@@ -75,11 +75,10 @@ export async function Question({ questionId }: QuestionProps) {
               defaultSize={20}
               className="flex h-full w-full flex-col items-center justify-between gap-2 rounded-md border p-2"
             >
-              <OutputSection />
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={80} minSize={50}>
               <QuestionTabs questionId={questionId} />
+            </ResizablePanel>
+            <ResizablePanel minSize={20} defaultSize={80}>
+              <OutputSection />
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>
