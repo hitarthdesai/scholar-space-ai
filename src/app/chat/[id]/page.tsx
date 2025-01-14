@@ -1,4 +1,4 @@
-import { Chat } from "@/components/Chat";
+import { Chat } from "@/components/chat/Chat";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { EnumConversationType } from "@/schemas/chatSchema";
 import { auth } from "@/utils/auth/config";

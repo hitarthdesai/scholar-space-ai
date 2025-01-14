@@ -1,4 +1,4 @@
-import { ConversationsSidebar } from "@/components/ConversationsSidebar";
+import { ConversationsSidebar } from "@/components/chat/ConversationsSidebar";
 import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 import { EnumConversationType } from "@/schemas/chatSchema";
 import { auth } from "@/utils/auth/config";

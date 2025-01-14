@@ -1,6 +1,6 @@
 import { DeleteConversationDialog } from "./DeleteConversationDialog";
 import { TrashIcon } from "@radix-ui/react-icons";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 type DeleteConversationButtonProps = {
   conversationId: string;

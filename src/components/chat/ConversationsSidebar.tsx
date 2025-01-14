@@ -2,7 +2,7 @@
 
 import { cn } from "@/utils/cn";
 import { useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { EnumConversationType, type Conversation } from "@/schemas/chatSchema";
 import Link from "next/link";
