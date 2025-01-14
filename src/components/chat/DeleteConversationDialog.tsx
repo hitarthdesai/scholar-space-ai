@@ -17,7 +17,7 @@ import { useAction } from "next-safe-action/hooks";
 import { deleteConversation } from "@/actions/deleteConversation";
 import { EnumDeleteConversationResult } from "@/schemas/chatSchema";
 import { toastDescriptionDeleteConversation } from "@/utils/constants/toast";
-import { toast } from "./ui/use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 type DeleteConversationDialogProps = {
   conversationId: string;

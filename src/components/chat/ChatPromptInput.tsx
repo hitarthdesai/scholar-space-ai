@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem } from "./ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import {
   continueConversationInputSchema,
   type ContinueConversationInput,
@@ -10,9 +10,9 @@ import {
   EnumMessageRole,
 } from "@/schemas/chatSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "./ui/input";
+import { Input } from "@/components/ui/input";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { readStreamableValue, useActions, useUIState } from "ai/rsc";
 import { type TypeAI } from "./AiProvider";
 import { useRouter } from "next/navigation";

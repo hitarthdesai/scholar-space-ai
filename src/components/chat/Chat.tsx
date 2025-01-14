@@ -1,9 +1,9 @@
-import { AI } from "@/components/AiProvider";
-import { ChatMessages } from "@/components/ChatMessages";
+import { AI } from "@/components/chat/AiProvider";
+import { ChatMessages } from "@/components/chat/ChatMessages";
 import {
   ChatPromptInput,
   type ChatPromptInputProps,
-} from "@/components/ChatPromptInput";
+} from "@/components/chat/ChatPromptInput";
 import { type Message } from "@/schemas/chatSchema";
 
 type ChatProps = ChatPromptInputProps & {
