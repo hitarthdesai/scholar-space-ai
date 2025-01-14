@@ -6,7 +6,7 @@ import {
   CONVERSATION_NAME_MAX_LENGTH,
   CONVERSATION_NAME_MIN_LENGTH,
 } from "@/utils/constants/chat";
-import { continueConversation } from "@/actions/continueConversation";
+import { type continueConversation } from "@/actions/continueConversation";
 
 export const EnumConversationType = {
   Free: "free",
