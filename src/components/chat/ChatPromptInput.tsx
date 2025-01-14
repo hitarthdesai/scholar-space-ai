@@ -17,8 +17,11 @@ import { readStreamableValue, useActions, useUIState } from "ai/rsc";
 import { type TypeAI } from "./AiProvider";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
+import { ChatFileSelectDialog } from "./ChatFileSelectDialog";
+import { PlusCircleIcon } from "lucide-react";
+import { useState } from "react";
 
-export type ChatPromptInputProps =
+type _ChatPromptInputProps =
   | {
       type: typeof EnumConversationType.Free;
       conversationId?: string;
@@ -30,12 +33,19 @@ export type ChatPromptInputProps =
   | {
       type: typeof EnumConversationType.Classroom;
       classroomId: string;
+      conversationId?: string;
     };
 
+export type ChatPromptInputProps = _ChatPromptInputProps & {
+  showFilesSelectButton?: boolean;
+};
+
 export function ChatPromptInput(props: ChatPromptInputProps) {
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const defaultPromptInputValues: ContinueConversationInput = {
     ...props,
     prompt: "",
+    selectedFiles: [],
   };
 
   const router = useRouter();
@@ -95,6 +105,7 @@ export function ChatPromptInput(props: ChatPromptInputProps) {
       return initialMessages;
     });
 
+    formData.selectedFiles = selectedFiles;
     await executeAsync(formData);
   };
 
@@ -105,6 +116,16 @@ export function ChatPromptInput(props: ChatPromptInputProps) {
         className="flex rounded-full border border-primary p-1"
         onSubmit={form.handleSubmit(handleSubmit)}
       >
+        {!!props.showFilesSelectButton && (
+          <ChatFileSelectDialog onFilesSelected={(f) => setSelectedFiles(f)}>
+            <Button
+              size="icon"
+              className="rounded-full bg-transparent text-white hover:text-black"
+            >
+              <PlusCircleIcon className="bg-transparent" />
+            </Button>
+          </ChatFileSelectDialog>
+        )}
         <FormField
           name="prompt"
           control={form.control}

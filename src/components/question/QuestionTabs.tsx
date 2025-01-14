@@ -1,6 +1,6 @@
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { EnumTabsContentType, tabsDetails } from "@/utils/constants/question";
-import { Chat } from "../Chat";
+import { Chat } from "@/components/chat/Chat";
 import { EnumConversationType } from "@/schemas/chatSchema";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";

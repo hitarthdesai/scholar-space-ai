@@ -6,7 +6,7 @@ import {
   CONVERSATION_NAME_MAX_LENGTH,
   CONVERSATION_NAME_MIN_LENGTH,
 } from "@/utils/constants/chat";
-import { type continueConversation } from "@/actions/continueConversation";
+import { continueConversation } from "@/actions/continueConversation";
 
 export const EnumConversationType = {
   Free: "free",
@@ -98,6 +98,7 @@ export const continueConversationInputSchema = z.union([
       .min(CHAT_PROMPT_INPUT_MIN_LENGTH)
       .max(CHAT_PROMPT_INPUT_MAX_LENGTH),
     conversationId: z.string().optional(),
+    selectedFiles: z.array(z.string()),
   }),
   z.object({
     type: z.literal(EnumConversationType.Question),
@@ -106,6 +107,7 @@ export const continueConversationInputSchema = z.union([
       .min(CHAT_PROMPT_INPUT_MIN_LENGTH)
       .max(CHAT_PROMPT_INPUT_MAX_LENGTH),
     questionId: z.string(),
+    selectedFiles: z.array(z.string()),
   }),
   z.object({
     type: z.literal(EnumConversationType.Classroom),
@@ -115,6 +117,7 @@ export const continueConversationInputSchema = z.union([
       .max(CHAT_PROMPT_INPUT_MAX_LENGTH),
     classroomId: z.string(),
     conversationId: z.string().optional(),
+    selectedFiles: z.array(z.string()),
   }),
 ]);
 

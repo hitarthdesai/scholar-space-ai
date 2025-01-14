@@ -1,4 +1,4 @@
-import { Chat } from "@/components/Chat";
+import { Chat } from "@/components/chat/Chat";
 import { EnumConversationType } from "@/schemas/chatSchema";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
@@ -16,7 +16,11 @@ export default async function ChatPage({ params: { classroomId } }: PageProps) {
 
   return (
     <main className="flex h-full flex-col justify-between">
-      <Chat type={EnumConversationType.Classroom} classroomId={classroomId} />
+      <Chat
+        type={EnumConversationType.Classroom}
+        classroomId={classroomId}
+        showFilesSelectButton
+      />
     </main>
   );
 }
