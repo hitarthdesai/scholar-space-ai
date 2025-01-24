@@ -11,55 +11,66 @@ import {
 } from "@/components/ui/dialog";
 import { type PropsWithChildren, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { SendHorizonalIcon } from "lucide-react";
+import { submitCode } from "@/actions/submitCode";
+import { useAction } from "next-safe-action/hooks";
+import { Loader2 } from "lucide-react";
+import { EnumSubmitCodeResult } from "@/schemas/questionSchema";
+import { useCodeContext } from "@/contexts/CodeContext";
+import { toast } from "@/components/ui/use-toast";
+import { toastDescriptionSubmitCode } from "@/utils/constants/toast";
 
 type SubmitQuestionDialogProps = {
   questionId: string;
 };
 
 export function SubmitQuestionDialog({
-  questionId,
   children,
 }: PropsWithChildren<SubmitQuestionDialogProps>) {
+  const { code, questionId } = useCodeContext();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSubmitConfirm = () => {
-    // Handle submit logic here
-    console.log("Submit confirmed!");
-    // Trigger any necessary backend actions for AI or submission
-    setIsOpen(false);
-  };
+  const { executeAsync, isExecuting: isSubmitting } = useAction(submitCode, {
+    onSuccess: ({ data }) => {
+      if (!data?.type) return;
 
-  const handleSubmitCancel = () => {
-    // Handle cancel logic
-    console.log("Submit cancelled!");
-    setIsOpen(false);
-  };
+      const isErroneous = data.type !== EnumSubmitCodeResult.CodeSubmitted;
+      toast({
+        title: isErroneous
+          ? "Error in submitting code"
+          : "Code Submitted successfully",
+        description: toastDescriptionSubmitCode[data.type],
+        variant: isErroneous ? "destructive" : "default",
+      });
+
+      setIsOpen(false);
+    },
+  });
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-center text-xl">
-            Are you sure you want to submit?
-            <br />
-            This cannot be undone.
-          </DialogTitle>
+          <DialogTitle className="text-center text-xl">Submit Code</DialogTitle>
         </DialogHeader>
-        <DialogFooter className="flex justify-between">
-          <Button
-            onClick={handleSubmitCancel}
-            className="bg-gray-500 text-white hover:bg-gray-400"
-          >
+        <DialogDescription>
+          Are you sure you want to submit your code? You will not be able to
+          edit it after submission.
+        </DialogDescription>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setIsOpen(false)}>
             Cancel
           </Button>
-          <div className="flex-grow"></div>
           <Button
-            onClick={handleSubmitConfirm}
-            className="bg-green-700 text-white hover:bg-green-300"
+            variant="outline"
+            onClick={async () => await executeAsync({ questionId, code })}
+            disabled={isSubmitting}
           >
-            Confirm
+            {isSubmitting ? (
+              <Loader2 className="animate-spin p-0.5" />
+            ) : (
+              "Submit"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

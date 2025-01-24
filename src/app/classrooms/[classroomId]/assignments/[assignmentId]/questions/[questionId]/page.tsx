@@ -7,6 +7,9 @@ import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { canUserAccessQuestion } from "@/utils/classroom/canUserAccessQuestion";
 import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
+import { db } from "@/server/db";
+import { questionAttempts } from "@/server/db/schema";
+import { and, eq } from "drizzle-orm";
 
 type PageProps = {
   params: {
@@ -33,6 +36,24 @@ export default async function QuestionPage({
 
   if (!isAuthorized) {
     return <NotAuthorizedToViewPage />;
+  }
+
+  const hasVisited = await db
+    .select()
+    .from(questionAttempts)
+    .where(
+      and(
+        eq(questionAttempts.userId, userId),
+        eq(questionAttempts.questionId, questionId)
+      )
+    );
+
+  if (hasVisited.length === 0) {
+    await db.insert(questionAttempts).values({
+      userId: userId,
+      questionId: questionId,
+      answer: "",
+    });
   }
 
   const breadcrumbs = await getBreadcrumbsByPage({

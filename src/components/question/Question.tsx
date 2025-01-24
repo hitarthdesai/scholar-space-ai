@@ -16,6 +16,9 @@ import { auth } from "@/utils/auth/config";
 import assert from "assert";
 import { ResetCodeButton } from "./ResetCodeButton";
 import { SubmitQuestionDialog } from "../SubmitQuestionDialog";
+import { db } from "@/server/db";
+import { questionAttempts } from "@/server/db/schema";
+import { and, eq, isNotNull } from "drizzle-orm";
 
 type QuestionProps = {
   questionId: string;
@@ -25,6 +28,21 @@ export async function Question({ questionId }: QuestionProps) {
   const session = await auth();
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
+
+  const isQuestionSubmitted = await db
+    .select()
+    .from(questionAttempts)
+    .where(
+      and(
+        eq(questionAttempts.userId, userId),
+        eq(questionAttempts.questionId, questionId),
+        isNotNull(questionAttempts.submitted)
+      )
+    );
+
+  if (isQuestionSubmitted) {
+    const notEdittable = true;
+  }
 
   const question =
     (await getObject({ fileName: `questions/${questionId}/question.txt` })) ??

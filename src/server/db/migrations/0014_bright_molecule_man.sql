@@ -1,0 +1,1 @@
+ALTER TABLE `questionAttempt` ADD `submitted` integer;

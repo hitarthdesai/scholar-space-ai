@@ -57,11 +57,7 @@ export function SaveCodeButton() {
   );
 
   const { code, questionId } = useCodeContext();
-  const { executeAsync, isExecuting, execute, result } = useAction(saveCode, {
-    onSettled({ result: { data } }) {
-      if (!data) return;
-    },
-  });
+  const { executeAsync, isExecuting, execute, result } = useAction(saveCode);
 
   const debouncedCode = useDebounce(code, 1000);
   useEffect(() => {
