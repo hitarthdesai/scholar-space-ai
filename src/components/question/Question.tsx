@@ -92,15 +92,15 @@ export async function Question({ questionId }: QuestionProps) {
             direction="vertical"
             className="flex h-full w-full flex-col gap-2"
           >
+            <ResizablePanel minSize={20} defaultSize={20}>
+              <OutputSection />
+            </ResizablePanel>
             <ResizablePanel
               minSize={20}
-              defaultSize={20}
+              defaultSize={80}
               className="flex h-full w-full flex-col items-center justify-between gap-2 rounded-md border p-2"
             >
               <QuestionTabs questionId={questionId} />
-            </ResizablePanel>
-            <ResizablePanel minSize={20} defaultSize={80}>
-              <OutputSection />
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>
