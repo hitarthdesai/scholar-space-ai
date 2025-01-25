@@ -9,7 +9,7 @@ import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
 import { db } from "@/server/db";
 import { questionAttempts } from "@/server/db/schema";
-import { and, eq } from "drizzle-orm";
+import { addQuestionAttemptToDb } from "@/utils/classroom/addQuestionAttemptToDb";
 
 type PageProps = {
   params: {
@@ -38,15 +38,10 @@ export default async function QuestionPage({
     return <NotAuthorizedToViewPage />;
   }
 
-  const hasVisited = await db
-    .select()
-    .from(questionAttempts)
-    .where(
-      and(
-        eq(questionAttempts.userId, userId),
-        eq(questionAttempts.questionId, questionId)
-      )
-    );
+  const hasVisited = await addQuestionAttemptToDb({
+    questionId,
+    userId,
+  });
 
   if (hasVisited.length === 0) {
     await db.insert(questionAttempts).values({

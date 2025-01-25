@@ -120,17 +120,6 @@ export const continueConversation = createSafeActionClient()
             } else {
               saveMessageToDbArgs.conversationId = _conversationId;
             }
-
-            if (attempts.length === 0) {
-              await tx.insert(questionAttempts).values([
-                {
-                  userId,
-                  questionId: parsedInput.questionId,
-                  conversationId: saveMessageToDbArgs.conversationId,
-                  answer: "",
-                },
-              ]);
-            }
           });
 
           break;
