@@ -11,13 +11,9 @@ export async function addQuestionAttemptToDb({
   questionId,
   userId,
 }: addQuestionAttemptToDbProps) {
-  return db
-    .select()
-    .from(questionAttempts)
-    .where(
-      and(
-        eq(questionAttempts.userId, userId),
-        eq(questionAttempts.questionId, questionId)
-      )
-    );
+  return db.insert(questionAttempts).values({
+    userId: userId,
+    questionId: questionId,
+    answer: "",
+  });
 }
