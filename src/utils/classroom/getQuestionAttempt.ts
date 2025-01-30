@@ -12,7 +12,10 @@ export async function getQuestionAttempt({
   userId,
 }: getQuestionAttemptProps) {
   return db
-    .select()
+    .select({
+      userId: questionAttempts.userId,
+      questionId: questionAttempts.questionId,
+    })
     .from(questionAttempts)
     .where(
       and(
