@@ -50,7 +50,7 @@ export default async function AssignmentPage({
   });
 
   return (
-    <div className="flex h-full w-full flex-col p-4">
+    <div className="flex h-full w-full flex-col gap-4">
       <PageBreadcrumbs breadcrumbs={breadcrumbs} />
       <main className="flex h-full grow flex-col">
         <AssignmentQuestions

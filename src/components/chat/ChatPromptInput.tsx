@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem } from "./ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import {
   continueConversationInputSchema,
   type ContinueConversationInput,
@@ -10,28 +10,42 @@ import {
   EnumMessageRole,
 } from "@/schemas/chatSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "./ui/input";
+import { Input } from "@/components/ui/input";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { readStreamableValue, useActions, useUIState } from "ai/rsc";
 import { type TypeAI } from "./AiProvider";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
+import { ChatFileSelectDialog } from "./ChatFileSelectDialog";
+import { PlusCircleIcon } from "lucide-react";
+import { useState } from "react";
 
-export type ChatPromptInputProps =
+type _ChatPromptInputProps =
   | {
-      type: "free";
+      type: typeof EnumConversationType.Free;
       conversationId?: string;
     }
   | {
-      type: "ques";
+      type: typeof EnumConversationType.Question;
       questionId: string;
+    }
+  | {
+      type: typeof EnumConversationType.Classroom;
+      classroomId: string;
+      conversationId?: string;
     };
 
+export type ChatPromptInputProps = _ChatPromptInputProps & {
+  showFilesSelectButton?: boolean;
+};
+
 export function ChatPromptInput(props: ChatPromptInputProps) {
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const defaultPromptInputValues: ContinueConversationInput = {
     ...props,
     prompt: "",
+    selectedFiles: [],
   };
 
   const router = useRouter();
@@ -69,6 +83,10 @@ export function ChatPromptInput(props: ChatPromptInputProps) {
 
       if (props.type === EnumConversationType.Free) {
         router.push(`/chat/${newConversationId}`);
+      } else if (props.type === EnumConversationType.Classroom) {
+        router.push(
+          `/classrooms/${props.classroomId}/chats/${newConversationId}`
+        );
       }
       router.refresh();
     },
@@ -87,6 +105,7 @@ export function ChatPromptInput(props: ChatPromptInputProps) {
       return initialMessages;
     });
 
+    formData.selectedFiles = selectedFiles;
     await executeAsync(formData);
   };
 
@@ -97,6 +116,16 @@ export function ChatPromptInput(props: ChatPromptInputProps) {
         className="flex rounded-full border border-primary p-1"
         onSubmit={form.handleSubmit(handleSubmit)}
       >
+        {!!props.showFilesSelectButton && (
+          <ChatFileSelectDialog onFilesSelected={(f) => setSelectedFiles(f)}>
+            <Button
+              size="icon"
+              className="rounded-full bg-transparent text-white hover:text-black"
+            >
+              <PlusCircleIcon className="bg-transparent" />
+            </Button>
+          </ChatFileSelectDialog>
+        )}
         <FormField
           name="prompt"
           control={form.control}

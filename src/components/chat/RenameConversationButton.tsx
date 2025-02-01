@@ -1,6 +1,6 @@
 import { RenameConversationDialog } from "./RenameConversationDialog";
 import { Pencil2Icon } from "@radix-ui/react-icons";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 type RenameConversationButtonProps = {
   conversationId: string;

@@ -3,6 +3,7 @@ export const EnumPage = {
   ClassroomParticipants: "ClassroomParticipants",
   ClassroomAssignments: "ClassroomAssignments",
   ClassroomFiles: "ClassroomFiles",
+  ClassroomChats: "ClassroomChats",
   Assignment: "Assignment",
   Question: "Question",
 } as const;

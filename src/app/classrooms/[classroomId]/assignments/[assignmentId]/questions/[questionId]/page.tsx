@@ -52,7 +52,7 @@ export default async function QuestionPage({
   });
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-4">
+    <div className="flex h-full w-full flex-col gap-4">
       <PageBreadcrumbs breadcrumbs={breadcrumbs} />
       <main className="grow">
         <Question questionId={questionId} />

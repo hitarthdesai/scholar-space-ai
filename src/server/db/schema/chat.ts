@@ -4,6 +4,7 @@ import { relations, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { randomUUID } from "crypto";
 import { users } from "./auth";
+import { classrooms } from "./classroom";
 
 export const messages = sqliteTable("message", {
   id: text("id")
@@ -25,7 +26,11 @@ export const conversations = sqliteTable("conversation", {
     .primaryKey()
     .$defaultFn(() => randomUUID()),
   type: text("type", {
-    enum: [EnumConversationType.Free, EnumConversationType.Question],
+    enum: [
+      EnumConversationType.Free,
+      EnumConversationType.Question,
+      EnumConversationType.Classroom,
+    ],
   })
     .notNull()
     .default(EnumConversationType.Question),
@@ -76,6 +81,29 @@ export const userConversationsRelations = relations(
     }),
     conversation: one(conversations, {
       fields: [userConversations.conversationId],
+      references: [conversations.id],
+    }),
+  })
+);
+
+export const classroomConversations = sqliteTable("classroomConversation", {
+  classroomId: text("classroomId")
+    .notNull()
+    .references(() => classrooms.id),
+  conversationId: text("conversationId")
+    .notNull()
+    .references(() => conversations.id, { onDelete: "cascade" }),
+});
+
+export const classroomConversationsRelations = relations(
+  classroomConversations,
+  ({ one }) => ({
+    classroom: one(classrooms, {
+      fields: [classroomConversations.classroomId],
+      references: [classrooms.id],
+    }),
+    conversation: one(conversations, {
+      fields: [classroomConversations.conversationId],
       references: [conversations.id],
     }),
   })

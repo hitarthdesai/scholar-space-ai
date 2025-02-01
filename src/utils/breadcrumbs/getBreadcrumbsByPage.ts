@@ -23,6 +23,10 @@ type GetBreadcrumbsByPageProps =
       classroomId: string;
     }
   | {
+      page: (typeof EnumPage)["ClassroomChats"];
+      classroomId: string;
+    }
+  | {
       page: (typeof EnumPage)["ClassroomFiles"];
       classroomId: string;
     }
@@ -43,6 +47,7 @@ export async function getBreadcrumbsByPage(
     case EnumPage.ClassroomParticipants:
     case EnumPage.ClassroomAssignments:
     case EnumPage.ClassroomFiles:
+    case EnumPage.ClassroomChats:
       const [{ classroomId, classroomName }] = await db
         .select({
           classroomId: classrooms.id,
@@ -52,10 +57,6 @@ export async function getBreadcrumbsByPage(
         .where(eq(classrooms.id, props.classroomId));
 
       const breadcrumbs = [
-        {
-          label: "Home",
-          href: "/",
-        },
         {
           label: "Classrooms",
           href: "/classrooms",
@@ -91,6 +92,14 @@ export async function getBreadcrumbsByPage(
           return breadcrumbs;
         }
 
+        case EnumPage.ClassroomChats: {
+          breadcrumbs.push({
+            label: "Chats",
+            href: `/classrooms/${classroomId}/chats`,
+          });
+          return breadcrumbs;
+        }
+
         default:
           return breadcrumbs;
       }
@@ -116,10 +125,6 @@ export async function getBreadcrumbsByPage(
 
       return [
         {
-          label: "Home",
-          href: "/",
-        },
-        {
           label: "Classrooms",
           href: "/classrooms",
         },
@@ -133,7 +138,7 @@ export async function getBreadcrumbsByPage(
         },
         {
           label: assignmentName,
-          href: `/assignments/${assignmentId}`,
+          href: `/classrooms/${classroomId}/assignments/${assignmentId}`,
         },
       ];
     }
@@ -171,10 +176,6 @@ export async function getBreadcrumbsByPage(
 
       return [
         {
-          label: "Home",
-          href: "/",
-        },
-        {
           label: "Classrooms",
           href: "/classrooms",
         },
@@ -183,12 +184,16 @@ export async function getBreadcrumbsByPage(
           href: `/classrooms/${classroomId}`,
         },
         {
+          label: "Assignments",
+          href: `/classrooms/${classroomId}/assignments`,
+        },
+        {
           label: assignmentName,
-          href: `/assignments/${assignmentId}`,
+          href: `/classrooms/${classroomId}/assignments/${assignmentId}`,
         },
         {
           label: questionName,
-          href: `/questions/${questionid}`,
+          href: `/classrooms/${classroomId}/assignments/${assignmentId}/questions/${questionid}`,
         },
       ];
     }

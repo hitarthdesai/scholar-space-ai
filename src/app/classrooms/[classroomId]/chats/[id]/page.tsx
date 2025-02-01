@@ -8,12 +8,13 @@ import assert from "assert";
 
 type PageProps = {
   params: {
+    classroomId: string;
     id: string;
   };
 };
 
 export default async function ChatPage({
-  params: { id: conversationId },
+  params: { classroomId, id: conversationId },
 }: PageProps) {
   const session = await auth();
   const userId = session?.user?.id;
@@ -31,9 +32,11 @@ export default async function ChatPage({
   return (
     <main className="flex h-full flex-col justify-between">
       <Chat
-        type={EnumConversationType.Free}
+        type={EnumConversationType.Classroom}
+        classroomId={classroomId}
         conversationId={conversationId}
         messages={messages}
+        showFilesSelectButton
       />
     </main>
   );
