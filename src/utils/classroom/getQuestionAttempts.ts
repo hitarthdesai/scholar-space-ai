@@ -2,15 +2,15 @@ import { db } from "@/server/db";
 import { eq, and } from "drizzle-orm";
 import { questionAttempts } from "@/server/db/schema";
 
-type getQuestionAttemptProps = {
+type getQuestionAttemptsProps = {
   questionId: string;
   userId: string;
 };
 
-export async function getQuestionAttempt({
+export async function getQuestionAttempts({
   questionId,
   userId,
-}: getQuestionAttemptProps) {
+}: getQuestionAttemptsProps) {
   return db
     .select({
       userId: questionAttempts.userId,

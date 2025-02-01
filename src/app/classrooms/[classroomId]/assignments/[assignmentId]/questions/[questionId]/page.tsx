@@ -7,7 +7,7 @@ import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { canUserAccessQuestion } from "@/utils/classroom/canUserAccessQuestion";
 import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
-import { getQuestionAttempt } from "@/utils/classroom/getQuestionAttempt";
+import { getQuestionAttempts } from "@/utils/classroom/getQuestionAttempts";
 import { addQuestionAttemptToDb } from "@/utils/classroom/addQuestionAttemptToDb";
 
 type PageProps = {
@@ -37,12 +37,14 @@ export default async function QuestionPage({
     return <NotAuthorizedToViewPage />;
   }
 
-  const hasVisited = await getQuestionAttempt({
+  const attempts = await getQuestionAttempts({
     questionId,
     userId,
   });
 
-  if (hasVisited.length === 0) {
+  const hasVisited = attempts.length > 0;
+
+  if (!hasVisited) {
     await addQuestionAttemptToDb({ userId, questionId });
   }
 
