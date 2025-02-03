@@ -41,6 +41,7 @@ export async function Question({ questionId }: QuestionProps) {
     );
 
   if (isQuestionSubmitted) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const notEdittable = true;
   }
 

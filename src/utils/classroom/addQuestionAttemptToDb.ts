@@ -1,5 +1,4 @@
 import { db } from "@/server/db";
-import { eq, and } from "drizzle-orm";
 import { questionAttempts } from "@/server/db/schema";
 
 type addQuestionAttemptToDbProps = {

@@ -45,7 +45,7 @@ import {
   EnumEditQuestionResult,
   EnumResetCodeResult,
   EnumSubmitCodeResult,
-  SubmitCodeResult,
+  type SubmitCodeResult,
 } from "@/schemas/questionSchema";
 import {
   type UpdateUserInformationResult,
