@@ -117,21 +117,20 @@ export const continueConversation = createSafeActionClient()
               await tx
                 .insert(userConversations)
                 .values({ conversationId: id, userId });
-
               saveMessageToDbArgs.conversationId = id;
             } else {
               saveMessageToDbArgs.conversationId = _conversationId;
             }
-
-            if (attempts.length === 0) {
-              await tx.insert(questionAttempts).values([
-                {
-                  userId,
-                  questionId: parsedInput.questionId,
-                  conversationId: saveMessageToDbArgs.conversationId,
-                  answer: "",
-                },
-              ]);
+            if (attempts.length === 1) {
+              await tx
+                .update(questionAttempts)
+                .set({ conversationId: saveMessageToDbArgs.conversationId })
+                .where(
+                  and(
+                    eq(questionAttempts.userId, userId),
+                    eq(questionAttempts.questionId, parsedInput.questionId)
+                  )
+                );
             }
           });
 
@@ -196,7 +195,7 @@ export const continueConversation = createSafeActionClient()
                 : { type: parsedInput.type };
 
           const { textStream } = await streamText({
-            model: groq("llama-3.1-70b-versatile"),
+            model: groq("llama-3.3-70b-versatile"),
             messages: history.get(),
             system:
               await getSystemPromptByConversationType(getSystemPromptArgs),

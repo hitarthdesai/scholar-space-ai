@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "a61b5401-01f4-47c4-99fa-f3cead9fa75f",
-  "prevId": "2b544299-8854-4374-824c-6d7a04e4ea9a",
+  "id": "485bd343-7396-4aaf-b072-a5218d6b53a8",
+  "prevId": "a61b5401-01f4-47c4-99fa-f3cead9fa75f",
   "tables": {
     "account": {
       "name": "account",
@@ -88,7 +88,9 @@
       "indexes": {
         "account_userId_idx": {
           "name": "account_userId_idx",
-          "columns": ["userId"],
+          "columns": [
+            "userId"
+          ],
           "isUnique": false
         }
       },
@@ -97,8 +99,12 @@
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -134,7 +140,9 @@
       "indexes": {
         "session_userId_idx": {
           "name": "session_userId_idx",
-          "columns": ["userId"],
+          "columns": [
+            "userId"
+          ],
           "isUnique": false
         }
       },
@@ -143,8 +151,12 @@
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -195,7 +207,9 @@
       "indexes": {
         "user_email_unique": {
           "name": "user_email_unique",
-          "columns": ["email"],
+          "columns": [
+            "email"
+          ],
           "isUnique": true
         }
       },
@@ -232,7 +246,10 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {
         "verificationToken_identifier_token_pk": {
-          "columns": ["identifier", "token"],
+          "columns": [
+            "identifier",
+            "token"
+          ],
           "name": "verificationToken_identifier_token_pk"
         }
       },
@@ -262,8 +279,12 @@
           "name": "classroomConversation_classroomId_classroom_id_fk",
           "tableFrom": "classroomConversation",
           "tableTo": "classroom",
-          "columnsFrom": ["classroomId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "classroomId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -271,8 +292,12 @@
           "name": "classroomConversation_conversationId_conversation_id_fk",
           "tableFrom": "classroomConversation",
           "tableTo": "conversation",
-          "columnsFrom": ["conversationId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "conversationId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -304,8 +329,12 @@
           "name": "conversationMessage_conversationId_conversation_id_fk",
           "tableFrom": "conversationMessage",
           "tableTo": "conversation",
-          "columnsFrom": ["conversationId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "conversationId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -313,8 +342,12 @@
           "name": "conversationMessage_messageId_message_id_fk",
           "tableFrom": "conversationMessage",
           "tableTo": "message",
-          "columnsFrom": ["messageId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "messageId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -424,8 +457,12 @@
           "name": "userConversation_userId_user_id_fk",
           "tableFrom": "userConversation",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -433,8 +470,12 @@
           "name": "userConversation_conversationId_conversation_id_fk",
           "tableFrom": "userConversation",
           "tableTo": "conversation",
-          "columnsFrom": ["conversationId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "conversationId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -477,7 +518,10 @@
       "indexes": {
         "classroomParticipant_classroomId_userId_unique": {
           "name": "classroomParticipant_classroomId_userId_unique",
-          "columns": ["classroomId", "userId"],
+          "columns": [
+            "classroomId",
+            "userId"
+          ],
           "isUnique": true
         }
       },
@@ -486,8 +530,12 @@
           "name": "classroomParticipant_classroomId_classroom_id_fk",
           "tableFrom": "classroomParticipant",
           "tableTo": "classroom",
-          "columnsFrom": ["classroomId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "classroomId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -495,8 +543,12 @@
           "name": "classroomParticipant_userId_user_id_fk",
           "tableFrom": "classroomParticipant",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -590,8 +642,12 @@
           "name": "classroomAssignment_classroomId_classroom_id_fk",
           "tableFrom": "classroomAssignment",
           "tableTo": "classroom",
-          "columnsFrom": ["classroomId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "classroomId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -599,8 +655,12 @@
           "name": "classroomAssignment_assignmentId_assignment_id_fk",
           "tableFrom": "classroomAssignment",
           "tableTo": "assignment",
-          "columnsFrom": ["assignmentId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "assignmentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -632,6 +692,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "submitted": {
+          "name": "submitted",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "answer": {
           "name": "answer",
           "type": "text(255)",
@@ -646,8 +713,12 @@
           "name": "questionAttempt_userId_user_id_fk",
           "tableFrom": "questionAttempt",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -655,8 +726,12 @@
           "name": "questionAttempt_questionId_question_id_fk",
           "tableFrom": "questionAttempt",
           "tableTo": "question",
-          "columnsFrom": ["questionId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "questionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -664,8 +739,12 @@
           "name": "questionAttempt_conversationId_conversation_id_fk",
           "tableFrom": "questionAttempt",
           "tableTo": "conversation",
-          "columnsFrom": ["conversationId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "conversationId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -704,8 +783,12 @@
           "name": "question_assignmentId_assignment_id_fk",
           "tableFrom": "question",
           "tableTo": "assignment",
-          "columnsFrom": ["assignmentId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "assignmentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -737,8 +820,12 @@
           "name": "classroomFile_fileId_file_id_fk",
           "tableFrom": "classroomFile",
           "tableTo": "file",
-          "columnsFrom": ["fileId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "fileId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -746,8 +833,12 @@
           "name": "classroomFile_classroomId_classroom_id_fk",
           "tableFrom": "classroomFile",
           "tableTo": "classroom",
-          "columnsFrom": ["classroomId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "classroomId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -794,8 +885,12 @@
           "name": "file_ownerId_user_id_fk",
           "tableFrom": "file",
           "tableTo": "user",
-          "columnsFrom": ["ownerId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "ownerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }

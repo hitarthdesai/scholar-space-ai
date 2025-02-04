@@ -44,6 +44,8 @@ import {
   EnumDeleteQuestionResult,
   EnumEditQuestionResult,
   EnumResetCodeResult,
+  EnumSubmitCodeResult,
+  type SubmitCodeResult,
 } from "@/schemas/questionSchema";
 import {
   type UpdateUserInformationResult,
@@ -310,4 +312,12 @@ export const toastDescriptionDeleteFile: Record<DeleteFileResult, string> = {
   [EnumDeleteFileResult.NotAuthorized]:
     "You are not authorized to delete files in this classroom",
   [EnumDeleteFileResult.FileDeleted]: "Your file has been deleted successfully",
+};
+
+export const toastDescriptionSubmitCode: Record<SubmitCodeResult, string> = {
+  [EnumSubmitCodeResult.CodeSubmitted]: "The code was submitted successfully.",
+  [EnumSubmitCodeResult.NotAuthorized]:
+    "You are not authorized to submit code.",
+  [EnumSubmitCodeResult.Error]:
+    "Unable to submit code. Please try again later.",
 };

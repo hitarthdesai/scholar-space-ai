@@ -151,6 +151,20 @@ export const EnumSaveCodeResult = {
 const saveCodeResultSchema = z.nativeEnum(EnumSaveCodeResult);
 export type SaveCodeResult = z.infer<typeof saveCodeResultSchema>;
 
+export const submitCodeInputSchema = z.object({
+  questionId: z.string().min(1),
+  code: z.string().min(1),
+});
+
+export const EnumSubmitCodeResult = {
+  CodeSubmitted: "codeRanSuccessfully",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const submitCodeResultSchema = z.nativeEnum(EnumSubmitCodeResult);
+export type SubmitCodeResult = z.infer<typeof submitCodeResultSchema>;
+
 export const resetCodeInputSchema = z.object({
   questionId: z.string().min(1),
 });

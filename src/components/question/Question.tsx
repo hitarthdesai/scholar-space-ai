@@ -15,6 +15,10 @@ import { SaveCodeButton } from "./SaveCodeButton";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
 import { ResetCodeButton } from "./ResetCodeButton";
+import { SubmitQuestionDialog } from "../SubmitQuestionDialog";
+import { db } from "@/server/db";
+import { questionAttempts } from "@/server/db/schema";
+import { and, eq, isNotNull } from "drizzle-orm";
 
 type QuestionProps = {
   questionId: string;
@@ -24,6 +28,22 @@ export async function Question({ questionId }: QuestionProps) {
   const session = await auth();
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
+
+  const isQuestionSubmitted = await db
+    .select()
+    .from(questionAttempts)
+    .where(
+      and(
+        eq(questionAttempts.userId, userId),
+        eq(questionAttempts.questionId, questionId),
+        isNotNull(questionAttempts.submitted)
+      )
+    );
+
+  if (isQuestionSubmitted) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const notEdittable = true;
+  }
 
   const question =
     (await getObject({ fileName: `questions/${questionId}/question.txt` })) ??
@@ -57,9 +77,11 @@ export async function Question({ questionId }: QuestionProps) {
             <SolutionEditor />
           </div>
           <div className="flex w-full items-center gap-2">
-            <Button className="mr-auto flex items-center justify-center gap-2 bg-green-700 text-white hover:bg-green-300 hover:text-black">
-              Submit <SendHorizonalIcon aria-hidden />
-            </Button>
+            <SubmitQuestionDialog questionId={questionId}>
+              <Button className="mr-auto flex items-center justify-center gap-2 bg-green-700 text-white hover:bg-green-300 hover:text-black">
+                Submit <SendHorizonalIcon aria-hidden />
+              </Button>
+            </SubmitQuestionDialog>
             <ResetCodeButton />
             <SaveCodeButton />
             <RunCodeButton />
@@ -71,15 +93,14 @@ export async function Question({ questionId }: QuestionProps) {
             direction="vertical"
             className="flex h-full w-full flex-col gap-2"
           >
-            <ResizablePanel
-              minSize={20}
-              defaultSize={20}
-              className="flex h-full w-full flex-col items-center justify-between gap-2 rounded-md border p-2"
-            >
+            <ResizablePanel minSize={20} defaultSize={20}>
               <OutputSection />
             </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={80} minSize={50}>
+            <ResizablePanel
+              minSize={20}
+              defaultSize={80}
+              className="flex h-full w-full flex-col items-center justify-between gap-2 rounded-md border p-2"
+            >
               <QuestionTabs questionId={questionId} />
             </ResizablePanel>
           </ResizablePanelGroup>

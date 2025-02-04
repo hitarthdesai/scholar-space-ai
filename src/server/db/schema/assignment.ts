@@ -57,6 +57,8 @@ export const questionAttempts = sqliteTable("questionAttempt", {
   conversationId: text("conversationId").references(() => conversations.id, {
     onDelete: "set null",
   }),
+  submitted: integer("submitted", { mode: "timestamp_ms" }),
+  // TODO: Remove this column. We store code in AWS S3 now.
   answer: text("answer", { length: 255 }).notNull(),
 });
 
