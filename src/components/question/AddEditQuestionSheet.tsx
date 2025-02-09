@@ -8,7 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { AddQuestionForm } from "./AddQuestionForm";
+import { AddQuestionForm } from "./add/AddQuestionForm";
 import { type PropsWithChildren, Suspense, useState } from "react";
 import { type AddEditQuestionSheetProps } from "@/schemas/questionSchema";
 import {
