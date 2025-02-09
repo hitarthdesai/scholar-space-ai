@@ -18,15 +18,22 @@ import {
   type AddQuestionForm as AddQuestionFormType,
   addQuestionFormSchema,
   EnumAddQuestionResult,
+  EnumQuestionType,
 } from "@/schemas/questionSchema";
 import { FormIds } from "@/utils/constants/form";
 import { addQuestion } from "@/actions/addQuestion";
 import { type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
-import { Textarea } from "../ui/textarea";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { SheetFooter } from "../ui/sheet";
+import { Button } from "../../ui/button";
+import { SheetFooter } from "../../ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { AddCodeQuestionFormFields } from "./AddCodeQuestionFormFields";
 
 type AddQuestionFormComponentProps = {
   assignmentId: string;
@@ -39,6 +46,7 @@ export const AddQuestionForm = ({
 }: AddQuestionFormComponentProps) => {
   const addQuestionFormDefaultValues: AddQuestionFormType = {
     assignmentId,
+    type: EnumQuestionType.Code,
     name: "",
     question: "",
     starterCode: "",
@@ -72,6 +80,8 @@ export const AddQuestionForm = ({
     },
   });
 
+  const questionType = form.watch("type");
+
   return (
     <Form {...form}>
       <form
@@ -81,48 +91,36 @@ export const AddQuestionForm = ({
       >
         <FormField
           control={form.control}
-          name="name"
+          name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Type</FormLabel>
               <FormControl>
-                <Input required {...field} />
-              </FormControl>
-              <FormDescription>Name of the question</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="question"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Question</FormLabel>
-              <FormControl>
-                <Textarea required {...field} />
-              </FormControl>
-              <FormDescription>The question text</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="starterCode"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Starter code</FormLabel>
-              <FormControl>
-                <Textarea required {...field} />
+                <Select {...field} onValueChange={field.onChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={EnumQuestionType.Code}>Code</SelectItem>
+                    <SelectItem value={EnumQuestionType.SingleCorrectMcq}>
+                      Single-correct MCQ
+                    </SelectItem>
+                    <SelectItem value={EnumQuestionType.MultiCorrectMcq}>
+                      Multi-correct MCQ
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormDescription>
-                Stubbed code to assist the user in solving questions
+                The type of question you want to ask
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        {questionType === EnumQuestionType.Code && (
+          <AddCodeQuestionFormFields form={form} />
+        )}
       </form>
       <SheetFooter>
         <Button type="submit" form={FormIds.AddQuestion}>
