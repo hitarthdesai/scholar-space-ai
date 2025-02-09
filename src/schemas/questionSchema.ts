@@ -62,7 +62,7 @@ export type AddEditQuestionSheetProps = z.infer<
   typeof addEditQuestionSheetPropsSchema
 >;
 
-const addCodeQuestionFormSchema = z.object({
+export const addCodeQuestionFormSchema = z.object({
   assignmentId: z.string().min(1),
   type: z.literal(EnumQuestionType.Code),
   name: z.string().min(QUESTION_NAME_MIN_LENGTH).max(QUESTION_NAME_MAX_LENGTH),
@@ -75,6 +75,8 @@ const addCodeQuestionFormSchema = z.object({
     .min(STARTER_CODE_MIN_LENGTH)
     .max(STARTER_CODE_MAX_LENGTH),
 });
+
+export type AddCodeQuestionForm = z.infer<typeof addCodeQuestionFormSchema>;
 
 const addSingleCorrectMCQQuestionFormSchema = z.object({
   assignmentId: z.string().min(1),
