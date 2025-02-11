@@ -34,6 +34,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AddCodeQuestionFormFields } from "./AddCodeQuestionFormFields";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { AddSingleCorrectFormFields } from "./AddSingleCorrectMcqFormFields";
 
 type AddQuestionFormComponentProps = {
   assignmentId: string;
@@ -46,7 +49,7 @@ export const AddQuestionForm = ({
 }: AddQuestionFormComponentProps) => {
   const addQuestionFormDefaultValues: AddQuestionFormType = {
     assignmentId,
-    type: EnumQuestionType.Code,
+    type: EnumQuestionType.SingleCorrectMcq,
     name: "",
     question: "",
     starterCode: "",
@@ -118,8 +121,39 @@ export const AddQuestionForm = ({
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input required {...field} />
+              </FormControl>
+              <FormDescription>Name of the question</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="question"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Question</FormLabel>
+              <FormControl>
+                <Textarea required {...field} />
+              </FormControl>
+              <FormDescription>The question text</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         {questionType === EnumQuestionType.Code && (
           <AddCodeQuestionFormFields form={form} />
+        )}
+        {questionType === EnumQuestionType.SingleCorrectMcq && (
+          <AddSingleCorrectFormFields form={form} />
         )}
       </form>
       <SheetFooter>
