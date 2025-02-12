@@ -16,9 +16,7 @@ import { auth } from "@/utils/auth/config";
 import assert from "assert";
 import { ResetCodeButton } from "./ResetCodeButton";
 import { SubmitQuestionDialog } from "../SubmitQuestionDialog";
-import { db } from "@/server/db";
-import { questionAttempts } from "@/server/db/schema";
-import { and, eq, isNotNull } from "drizzle-orm";
+import { getQuestionSubmission } from "@/utils/classroom/getQuestionSubmission";
 
 type QuestionProps = {
   questionId: string;
@@ -29,22 +27,11 @@ export async function Question({ questionId }: QuestionProps) {
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
 
-  const isQuestionSubmitted = await db
-    .select()
-    .from(questionAttempts)
-    .where(
-      and(
-        eq(questionAttempts.userId, userId),
-        eq(questionAttempts.questionId, questionId),
-        isNotNull(questionAttempts.submitted)
-      )
-    );
-
-  if (isQuestionSubmitted) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const notEdittable = true;
-  }
-
+  const isQuestionSubmitted = await getQuestionSubmission({
+    userId,
+    questionId,
+  });
+  const notEdittable = isQuestionSubmitted.length > 0;
   const question =
     (await getObject({ fileName: `questions/${questionId}/question.txt` })) ??
     "";
@@ -74,7 +61,7 @@ export async function Question({ questionId }: QuestionProps) {
             {question}
           </div>
           <div className="w-full grow">
-            <SolutionEditor />
+            <SolutionEditor notEdittable={notEdittable} />
           </div>
           <div className="flex w-full items-center gap-2">
             <SubmitQuestionDialog questionId={questionId}>
