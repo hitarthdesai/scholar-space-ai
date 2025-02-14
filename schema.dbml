@@ -1,0 +1,161 @@
+table account {
+  userId text [not null]
+  type text(255) [not null]
+  provider text(255) [not null]
+  providerAccountId text(255) [not null]
+  refresh_token text
+  access_token text
+  expires_at integer
+  token_type text(255)
+  scope text(255)
+  id_token text
+  session_state text(255)
+
+  indexes {
+    userId [name: 'account_userId_idx']
+  }
+}
+
+table session {
+  sessionToken text(255) [pk, not null]
+  userId text [not null]
+  expires integer [not null]
+
+  indexes {
+    userId [name: 'session_userId_idx']
+  }
+}
+
+table user {
+  id text [pk, not null]
+  name text(255)
+  email text(255) [not null, unique]
+  emailVerified integer
+  image text(255) [default: '']
+}
+
+table verificationToken {
+  identifier text(255) [not null]
+  token text(255) [not null]
+  expires integer [not null]
+
+  indexes {
+    (identifier, token) [pk]
+  }
+}
+
+table classroomConversation {
+  classroomId text [not null]
+  conversationId text [not null]
+}
+
+table conversationMessage {
+  conversationId text [not null]
+  messageId text [not null]
+}
+
+table conversation {
+  id text [pk, not null]
+  type text [not null, default: 'ques']
+  createdAt integer [not null, default: `(CURRENT_TIMESTAMP)`]
+  name text [not null, default: 'Conversation']
+}
+
+table message {
+  id text [pk, not null]
+  message text(200) [not null]
+  createdAt integer [not null, default: `(CURRENT_TIMESTAMP)`]
+  by text [not null]
+}
+
+table userConversation {
+  userId text [not null]
+  conversationId text [not null]
+}
+
+table classroomParticipant {
+  classroomId text [not null]
+  userId text [not null]
+  role text [not null]
+  status text [not null]
+
+  indexes {
+    (classroomId, userId) [name: 'classroomParticipant_classroomId_userId_unique', unique]
+  }
+}
+
+table classroom {
+  id text [pk, not null]
+  name text(255) [not null]
+  created_at integer [not null, default: `(CURRENT_TIMESTAMP)`]
+}
+
+table assignment {
+  id text [pk, not null]
+  name text(255) [not null]
+  created_at integer [not null, default: `(CURRENT_TIMESTAMP)`]
+}
+
+table classroomAssignment {
+  classroomId text [not null]
+  assignmentId text [not null]
+}
+
+table questionAttempt {
+  userId text [not null]
+  questionId text [not null]
+  conversationId text
+  submitted integer
+  answer text(255) [not null]
+}
+
+table question {
+  id text [pk, not null]
+  assignmentId text [not null]
+  name text [not null]
+  type text [not null, default: 'code']
+}
+
+table classroomFile {
+  fileId text
+  classroomId text
+}
+
+table file {
+  id text [pk, not null]
+  name text(255) [not null]
+  ownerId text [not null]
+  expires integer [not null, default: `(CURRENT_TIMESTAMP)`]
+}
+
+ref: user.id - account.userId
+
+ref: session.userId - user.id
+
+ref: classroomConversation.classroomId - classroom.id
+
+ref: classroomConversation.conversationId - conversation.id
+
+ref: conversationMessage.conversationId - conversation.id
+
+ref: conversationMessage.messageId - message.id
+
+ref: userConversation.userId - user.id
+
+ref: userConversation.conversationId - conversation.id
+
+ref: classroomAssignment.classroomId - classroom.id
+
+ref: classroomAssignment.assignmentId - assignment.id
+
+ref: questionAttempt.userId - user.id
+
+ref: questionAttempt.questionId - question.id
+
+ref: questionAttempt.conversationId - conversation.id
+
+ref: classroomFile.fileId - file.id
+
+ref: classroomFile.classroomId - classroom.id
+
+ref: file.ownerId - user.id
