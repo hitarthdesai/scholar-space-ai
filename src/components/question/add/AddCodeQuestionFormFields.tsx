@@ -9,10 +9,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  type EnumQuestionType,
-  type ExtractQuestionForm,
-} from "@/schemas/questionSchema";
+import { type EnumQuestionType } from "@/schemas/questionSchema";
+import { type ExtractQuestionForm } from "@/utils/types";
 import { type UseFormReturn } from "react-hook-form";
 
 type AddCodeQuestionFormProps = {

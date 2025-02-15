@@ -11,7 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
+import { DefaultValues, useForm } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
 import { toastDescriptionAddQuestion } from "@/utils/constants/toast";
 import {
@@ -47,9 +47,9 @@ export const AddQuestionForm = ({
   assignmentId,
   setIsOpen,
 }: AddQuestionFormComponentProps) => {
-  const addQuestionFormDefaultValues: AddQuestionFormType = {
-    assignmentId,
+  const addQuestionFormDefaultValues: DefaultValues<AddQuestionFormType> = {
     type: EnumQuestionType.SingleCorrectMcq,
+    assignmentId,
     name: "",
     question: "",
   };
@@ -148,9 +148,12 @@ export const AddQuestionForm = ({
             </FormItem>
           )}
         />
+        {/* TODO: Figure out a type-safe way of managing these forms */}
+        {/* eslint-disable-next-line */}
         {questionType === EnumQuestionType.Code && (
           <AddCodeQuestionFormFields form={form} />
         )}
+        {/* eslint-disable-next-line */}
         {questionType === EnumQuestionType.SingleCorrectMcq && (
           <AddSingleCorrectFormFields form={form} />
         )}

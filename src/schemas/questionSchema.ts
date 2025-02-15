@@ -66,8 +66,8 @@ export type AddEditQuestionSheetProps = z.infer<
 >;
 
 export const addCodeQuestionFormSchema = z.object({
-  assignmentId: z.string().min(1),
   type: z.literal(EnumQuestionType.Code),
+  assignmentId: z.string().min(1),
   name: z.string().min(QUESTION_NAME_MIN_LENGTH).max(QUESTION_NAME_MAX_LENGTH),
   question: z
     .string()
@@ -88,10 +88,10 @@ export const mcqOption = z.object({
 
 export type McqOption = z.infer<typeof mcqOption>;
 
-const addSingleCorrectMCQQuestionFormSchema = z
+export const addSingleCorrectMCQQuestionFormSchema = z
   .object({
-    assignmentId: z.string().min(1),
     type: z.literal(EnumQuestionType.SingleCorrectMcq),
+    assignmentId: z.string().min(1),
     name: z
       .string()
       .min(QUESTION_NAME_MIN_LENGTH)
@@ -116,9 +116,13 @@ const addSingleCorrectMCQQuestionFormSchema = z
     }
   );
 
-const addMultiCorrectMCQQuestionFormSchema = z.object({
-  assignmentId: z.string().min(1),
+export type AddSingleCorrectMCQQuestionForm = z.infer<
+  typeof addSingleCorrectMCQQuestionFormSchema
+>;
+
+export const addMultiCorrectMCQQuestionFormSchema = z.object({
   type: z.literal(EnumQuestionType.MultiCorrectMcq),
+  assignmentId: z.string().min(1),
   name: z.string().min(QUESTION_NAME_MIN_LENGTH).max(QUESTION_NAME_MAX_LENGTH),
   question: z
     .string()
@@ -127,6 +131,10 @@ const addMultiCorrectMCQQuestionFormSchema = z.object({
   options: z.array(mcqOption).min(1),
 });
 
+export type AddMultiCorrectMCQQuestionForm = z.infer<
+  typeof addMultiCorrectMCQQuestionFormSchema
+>;
+
 export const addQuestionFormSchema = z.union([
   addCodeQuestionFormSchema,
   addSingleCorrectMCQQuestionFormSchema,
@@ -134,15 +142,6 @@ export const addQuestionFormSchema = z.union([
 ]);
 
 export type AddQuestionForm = z.infer<typeof addQuestionFormSchema>;
-
-export type ExtractQuestionForm<T extends QuestionType> =
-  T extends typeof EnumQuestionType.Code
-    ? z.infer<typeof addCodeQuestionFormSchema>
-    : T extends typeof EnumQuestionType.SingleCorrectMcq
-      ? z.infer<typeof addSingleCorrectMCQQuestionFormSchema>
-      : T extends typeof EnumQuestionType.MultiCorrectMcq
-        ? z.infer<typeof addMultiCorrectMCQQuestionFormSchema>
-        : never;
 
 export const EnumAddQuestionResult = {
   QuestionAdded: "QuestionAdded",

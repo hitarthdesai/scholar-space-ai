@@ -17,12 +17,12 @@ import {
   MCQ_OPTIONS_MIN_LENGTH,
   type McqOption,
   type EnumQuestionType,
-  type ExtractQuestionForm,
 } from "@/schemas/questionSchema";
 import { XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type UseFormReturn } from "react-hook-form";
 import { CheckIcon } from "@radix-ui/react-icons";
+import { type ExtractQuestionForm } from "@/utils/types";
 
 type AddSingleCorrectMcqFormProps = {
   form: UseFormReturn<
@@ -41,10 +41,7 @@ export function AddSingleCorrectFormFields({
   const [options, setOptions] = useState<McqOption[]>(defaultOptions);
 
   useEffect(() => {
-    form.setValue(
-      "options",
-      options.map((o) => ({ value: o.value + 1, label: o.label }))
-    );
+    form.setValue("options", options);
   }, [form, options]);
 
   const addOption = () => {
