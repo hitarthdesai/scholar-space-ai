@@ -21,6 +21,8 @@ export const addQuestion = createSafeActionClient()
         return { type: EnumAddQuestionResult.NotAuthorized };
       }
 
+      console.log("parsedInput", parsedInput);
+
       const isAuthorized = await canUserAccessAssignment({
         assignmentId: parsedInput.assignmentId,
         userId,
@@ -33,6 +35,8 @@ export const addQuestion = createSafeActionClient()
       switch (parsedInput.type) {
         case EnumQuestionType.Code:
           return addCodeQuestion(parsedInput);
+        // default:
+        //   return { type: EnumAddQuestionResult.Error };
       }
     } catch (e) {
       console.error(e);

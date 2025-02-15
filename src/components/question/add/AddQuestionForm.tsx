@@ -52,7 +52,6 @@ export const AddQuestionForm = ({
     type: EnumQuestionType.SingleCorrectMcq,
     name: "",
     question: "",
-    starterCode: "",
   };
 
   const router = useRouter();

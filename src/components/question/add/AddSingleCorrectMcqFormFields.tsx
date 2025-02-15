@@ -1,102 +1,144 @@
 "use client";
 
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { FormLabel } from "@/components/ui/form";
+
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { type AddQuestionForm } from "@/schemas/questionSchema";
-import { MinusCircleIcon } from "lucide-react";
-import { useState } from "react";
+import {
+  MCQ_OPTIONS_MAX_LENGTH,
+  MCQ_OPTIONS_MIN_LENGTH,
+  type McqOption,
+  type EnumQuestionType,
+  type ExtractQuestionForm,
+} from "@/schemas/questionSchema";
+import { XIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { type UseFormReturn } from "react-hook-form";
+import { CheckIcon } from "@radix-ui/react-icons";
 
 type AddSingleCorrectMcqFormProps = {
-  form: UseFormReturn<AddQuestionForm>;
+  form: UseFormReturn<
+    ExtractQuestionForm<typeof EnumQuestionType.SingleCorrectMcq>
+  >;
 };
 
-type SingleCorrectMcqOption = {
-  label: string;
-  isCorrect: boolean;
-};
-
-const defaultOptions: SingleCorrectMcqOption[] = [
-  { label: "", isCorrect: true },
-  { label: "", isCorrect: false },
+const defaultOptions: McqOption[] = [
+  { value: "1", label: "" },
+  { value: "2", label: "" },
 ];
 
 export function AddSingleCorrectFormFields({
   form,
 }: AddSingleCorrectMcqFormProps) {
-  const [options, setOptions] =
-    useState<SingleCorrectMcqOption[]>(defaultOptions);
+  const [options, setOptions] = useState<McqOption[]>(defaultOptions);
+
+  useEffect(() => {
+    form.setValue(
+      "options",
+      options.map((o) => ({ value: o.value + 1, label: o.label }))
+    );
+  }, [form, options]);
 
   const addOption = () => {
-    setOptions((prev) => [...prev, { label: "", isCorrect: false }]);
+    setOptions((prev) => [
+      ...prev,
+      { value: new Date().getTime().toString(), label: "" },
+    ]);
   };
 
-  const removeOption = (id: number) => {
+  const removeOption = (value: string) => {
     setOptions((prev) => {
-      const isCorrect = prev[id].isCorrect;
-      const newOptions = prev.slice(0, id).concat(prev.slice(id + 1));
-      if (isCorrect) {
-        newOptions[0].isCorrect = true;
-      }
-
-      return newOptions;
+      return prev.filter((o) => o.value !== value);
     });
   };
 
-  const markOptionAsCorrect = (i: number) => {
-    setOptions((prev) => {
-      const newOptions = [...prev];
-      newOptions.forEach((o) => {
-        o.isCorrect = false;
-      });
-      newOptions[i].isCorrect = true;
-      return newOptions;
-    });
-  };
+  console.log("errors", form.formState.errors);
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 border-t-2 border-border pt-4">
-      <div className="flex items-center justify-between">
-        <FormLabel>Options</FormLabel>
-        <Button
-          type="button"
-          size="sm"
-          disabled={options.length >= 5}
-          onClick={addOption}
-        >
-          Add more
-        </Button>
-      </div>
-
-      {options.map((_, i) => {
-        return (
-          <div className="flex items-center gap-4" key={i}>
-            <label className="text-xs">{i + 1}.</label>
-            <Input />
-            <Checkbox
-              checked={options[i].isCorrect}
-              disabled={options.length === 1}
-              onCheckedChange={(newChecked) => {
-                if (!newChecked) return;
-
-                markOptionAsCorrect(i);
-              }}
-            />
-            <Button
-              className="ml-6"
-              type="button"
-              size="icon"
-              variant="ghost"
-              disabled={options.length === 1}
-              onClick={() => removeOption(i)}
-            >
-              <MinusCircleIcon />
-            </Button>
-          </div>
-        );
-      })}
+    <div className="border-t-2 border-border pt-4">
+      <FormField
+        control={form.control}
+        name="correctOption"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="mb-4 flex items-center justify-between">
+              Options
+              <Button
+                type="button"
+                size="sm"
+                disabled={options.length >= MCQ_OPTIONS_MAX_LENGTH}
+                onClick={addOption}
+              >
+                Add more
+              </Button>
+            </FormLabel>
+            <FormControl>
+              <RadioGroup
+                {...field}
+                onValueChange={field.onChange}
+                defaultValue={defaultOptions[0].value}
+              >
+                {options.map(({ value, label }, i) => {
+                  return (
+                    <div className="flex items-center gap-4" key={i}>
+                      <FormItem className="flex items-center gap-4">
+                        <FormLabel className="min-w-3 text-right">
+                          {i + 1}.
+                        </FormLabel>
+                        <FormControl>
+                          <RadioGroupItem
+                            value={value}
+                            indicator={
+                              <CheckIcon className="h-3.5 w-3.5 fill-primary" />
+                            }
+                            className="!m-0"
+                          />
+                        </FormControl>
+                      </FormItem>
+                      <Input
+                        required
+                        value={label}
+                        onChange={(e) => {
+                          setOptions((prev) => {
+                            return prev.map((o) => {
+                              if (o.value === value) {
+                                return { ...o, label: e.target.value };
+                              }
+                              return o;
+                            });
+                          });
+                        }}
+                      />
+                      <Button
+                        className="ml-6"
+                        type="button"
+                        size="icon"
+                        variant="ghost"
+                        disabled={options.length === MCQ_OPTIONS_MIN_LENGTH}
+                        onClick={() => removeOption(value)}
+                      >
+                        <XIcon size={16} />
+                      </Button>
+                    </div>
+                  );
+                })}
+              </RadioGroup>
+            </FormControl>
+            <FormDescription>
+              Options for the multiple choice question
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   );
 }

@@ -9,11 +9,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { type AddQuestionForm } from "@/schemas/questionSchema";
+import {
+  type EnumQuestionType,
+  type ExtractQuestionForm,
+} from "@/schemas/questionSchema";
 import { type UseFormReturn } from "react-hook-form";
 
 type AddCodeQuestionFormProps = {
-  form: UseFormReturn<AddQuestionForm>;
+  form: UseFormReturn<ExtractQuestionForm<typeof EnumQuestionType.Code>>;
 };
 
 export function AddCodeQuestionFormFields({ form }: AddCodeQuestionFormProps) {
