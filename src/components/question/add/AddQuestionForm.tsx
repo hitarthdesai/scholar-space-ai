@@ -11,7 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { DefaultValues, useForm } from "react-hook-form";
+import { type DefaultValues, useForm } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
 import { toastDescriptionAddQuestion } from "@/utils/constants/toast";
 import {
@@ -149,13 +149,17 @@ export const AddQuestionForm = ({
           )}
         />
         {/* TODO: Figure out a type-safe way of managing these forms */}
-        {/* eslint-disable-next-line */}
         {questionType === EnumQuestionType.Code && (
-          <AddCodeQuestionFormFields form={form} />
+          <>
+            {/* @ts-expect-error watch above TODO */}
+            <AddCodeQuestionFormFields form={form} />
+          </>
         )}
-        {/* eslint-disable-next-line */}
         {questionType === EnumQuestionType.SingleCorrectMcq && (
-          <AddSingleCorrectFormFields form={form} />
+          <>
+            {/* @ts-expect-error watch above TODO */}
+            <AddSingleCorrectFormFields form={form} />
+          </>
         )}
       </form>
       <SheetFooter>

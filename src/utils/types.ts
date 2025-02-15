@@ -1,11 +1,11 @@
 import {
-  addCodeQuestionFormSchema,
-  addMultiCorrectMCQQuestionFormSchema,
-  addSingleCorrectMCQQuestionFormSchema,
-  EnumQuestionType,
-  QuestionType,
+  type addCodeQuestionFormSchema,
+  type addMultiCorrectMCQQuestionFormSchema,
+  type addSingleCorrectMCQQuestionFormSchema,
+  type EnumQuestionType,
+  type QuestionType,
 } from "@/schemas/questionSchema";
-import { z } from "zod";
+import { type z } from "zod";
 
 export type ExtractQuestionForm<T extends QuestionType> =
   T extends typeof EnumQuestionType.Code
