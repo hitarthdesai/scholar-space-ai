@@ -33,6 +33,8 @@ export const addQuestion = createSafeActionClient()
       switch (parsedInput.type) {
         case EnumQuestionType.Code:
           return addCodeQuestion(parsedInput);
+        default:
+          return { type: EnumAddQuestionResult.Error };
       }
     } catch (e) {
       console.error(e);

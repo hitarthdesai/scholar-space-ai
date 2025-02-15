@@ -9,6 +9,9 @@ const QUESTION_TEXT_MAX_LENGTH = 500;
 const STARTER_CODE_MIN_LENGTH = 10;
 const STARTER_CODE_MAX_LENGTH = 500;
 
+export const MCQ_OPTIONS_MIN_LENGTH = 2;
+export const MCQ_OPTIONS_MAX_LENGTH = 5;
+
 export const EnumQuestionType = {
   Code: "code",
   SingleCorrectMcq: "single",
@@ -63,8 +66,8 @@ export type AddEditQuestionSheetProps = z.infer<
 >;
 
 export const addCodeQuestionFormSchema = z.object({
-  assignmentId: z.string().min(1),
   type: z.literal(EnumQuestionType.Code),
+  assignmentId: z.string().min(1),
   name: z.string().min(QUESTION_NAME_MIN_LENGTH).max(QUESTION_NAME_MAX_LENGTH),
   question: z
     .string()
@@ -78,29 +81,59 @@ export const addCodeQuestionFormSchema = z.object({
 
 export type AddCodeQuestionForm = z.infer<typeof addCodeQuestionFormSchema>;
 
-const addSingleCorrectMCQQuestionFormSchema = z.object({
-  assignmentId: z.string().min(1),
-  type: z.literal(EnumQuestionType.SingleCorrectMcq),
-  name: z.string().min(QUESTION_NAME_MIN_LENGTH).max(QUESTION_NAME_MAX_LENGTH),
-  question: z
-    .string()
-    .min(QUESTION_TEXT_MIN_LENGTH)
-    .max(QUESTION_TEXT_MAX_LENGTH),
-  options: z.array(z.string().min(1)),
-  correctOption: z.number(),
+export const mcqOption = z.object({
+  value: z.string().min(1),
+  label: z.string().min(1),
 });
 
-const addMultiCorrectMCQQuestionFormSchema = z.object({
-  assignmentId: z.string().min(1),
+export type McqOption = z.infer<typeof mcqOption>;
+
+export const addSingleCorrectMCQQuestionFormSchema = z
+  .object({
+    type: z.literal(EnumQuestionType.SingleCorrectMcq),
+    assignmentId: z.string().min(1),
+    name: z
+      .string()
+      .min(QUESTION_NAME_MIN_LENGTH)
+      .max(QUESTION_NAME_MAX_LENGTH),
+    question: z
+      .string()
+      .min(QUESTION_TEXT_MIN_LENGTH)
+      .max(QUESTION_TEXT_MAX_LENGTH),
+    options: z
+      .array(mcqOption)
+      .min(MCQ_OPTIONS_MIN_LENGTH)
+      .max(MCQ_OPTIONS_MAX_LENGTH),
+    correctOption: z.string().min(1),
+  })
+  .refine(
+    (data) => {
+      return data.options.some((o) => o.value === data.correctOption);
+    },
+    {
+      path: ["correctOption"],
+      message: "Correct option must be among the list of options",
+    }
+  );
+
+export type AddSingleCorrectMCQQuestionForm = z.infer<
+  typeof addSingleCorrectMCQQuestionFormSchema
+>;
+
+export const addMultiCorrectMCQQuestionFormSchema = z.object({
   type: z.literal(EnumQuestionType.MultiCorrectMcq),
+  assignmentId: z.string().min(1),
   name: z.string().min(QUESTION_NAME_MIN_LENGTH).max(QUESTION_NAME_MAX_LENGTH),
   question: z
     .string()
     .min(QUESTION_TEXT_MIN_LENGTH)
     .max(QUESTION_TEXT_MAX_LENGTH),
-  options: z.array(z.string().min(1)),
-  correctOptions: z.array(z.number()),
+  options: z.array(mcqOption).min(1),
 });
+
+export type AddMultiCorrectMCQQuestionForm = z.infer<
+  typeof addMultiCorrectMCQQuestionFormSchema
+>;
 
 export const addQuestionFormSchema = z.union([
   addCodeQuestionFormSchema,

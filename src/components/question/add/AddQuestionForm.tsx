@@ -11,7 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
+import { type DefaultValues, useForm } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
 import { toastDescriptionAddQuestion } from "@/utils/constants/toast";
 import {
@@ -34,6 +34,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AddCodeQuestionFormFields } from "./AddCodeQuestionFormFields";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { AddSingleCorrectFormFields } from "./AddSingleCorrectMcqFormFields";
 
 type AddQuestionFormComponentProps = {
   assignmentId: string;
@@ -44,12 +47,11 @@ export const AddQuestionForm = ({
   assignmentId,
   setIsOpen,
 }: AddQuestionFormComponentProps) => {
-  const addQuestionFormDefaultValues: AddQuestionFormType = {
+  const addQuestionFormDefaultValues: DefaultValues<AddQuestionFormType> = {
+    type: EnumQuestionType.SingleCorrectMcq,
     assignmentId,
-    type: EnumQuestionType.Code,
     name: "",
     question: "",
-    starterCode: "",
   };
 
   const router = useRouter();
@@ -118,8 +120,46 @@ export const AddQuestionForm = ({
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input required {...field} />
+              </FormControl>
+              <FormDescription>Name of the question</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="question"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Question</FormLabel>
+              <FormControl>
+                <Textarea required {...field} />
+              </FormControl>
+              <FormDescription>The question text</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* TODO: Figure out a type-safe way of managing these forms */}
         {questionType === EnumQuestionType.Code && (
-          <AddCodeQuestionFormFields form={form} />
+          <>
+            {/* @ts-expect-error watch above TODO */}
+            <AddCodeQuestionFormFields form={form} />
+          </>
+        )}
+        {questionType === EnumQuestionType.SingleCorrectMcq && (
+          <>
+            {/* @ts-expect-error watch above TODO */}
+            <AddSingleCorrectFormFields form={form} />
+          </>
         )}
       </form>
       <SheetFooter>
