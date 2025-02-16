@@ -5,6 +5,7 @@ import {
   type EnumQuestionType,
   type QuestionType,
 } from "@/schemas/questionSchema";
+import { type Dispatch, type SetStateAction } from "react";
 import { type z } from "zod";
 
 export type ExtractQuestionForm<T extends QuestionType> =
@@ -15,3 +16,7 @@ export type ExtractQuestionForm<T extends QuestionType> =
       : T extends typeof EnumQuestionType.MultiCorrectMcq
         ? z.infer<typeof addMultiCorrectMCQQuestionFormSchema>
         : never;
+
+export type WithSheetOpenStateSetter<T> = T & {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+};

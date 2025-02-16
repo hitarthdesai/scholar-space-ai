@@ -1,8 +1,6 @@
 import { defineConfig } from "drizzle-kit";
 import { configDotenv } from "@dotenvx/dotenvx";
-
 configDotenv({ path: ".env.local", override: true });
-
 const drizzleConfig = defineConfig({
   schema: "./src/server/db/schema/index.ts",
   out: "./src/server/db/migrations",
@@ -15,5 +13,4 @@ const drizzleConfig = defineConfig({
   strict: true,
   verbose: true,
 });
-
 export default drizzleConfig;

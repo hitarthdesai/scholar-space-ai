@@ -9,9 +9,7 @@ import { EnumFormMode } from "@/schemas/formSchema";
 import assert from "assert";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
-import { EnumQuestionType } from "@/schemas/questionSchema";
-import { getQuestionOptionsFromDb } from "@/utils/classroom/question/getQuestionOptionsFromDb";
-import { ComponentProps } from "react";
+import ChooseQuestionTypeDialog from "../question/add/ChooseQuestionTypeDialog";
 
 type QuestionTitleProps = {
   id: string;
@@ -109,14 +107,11 @@ export async function AssignmentQuestions({
         <AlertOctagonIcon className="h-24 w-24" />
         <p>No questions found</p>
         {isAuthorizedToAddOrDelete && (
-          <AddEditQuestionSheet
-            mode={EnumFormMode.Add}
-            assignmentId={assignmentId}
-          >
+          <ChooseQuestionTypeDialog assignmentId={assignmentId}>
             <Button className="flex gap-2">
               Add a question <ShieldQuestionIcon />
             </Button>
-          </AddEditQuestionSheet>
+          </ChooseQuestionTypeDialog>
         )}
       </div>
     );
@@ -142,14 +137,11 @@ export async function AssignmentQuestions({
       })}
       {isAuthorizedToAddOrDelete && (
         <li>
-          <AddEditQuestionSheet
-            mode={EnumFormMode.Add}
-            assignmentId={assignmentId}
-          >
+          <ChooseQuestionTypeDialog assignmentId={assignmentId}>
             <Button className="mt-2 flex gap-2">
               Add another question <ShieldQuestionIcon />
             </Button>
-          </AddEditQuestionSheet>
+          </ChooseQuestionTypeDialog>
         </li>
       )}
     </ol>

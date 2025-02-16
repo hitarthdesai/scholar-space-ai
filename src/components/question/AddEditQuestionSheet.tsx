@@ -8,7 +8,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { AddQuestionForm } from "./add/AddQuestionForm";
 import { type PropsWithChildren, Suspense, useState } from "react";
 import { type AddEditQuestionSheetProps } from "@/schemas/questionSchema";
 import {
@@ -42,9 +41,7 @@ export function AddEditQuestionSheet({
           <SheetTitle>{questionSheetTitle[mode]}</SheetTitle>
           <SheetDescription>{questionSheetDescription[mode]}</SheetDescription>
         </SheetHeader>
-        {mode === EnumFormMode.Add ? (
-          <AddQuestionForm {...props} setIsOpen={setIsOpen} />
-        ) : (
+        {mode === EnumFormMode.Edit && (
           <Suspense fallback={<EditQuestionFormFallback />}>
             <EditQuestionForm {...props} setIsOpen={setIsOpen} />
           </Suspense>
