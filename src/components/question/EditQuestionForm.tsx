@@ -18,12 +18,14 @@ import {
   toastDescriptionEditQuestion,
 } from "@/utils/constants/toast";
 import {
-  type EditFormDefaultValues,
-  editFormDefaultValuesSchema,
+  editCodeQuestionFormDefaultValuesSchema,
   editQuestionFormSchema,
   type EditQuestionForm as EditQuestionFormType,
+  editSingleCorrectMcqQuestionFormDefaultValuesSchema,
   EnumDeleteQuestionResult,
   EnumEditQuestionResult,
+  EnumQuestionType,
+  QuestionType,
 } from "@/schemas/questionSchema";
 import { FormIds } from "@/utils/constants/form";
 import { editQuestion } from "@/actions/editQuestion";
@@ -38,7 +40,8 @@ import { deleteQuestion } from "@/actions/deleteQuestion";
 export type EditQuestionFormProps = {
   id: string;
   name: string;
-  editPromise: Promise<EditFormDefaultValues>;
+  type: QuestionType;
+  editPromise: Promise<unknown>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -46,11 +49,15 @@ export const EditQuestionForm = ({
   setIsOpen,
   id,
   name,
+  type,
   editPromise,
 }: EditQuestionFormProps) => {
   const _editQuestionData = use(editPromise);
-  const { data, error } =
-    editFormDefaultValuesSchema.safeParse(_editQuestionData);
+  const { data, error } = (
+    type === EnumQuestionType.Code
+      ? editCodeQuestionFormDefaultValuesSchema
+      : editSingleCorrectMcqQuestionFormDefaultValuesSchema
+  ).safeParse(_editQuestionData);
 
   const editQuestionFormDefaultValues: EditQuestionFormType = {
     questionId: id,

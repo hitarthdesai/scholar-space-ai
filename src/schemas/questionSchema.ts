@@ -28,7 +28,14 @@ export const questionSchema = z.object({
 
 export type Question = z.infer<typeof questionSchema>;
 
-export const editFormDefaultValuesSchema = z.tuple([
+export const mcqOption = z.object({
+  value: z.string().min(1),
+  label: z.string().min(1),
+});
+
+export type McqOption = z.infer<typeof mcqOption>;
+
+export const editCodeQuestionFormDefaultValuesSchema = z.tuple([
   z
     .string()
     .min(QUESTION_TEXT_MIN_LENGTH)
@@ -41,22 +48,46 @@ export const editFormDefaultValuesSchema = z.tuple([
     .optional(),
 ]);
 
-export type EditFormDefaultValues = z.infer<typeof editFormDefaultValuesSchema>;
+export const editSingleCorrectMcqQuestionFormDefaultValuesSchema = z.tuple([
+  z
+    .string()
+    .min(QUESTION_TEXT_MIN_LENGTH)
+    .max(QUESTION_TEXT_MAX_LENGTH)
+    .optional(),
+  mcqOption
+    .extend({
+      isCorrect: z.boolean(),
+    })
+    .array(),
+]);
 
 export const addEditQuestionSheetPropsSchema = z.union([
   z.object({
     mode: z.literal(EnumFormMode.Add),
     assignmentId: z.string().min(1),
   }),
-  z.object({
-    mode: z.literal(EnumFormMode.Edit),
-    id: z.string().min(1),
-    name: z
-      .string()
-      .min(QUESTION_NAME_MIN_LENGTH)
-      .max(QUESTION_NAME_MAX_LENGTH),
-    editPromise: z.promise(editFormDefaultValuesSchema),
-  }),
+  z.intersection(
+    z.object({
+      mode: z.literal(EnumFormMode.Edit),
+      id: z.string().min(1),
+      name: z
+        .string()
+        .min(QUESTION_NAME_MIN_LENGTH)
+        .max(QUESTION_NAME_MAX_LENGTH),
+    }),
+    z.union([
+      z.object({
+        type: z.literal(EnumQuestionType.Code),
+        editPromise: z.promise(editCodeQuestionFormDefaultValuesSchema),
+      }),
+      z.object({
+        type: z.literal(EnumQuestionType.SingleCorrectMcq),
+        editPromise: z.promise(
+          editSingleCorrectMcqQuestionFormDefaultValuesSchema
+        ),
+      }),
+    ])
+  ),
 ]);
 
 export type AddEditQuestionSheetProps = z.infer<
@@ -78,13 +109,6 @@ export const addCodeQuestionFormSchema = z.object({
 });
 
 export type AddCodeQuestionForm = z.infer<typeof addCodeQuestionFormSchema>;
-
-export const mcqOption = z.object({
-  value: z.string().min(1),
-  label: z.string().min(1),
-});
-
-export type McqOption = z.infer<typeof mcqOption>;
 
 export const addSingleCorrectMCQQuestionFormSchema = z
   .object({

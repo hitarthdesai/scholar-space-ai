@@ -10,6 +10,8 @@ import assert from "assert";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { EnumQuestionType } from "@/schemas/questionSchema";
+import { getQuestionOptionsFromDb } from "@/utils/classroom/question/getQuestionOptionsFromDb";
+import { ComponentProps } from "react";
 
 type QuestionTitleProps = {
   id: string;
@@ -34,8 +36,32 @@ function QuestionTitle({ id, name, ...props }: QuestionTitleProps) {
   const starterCodePromise = getObject({
     fileName: `questions/${id}/starterCode.txt`,
   });
+  const editCodeQuestionPromise = Promise.all([
+    questionPromise,
+    starterCodePromise,
+  ]);
 
-  const editPromise = Promise.all([questionPromise, starterCodePromise]);
+  const optionsPromise = getQuestionOptionsFromDb({ questionId: id });
+  const editSingleCorrectMcqQuestionPromise = Promise.all([
+    questionPromise,
+    optionsPromise,
+  ]);
+
+  const addEditQuestionSheetProps: ComponentProps<typeof AddEditQuestionSheet> =
+    {
+      mode: EnumFormMode.Edit,
+      id,
+      name,
+      ...(props.type === EnumQuestionType.Code
+        ? {
+            type: EnumQuestionType.Code,
+            editPromise: editCodeQuestionPromise,
+          }
+        : {
+            type: EnumQuestionType.SingleCorrectMcq,
+            editPromise: editSingleCorrectMcqQuestionPromise,
+          }),
+    };
 
   return (
     <li className="flex flex-row items-center">
@@ -46,12 +72,7 @@ function QuestionTitle({ id, name, ...props }: QuestionTitleProps) {
       ) : (
         <Button variant="link">{name}</Button>
       )}
-      <AddEditQuestionSheet
-        mode={EnumFormMode.Edit}
-        id={id}
-        name={name}
-        editPromise={editPromise}
-      >
+      <AddEditQuestionSheet {...addEditQuestionSheetProps}>
         <Button variant="ghost">
           <PencilIcon className="h-4 w-4" />
         </Button>
