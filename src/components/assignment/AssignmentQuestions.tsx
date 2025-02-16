@@ -12,38 +12,49 @@ import { EnumFormMode } from "@/schemas/formSchema";
 import assert from "assert";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
+import { EnumQuestionType } from "@/schemas/questionSchema";
 
 type QuestionTitleProps = {
   id: string;
   name: string;
-  href: string;
-};
+} & (
+  | {
+      type: typeof EnumQuestionType.Code;
+      href: string;
+    }
+  | {
+      type:
+        | typeof EnumQuestionType.SingleCorrectMcq
+        | typeof EnumQuestionType.MultiCorrectMcq;
+    }
+);
 
-function QuestionTitle({ id, name, href }: QuestionTitleProps) {
-  const namePromise = db
-    .select({ name: questions.name, id: questions.id })
-    .from(questions)
-    .where(eq(questions.id, id))
-    .then((data) => data[0]);
+function QuestionTitle({ id, name, ...props }: QuestionTitleProps) {
   const questionPromise = getObject({
     fileName: `questions/${id}/question.txt`,
   });
+
   const starterCodePromise = getObject({
     fileName: `questions/${id}/starterCode.txt`,
   });
 
-  const editPromise = Promise.all([
-    namePromise,
-    questionPromise,
-    starterCodePromise,
-  ]);
+  const editPromise = Promise.all([questionPromise, starterCodePromise]);
 
   return (
     <li className="flex flex-row items-center">
-      <Link href={href}>
+      {props.type === EnumQuestionType.Code ? (
+        <Link href={props.href}>
+          <Button variant="link">{name}</Button>
+        </Link>
+      ) : (
         <Button variant="link">{name}</Button>
-      </Link>
-      <AddEditQuestionSheet mode={EnumFormMode.Edit} editPromise={editPromise}>
+      )}
+      <AddEditQuestionSheet
+        mode={EnumFormMode.Edit}
+        id={id}
+        name={name}
+        editPromise={editPromise}
+      >
         <Button variant="ghost">
           <PencilIcon className="h-4 w-4" />
         </Button>
@@ -95,9 +106,21 @@ export async function AssignmentQuestions({
 
   return (
     <ol className="flex flex-col">
-      {questions.map(({ id, name }) => {
-        const href = `/classrooms/${classroomId}/assignments/${assignmentId}/questions/${id}`;
-        return <QuestionTitle key={id} id={id} href={href} name={name} />;
+      {questions.map(({ id, name, type }) => {
+        if (type === EnumQuestionType.Code) {
+          const href = `/classrooms/${classroomId}/assignments/${assignmentId}/questions/${id}`;
+          return (
+            <QuestionTitle
+              key={id}
+              id={id}
+              href={href}
+              name={name}
+              type={type}
+            />
+          );
+        }
+
+        return <QuestionTitle key={id} id={id} name={name} type={type} />;
       })}
       {isAuthorizedToAddOrDelete && (
         <li>

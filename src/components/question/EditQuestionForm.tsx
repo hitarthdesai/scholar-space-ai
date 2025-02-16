@@ -36,12 +36,16 @@ import { LoadingButton } from "../ui/loading-button";
 import { deleteQuestion } from "@/actions/deleteQuestion";
 
 export type EditQuestionFormProps = {
+  id: string;
+  name: string;
   editPromise: Promise<EditFormDefaultValues>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export const EditQuestionForm = ({
   setIsOpen,
+  id,
+  name,
   editPromise,
 }: EditQuestionFormProps) => {
   const _editQuestionData = use(editPromise);
@@ -49,10 +53,10 @@ export const EditQuestionForm = ({
     editFormDefaultValuesSchema.safeParse(_editQuestionData);
 
   const editQuestionFormDefaultValues: EditQuestionFormType = {
-    questionId: data?.[0].id ?? "",
-    name: data?.[0]?.name ?? undefined,
-    question: data?.[1] ?? undefined,
-    starterCode: data?.[2] ?? undefined,
+    questionId: id,
+    name: name,
+    question: data?.[0] ?? undefined,
+    starterCode: data?.[1] ?? undefined,
   };
 
   const router = useRouter();

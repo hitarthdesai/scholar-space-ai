@@ -29,17 +29,10 @@ export const questionSchema = z.object({
 export type Question = z.infer<typeof questionSchema>;
 
 export const editFormDefaultValuesSchema = z.tuple([
-  z.object({
-    id: z.string().min(1),
-    name: z
-      .string()
-      .min(QUESTION_NAME_MIN_LENGTH)
-      .max(QUESTION_NAME_MAX_LENGTH),
-  }),
   z
     .string()
-    .min(QUESTION_NAME_MIN_LENGTH)
-    .max(QUESTION_NAME_MAX_LENGTH)
+    .min(QUESTION_TEXT_MIN_LENGTH)
+    .max(QUESTION_TEXT_MAX_LENGTH)
     .optional(),
   z
     .string()
@@ -57,6 +50,11 @@ export const addEditQuestionSheetPropsSchema = z.union([
   }),
   z.object({
     mode: z.literal(EnumFormMode.Edit),
+    id: z.string().min(1),
+    name: z
+      .string()
+      .min(QUESTION_NAME_MIN_LENGTH)
+      .max(QUESTION_NAME_MAX_LENGTH),
     editPromise: z.promise(editFormDefaultValuesSchema),
   }),
 ]);
