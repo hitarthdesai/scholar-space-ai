@@ -7,7 +7,11 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/utils/cn";
 
-const Sheet = SheetPrimitive.Root;
+const Sheet = ({
+  ...props
+}: React.ComponentProps<typeof SheetPrimitive.Root>) => (
+  <SheetPrimitive.Root {...props} />
+);
 
 const SheetTrigger = SheetPrimitive.Trigger;
 

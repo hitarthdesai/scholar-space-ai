@@ -5,7 +5,7 @@ export const FormIds = {
   RejectInvite: "rejectInviteForm",
   AddClassroom: "createClassroomForm",
   AddAssignment: "addAssignmentForm",
-  AddQuestion: "addQuestionForm",
+  AddCodeQuestion: "addCodeQuestionForm",
   AddFile: "addFileForm",
   EditFile: "editFileForm",
   EditClassroom: "editClassroomForm",
