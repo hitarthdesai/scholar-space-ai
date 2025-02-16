@@ -10,6 +10,7 @@ import { auth } from "@/utils/auth/config";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { createSafeActionClient } from "next-safe-action";
 import { addCodeQuestion } from "@/utils/classroom/question/addCodeQuestion";
+import { addSingleCorrectMcqQuestion } from "@/utils/classroom/question/addSingleCorrectMcqQuestion";
 
 export const addQuestion = createSafeActionClient()
   .schema(addQuestionFormSchema)
@@ -33,6 +34,8 @@ export const addQuestion = createSafeActionClient()
       switch (parsedInput.type) {
         case EnumQuestionType.Code:
           return addCodeQuestion(parsedInput);
+        case EnumQuestionType.SingleCorrectMcq:
+          return addSingleCorrectMcqQuestion(parsedInput);
         default:
           return { type: EnumAddQuestionResult.Error };
       }
