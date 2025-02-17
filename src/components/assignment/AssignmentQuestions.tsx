@@ -1,5 +1,5 @@
 import { getAssignmentQuestionsFromDb } from "@/utils/classroom/getAssignmentQuestionsFromDb";
-import { AlertOctagonIcon, PencilIcon, ShieldQuestionIcon } from "lucide-react";
+import { AlertOctagonIcon, ShieldQuestionIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
@@ -7,6 +7,7 @@ import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignme
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import ChooseQuestionTypeDialog from "../question/add/ChooseQuestionTypeDialog";
 import { QuestionTitle } from "./QuestionTitle";
+import { Accordion } from "@/components/ui/accordion";
 
 type AssignmentQuestionsProps = {
   classroomId: string;
@@ -47,25 +48,31 @@ export async function AssignmentQuestions({
   }
 
   return (
-    <ol className="flex flex-col gap-3">
-      {questions.map(({ id, name, type }) => {
-        return (
-          <li className="flex flex-row items-center" key={id}>
-            <QuestionTitle
-              isAuthorizedToAddOrDelete={isAuthorizedToAddOrDelete}
-              classroomId={classroomId}
-              assignmentId={assignmentId}
-              questionId={id}
-              name={name}
-              type={type}
-            />
-          </li>
-        );
-      })}
+    <ol className="flex max-w-6xl flex-col gap-3 px-2 sm:px-0">
+      <Accordion
+        type="multiple"
+        className="w-full border-x border-t border-border"
+      >
+        {questions.map(({ id, name, type }) => {
+          return (
+            <li className="flex flex-row items-center" key={id}>
+              <QuestionTitle
+                isAuthorizedToAddOrDelete={isAuthorizedToAddOrDelete}
+                userId={userId}
+                classroomId={classroomId}
+                assignmentId={assignmentId}
+                questionId={id}
+                name={name}
+                type={type}
+              />
+            </li>
+          );
+        })}
+      </Accordion>
       {isAuthorizedToAddOrDelete && (
         <li>
           <ChooseQuestionTypeDialog assignmentId={assignmentId}>
-            <Button className="mt-2 flex gap-2">
+            <Button size="sm" className="mt-2 flex gap-2">
               Add another question <ShieldQuestionIcon />
             </Button>
           </ChooseQuestionTypeDialog>

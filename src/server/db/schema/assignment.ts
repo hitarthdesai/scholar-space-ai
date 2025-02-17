@@ -43,6 +43,46 @@ export const questionOptions = sqliteTable("questionOption", {
   isCorrect: integer("isCorrect", { mode: "boolean" }).notNull(),
 });
 
+export const questionOptionsRelations = relations(
+  questionOptions,
+  ({ one }) => ({
+    question: one(questions, {
+      fields: [questionOptions.questionId],
+      references: [questions.id],
+    }),
+  })
+);
+
+export const questionSelectedOptions = sqliteTable("questionSelectedOption", {
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  questionId: text("questionId")
+    .notNull()
+    .references(() => questions.id, { onDelete: "cascade" }),
+  optionId: text("optionId")
+    .notNull()
+    .references(() => questionOptions.optionId, { onDelete: "cascade" }),
+});
+
+export const questionSelectedOptionsRelations = relations(
+  questionSelectedOptions,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [questionSelectedOptions.userId],
+      references: [users.id],
+    }),
+    question: one(questions, {
+      fields: [questionSelectedOptions.questionId],
+      references: [questions.id],
+    }),
+    option: one(questionOptions, {
+      fields: [questionSelectedOptions.optionId],
+      references: [questionOptions.optionId],
+    }),
+  })
+);
+
 export const classroomAssignments = sqliteTable("classroomAssignment", {
   classroomId: text("classroomId")
     .notNull()

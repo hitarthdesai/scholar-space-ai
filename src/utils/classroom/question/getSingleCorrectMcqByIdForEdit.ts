@@ -5,13 +5,13 @@ import { getObject } from "@/utils/storage/s3/getObject";
 import { eq, and } from "drizzle-orm";
 import { unmergeMcqOptionsAndCorrectness } from "./unmergeMcqOptionsAndCorrectness";
 
-type GetSingleCorrectMcqByIdProps = {
+type GetSingleCorrectMcqByIdForEditProps = {
   id: string;
 };
 
-export const getSingleCorrectMcqById = ({
+export const getSingleCorrectMcqByIdForEdit = ({
   id,
-}: GetSingleCorrectMcqByIdProps) => {
+}: GetSingleCorrectMcqByIdForEditProps) => {
   const questionPromise = db
     .select({
       questionName: questions.name,

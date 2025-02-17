@@ -40,12 +40,14 @@ import {
   type DeleteQuestionResult,
   type EditQuestionResult,
   type ResetCodeResult,
+  type SubmitCodeResult,
+  type SaveMcqSelectionResult,
   EnumAddQuestionResult,
   EnumDeleteQuestionResult,
   EnumEditQuestionResult,
   EnumResetCodeResult,
   EnumSubmitCodeResult,
-  type SubmitCodeResult,
+  EnumSaveMcqSelectionResult,
 } from "@/schemas/questionSchema";
 import {
   type UpdateUserInformationResult,
@@ -320,4 +322,16 @@ export const toastDescriptionSubmitCode: Record<SubmitCodeResult, string> = {
     "You are not authorized to submit code.",
   [EnumSubmitCodeResult.Error]:
     "Unable to submit code. Please try again later.",
+};
+
+export const toastDescriptionSaveMcqSelection: Record<
+  SaveMcqSelectionResult,
+  string
+> = {
+  [EnumSaveMcqSelectionResult.McqSelectionSaved]:
+    "The MCQ selection was saved successfully.",
+  [EnumSaveMcqSelectionResult.NotAuthorized]:
+    "You are not authorized to save MCQ selections.",
+  [EnumSaveMcqSelectionResult.Error]:
+    "Unable to save MCQ selection. Please try again later.",
 };
