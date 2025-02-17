@@ -12,15 +12,15 @@ import { putObject } from "@/utils/storage/s3/putObject";
 import { randomUUID } from "crypto";
 import { mergeMcqOptionsAndCorrectness } from "./mergeMcqOptionsAndCorrectness";
 
-type AddSingleCorrectMcqQuestionProps = AddSingleCorrectMCQQuestionForm;
+type AddSingleCorrectMcqProps = AddSingleCorrectMCQQuestionForm;
 
-export const addSingleCorrectMcqQuestion = async ({
+export const addSingleCorrectMcq = async ({
   question,
   name,
   assignmentId,
   options,
   correctOption,
-}: AddSingleCorrectMcqQuestionProps) => {
+}: AddSingleCorrectMcqProps) => {
   try {
     const newQuestionId = randomUUID();
     const questionTextFileName = `questions/${newQuestionId}/question.txt`;

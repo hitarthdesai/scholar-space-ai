@@ -142,16 +142,32 @@ export type AddSingleCorrectMCQQuestionForm = z.infer<
   typeof addSingleCorrectMCQQuestionFormSchema
 >;
 
-export const addMultiCorrectMCQQuestionFormSchema = z.object({
-  type: z.literal(EnumQuestionType.MultiCorrectMcq),
-  assignmentId: z.string().min(1),
-  name: z.string().min(QUESTION_NAME_MIN_LENGTH).max(QUESTION_NAME_MAX_LENGTH),
-  question: z
-    .string()
-    .min(QUESTION_TEXT_MIN_LENGTH)
-    .max(QUESTION_TEXT_MAX_LENGTH),
-  options: z.array(mcqOption).min(1),
-});
+export const addMultiCorrectMCQQuestionFormSchema = z
+  .object({
+    type: z.literal(EnumQuestionType.MultiCorrectMcq),
+    assignmentId: z.string().min(1),
+    name: z
+      .string()
+      .min(QUESTION_NAME_MIN_LENGTH)
+      .max(QUESTION_NAME_MAX_LENGTH),
+    question: z
+      .string()
+      .min(QUESTION_TEXT_MIN_LENGTH)
+      .max(QUESTION_TEXT_MAX_LENGTH),
+    options: z.array(mcqOption).min(1),
+    correctOptions: z.array(z.string()).min(1),
+  })
+  .refine(
+    (data) => {
+      return data.correctOptions.every((co) =>
+        data.options.some((o) => o.value === co)
+      );
+    },
+    {
+      path: ["correctOptions"],
+      message: "Correct option must be among the list of options",
+    }
+  );
 
 export type AddMultiCorrectMCQQuestionForm = z.infer<
   typeof addMultiCorrectMCQQuestionFormSchema

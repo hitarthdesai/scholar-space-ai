@@ -9,6 +9,7 @@ import {
   type WithCloseQuestionTypeDialogMethod,
 } from "@/utils/types";
 import { AddSingleCorrectMcqForm } from "./AddSingleCorrectMcqForm";
+import { AddMultiCorrectMcqForm } from "./AddMultiCorrectMcqForm";
 
 type AddQuestionFormProps = {
   type: QuestionType;
@@ -40,14 +41,14 @@ export const AddQuestionForm = ({
           closeQuestionTypeDialog={closeQuestionTypeDialog}
         />
       );
-    // case EnumQuestionType.MultiCorrectMcq:
-    //   return (
-    //     <AddSingleCorrectFormFields
-    //       assignmentId={assignmentId}
-    //       closeSheet={closeSheet}
-    //       closeQuestionTypeDialog={closeQuestionTypeDialog}
-    //     />
-    //   );
+    case EnumQuestionType.MultiCorrectMcq:
+      return (
+        <AddMultiCorrectMcqForm
+          assignmentId={assignmentId}
+          closeSheet={closeSheet}
+          closeQuestionTypeDialog={closeQuestionTypeDialog}
+        />
+      );
     default:
       return null;
   }
