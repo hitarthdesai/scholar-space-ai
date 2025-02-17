@@ -18,12 +18,12 @@ import {
   MCQ_OPTIONS_MAX_LENGTH,
   MCQ_OPTIONS_MIN_LENGTH,
   type McqOption,
-  AddSingleCorrectMCQQuestionForm,
+  type AddSingleCorrectMCQQuestionForm,
   addSingleCorrectMCQQuestionFormSchema,
   EnumAddQuestionResult,
 } from "@/schemas/questionSchema";
 import { XIcon } from "lucide-react";
-import { DefaultValues, useForm, type UseFormReturn } from "react-hook-form";
+import { type DefaultValues, useForm } from "react-hook-form";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -35,8 +35,8 @@ import { SheetFooter } from "@/components/ui/sheet";
 import { FormIds } from "@/utils/constants/form";
 import { AddQuestionFormCommonFields } from "./AddQuestionFormCommonFields";
 import {
-  WithCloseFormSheetMethod,
-  WithCloseQuestionTypeDialogMethod,
+  type WithCloseFormSheetMethod,
+  type WithCloseQuestionTypeDialogMethod,
 } from "@/utils/types";
 
 type AddSingleCorrectMcqFormProps = {

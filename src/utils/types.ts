@@ -5,7 +5,6 @@ import {
   type EnumQuestionType,
   type QuestionType,
 } from "@/schemas/questionSchema";
-import { type Dispatch, type SetStateAction } from "react";
 import { type z } from "zod";
 
 export type ExtractQuestionForm<T extends QuestionType> =

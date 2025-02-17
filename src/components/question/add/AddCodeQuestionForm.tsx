@@ -23,8 +23,8 @@ import {
 import { FormIds } from "@/utils/constants/form";
 import { toastDescriptionAddQuestion } from "@/utils/constants/toast";
 import {
-  WithCloseQuestionTypeDialogMethod,
-  WithCloseFormSheetMethod,
+  type WithCloseQuestionTypeDialogMethod,
+  type WithCloseFormSheetMethod,
 } from "@/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";

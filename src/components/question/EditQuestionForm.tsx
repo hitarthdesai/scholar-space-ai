@@ -25,7 +25,7 @@ import {
   EnumDeleteQuestionResult,
   EnumEditQuestionResult,
   EnumQuestionType,
-  QuestionType,
+  type QuestionType,
 } from "@/schemas/questionSchema";
 import { FormIds } from "@/utils/constants/form";
 import { editQuestion } from "@/actions/editQuestion";
