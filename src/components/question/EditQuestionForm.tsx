@@ -63,7 +63,7 @@ export const EditQuestionForm = ({
     questionId: id,
     name: name,
     question: data?.[0] ?? undefined,
-    starterCode: data?.[1] ?? undefined,
+    starterCode: "",
   };
 
   const router = useRouter();
