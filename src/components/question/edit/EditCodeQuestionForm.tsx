@@ -11,64 +11,53 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
+import { type DefaultValues, useForm } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
 import {
   toastDescriptionDeleteQuestion,
   toastDescriptionEditQuestion,
 } from "@/utils/constants/toast";
 import {
-  editCodeQuestionFormDefaultValuesSchema,
-  editQuestionFormSchema,
-  type EditQuestionForm as EditQuestionFormType,
-  editSingleCorrectMcqQuestionFormDefaultValuesSchema,
+  editCodeQuestionFormSchema,
+  type EditCodeQuestionForm as EditCodeQuestionFormType,
   EnumDeleteQuestionResult,
   EnumEditQuestionResult,
-  EnumQuestionType,
-  type QuestionType,
 } from "@/schemas/questionSchema";
 import { FormIds } from "@/utils/constants/form";
 import { editQuestion } from "@/actions/editQuestion";
-import { use, type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
-import { Textarea } from "../ui/textarea";
-import { Input } from "../ui/input";
-import { SheetFooter } from "../ui/sheet";
-import { LoadingButton } from "../ui/loading-button";
+import { Textarea } from "../../ui/textarea";
+import { Input } from "../../ui/input";
+import { SheetFooter } from "../../ui/sheet";
+import { LoadingButton } from "../../ui/loading-button";
 import { deleteQuestion } from "@/actions/deleteQuestion";
+import { type WithCloseFormSheetMethod } from "@/utils/types";
 
 export type EditQuestionFormProps = {
   id: string;
   name: string;
-  type: QuestionType;
-  editPromise: Promise<unknown>;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  question: string;
+  starterCode: string;
 };
 
-export const EditQuestionForm = ({
-  setIsOpen,
+export const EditCodeQuestionForm = ({
   id,
   name,
-  type,
-  editPromise,
-}: EditQuestionFormProps) => {
-  const _editQuestionData = use(editPromise);
-  const { data, error } = (
-    type === EnumQuestionType.Code
-      ? editCodeQuestionFormDefaultValuesSchema
-      : editSingleCorrectMcqQuestionFormDefaultValuesSchema
-  ).safeParse(_editQuestionData);
-
-  const editQuestionFormDefaultValues: EditQuestionFormType = {
-    questionId: id,
-    name: name,
-    question: data?.[0] ?? undefined,
-    starterCode: "",
-  };
+  question,
+  starterCode,
+  closeSheet,
+}: WithCloseFormSheetMethod<EditQuestionFormProps>) => {
+  const editQuestionFormDefaultValues: DefaultValues<EditCodeQuestionFormType> =
+    {
+      questionId: id,
+      name,
+      question,
+      starterCode,
+    };
 
   const router = useRouter();
-  const form = useForm<EditQuestionFormType>({
-    resolver: zodResolver(editQuestionFormSchema),
+  const form = useForm<EditCodeQuestionFormType>({
+    resolver: zodResolver(editCodeQuestionFormSchema),
     defaultValues: editQuestionFormDefaultValues,
   });
 
@@ -90,14 +79,14 @@ export const EditQuestionForm = ({
 
         if (!isErroneous) {
           form.reset();
-          setIsOpen(false);
+          closeSheet();
           router.refresh();
         }
       },
     }
   );
 
-  const onSubmit = async (data: EditQuestionFormType) => {
+  const onSubmit = async (data: EditCodeQuestionFormType) => {
     const hasNameChanged = data.name !== editQuestionFormDefaultValues.name;
     const hasQuestionChanged =
       data.question !== editQuestionFormDefaultValues.question;
@@ -139,17 +128,12 @@ export const EditQuestionForm = ({
         });
 
         if (!isErroneous) {
-          setIsOpen(false);
+          closeSheet();
           router.refresh();
         }
       },
     }
   );
-
-  // TODO: Find a better error for this.
-  if (error) {
-    return <div>ERROR</div>;
-  }
 
   const disableActions = isEditing || isDeleting;
 
@@ -210,7 +194,7 @@ export const EditQuestionForm = ({
           variant="destructive"
           onClick={async () =>
             executeDelete({
-              questionId: editQuestionFormDefaultValues.questionId,
+              questionId: id,
             })
           }
         >

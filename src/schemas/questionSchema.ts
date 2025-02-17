@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { EnumFormMode } from "./formSchema";
 import { Question } from "@/components/question/Question";
 
 const QUESTION_NAME_MIN_LENGTH = 5;
@@ -35,19 +34,6 @@ export const mcqOption = z.object({
 
 export type McqOption = z.infer<typeof mcqOption>;
 
-export const editCodeQuestionFormDefaultValuesSchema = z.tuple([
-  z
-    .string()
-    .min(QUESTION_TEXT_MIN_LENGTH)
-    .max(QUESTION_TEXT_MAX_LENGTH)
-    .optional(),
-  z
-    .string()
-    .min(STARTER_CODE_MIN_LENGTH)
-    .max(STARTER_CODE_MAX_LENGTH)
-    .optional(),
-]);
-
 export const editSingleCorrectMcqQuestionFormDefaultValuesSchema = z.tuple([
   z
     .string()
@@ -60,39 +46,6 @@ export const editSingleCorrectMcqQuestionFormDefaultValuesSchema = z.tuple([
     })
     .array(),
 ]);
-
-export const addEditQuestionSheetPropsSchema = z.union([
-  z.object({
-    mode: z.literal(EnumFormMode.Add),
-    assignmentId: z.string().min(1),
-  }),
-  z.intersection(
-    z.object({
-      mode: z.literal(EnumFormMode.Edit),
-      id: z.string().min(1),
-      name: z
-        .string()
-        .min(QUESTION_NAME_MIN_LENGTH)
-        .max(QUESTION_NAME_MAX_LENGTH),
-    }),
-    z.union([
-      z.object({
-        type: z.literal(EnumQuestionType.Code),
-        editPromise: z.promise(editCodeQuestionFormDefaultValuesSchema),
-      }),
-      z.object({
-        type: z.literal(EnumQuestionType.SingleCorrectMcq),
-        editPromise: z.promise(
-          editSingleCorrectMcqQuestionFormDefaultValuesSchema
-        ),
-      }),
-    ])
-  ),
-]);
-
-export type AddEditQuestionSheetProps = z.infer<
-  typeof addEditQuestionSheetPropsSchema
->;
 
 export const addCodeQuestionFormSchema = z.object({
   type: z.literal(EnumQuestionType.Code),
@@ -109,6 +62,21 @@ export const addCodeQuestionFormSchema = z.object({
 });
 
 export type AddCodeQuestionForm = z.infer<typeof addCodeQuestionFormSchema>;
+
+export const editCodeQuestionFormSchema = addCodeQuestionFormSchema
+  .pick({
+    type: true,
+    name: true,
+    question: true,
+    starterCode: true,
+  })
+  .merge(
+    z.object({
+      id: z.string().min(1),
+    })
+  );
+
+export type EditCodeQuestionForm = z.infer<typeof editCodeQuestionFormSchema>;
 
 export const addSingleCorrectMCQQuestionFormSchema = z
   .object({
@@ -221,6 +189,32 @@ export const EnumEditQuestionResult = {
 
 export const editQuestionResultSchema = z.nativeEnum(EnumEditQuestionResult);
 export type EditQuestionResult = z.infer<typeof editQuestionResultSchema>;
+
+export const editQuestionSheetPropsSchema = z.union([
+  z.object({
+    type: z.literal(EnumQuestionType.Code),
+    editPromise: z.promise(editCodeQuestionFormSchema),
+  }),
+  z.object({
+    type: z.literal(EnumQuestionType.SingleCorrectMcq),
+    editPromise: z.promise(z.undefined()),
+  }),
+  z.object({
+    type: z.literal(EnumQuestionType.MultiCorrectMcq),
+    editPromise: z.promise(z.undefined()),
+  }),
+]);
+
+export type EditQuestionSheetProps = z.infer<
+  typeof editQuestionSheetPropsSchema
+>;
+
+export const editPromiseSchema = z.union([
+  z.promise(editCodeQuestionFormSchema),
+  z.promise(z.undefined()),
+]);
+
+export type EditPromise = z.infer<typeof editPromiseSchema>;
 
 export const deleteQuestionInputSchema = z.object({
   questionId: z.string().min(1),
