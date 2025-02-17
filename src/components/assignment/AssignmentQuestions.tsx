@@ -10,6 +10,9 @@ import assert from "assert";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import ChooseQuestionTypeDialog from "../question/add/ChooseQuestionTypeDialog";
+import { EnumQuestionType } from "@/schemas/questionSchema";
+import { getQuestionOptionsFromDb } from "@/utils/classroom/question/getQuestionOptionsFromDb";
+import { ComponentProps } from "react";
 
 type QuestionTitleProps = {
   id: string;

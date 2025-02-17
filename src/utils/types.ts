@@ -17,6 +17,10 @@ export type ExtractQuestionForm<T extends QuestionType> =
         ? z.infer<typeof addMultiCorrectMCQQuestionFormSchema>
         : never;
 
-export type WithSheetOpenStateSetter<T> = T & {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+export type WithCloseFormSheetMethod<T> = T & {
+  closeSheet: () => void;
+};
+
+export type WithCloseQuestionTypeDialogMethod<T> = T & {
+  closeQuestionTypeDialog: () => void;
 };

@@ -22,7 +22,10 @@ import {
 } from "@/schemas/questionSchema";
 import { FormIds } from "@/utils/constants/form";
 import { toastDescriptionAddQuestion } from "@/utils/constants/toast";
-import { type WithSheetOpenStateSetter } from "@/utils/types";
+import {
+  WithCloseQuestionTypeDialogMethod,
+  WithCloseFormSheetMethod,
+} from "@/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
@@ -35,8 +38,11 @@ type AddCodeQuestionFormProps = {
 
 export function AddCodeQuestionForm({
   assignmentId,
-  setIsOpen,
-}: WithSheetOpenStateSetter<AddCodeQuestionFormProps>) {
+  closeSheet,
+  closeQuestionTypeDialog,
+}: WithCloseQuestionTypeDialogMethod<
+  WithCloseFormSheetMethod<AddCodeQuestionFormProps>
+>) {
   const defaultValues: DefaultValues<AddCodeQuestionFormType> = {
     type: EnumQuestionType.Code,
     assignmentId,
@@ -67,7 +73,8 @@ export function AddCodeQuestionForm({
 
       if (!isErroneous) {
         form.reset();
-        setIsOpen(false);
+        closeSheet();
+        closeQuestionTypeDialog();
         router.refresh();
       }
     },
