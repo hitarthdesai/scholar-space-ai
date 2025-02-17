@@ -33,7 +33,7 @@ import { toastDescriptionAddQuestion } from "@/utils/constants/toast";
 import { toast } from "@/components/ui/use-toast";
 import { SheetFooter } from "@/components/ui/sheet";
 import { FormIds } from "@/utils/constants/form";
-import { AddQuestionFormCommonFields } from "./AddQuestionFormCommonFields";
+import { QuestionFormCommonFields } from "./QuestionFormCommonFields";
 import {
   type WithCloseFormSheetMethod,
   type WithCloseQuestionTypeDialogMethod,
@@ -115,10 +115,7 @@ export function AddSingleCorrectMcqForm({
         onSubmit={form.handleSubmit(executeAsync)}
         className="flex h-full flex-col gap-4"
       >
-        <AddQuestionFormCommonFields
-          type={EnumQuestionType.SingleCorrectMcq}
-          form={form}
-        />
+        <QuestionFormCommonFields />
         <div className="border-t-2 border-border pt-4">
           <FormField
             control={form.control}

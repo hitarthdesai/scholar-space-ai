@@ -1,18 +1,13 @@
 import { getAssignmentQuestionsFromDb } from "@/utils/classroom/getAssignmentQuestionsFromDb";
 import { AlertOctagonIcon, PencilIcon, ShieldQuestionIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import Link from "next/link";
 import { auth } from "@/utils/auth/config";
-import { getObject } from "@/utils/storage/s3/getObject";
-import { AddEditQuestionSheet } from "../question/AddEditQuestionSheet";
-import { EnumFormMode } from "@/schemas/formSchema";
 import assert from "assert";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import ChooseQuestionTypeDialog from "../question/add/ChooseQuestionTypeDialog";
 import { EnumQuestionType } from "@/schemas/questionSchema";
-import { getQuestionOptionsFromDb } from "@/utils/classroom/question/getQuestionOptionsFromDb";
-import { type ComponentProps } from "react";
+import { EditQuestionDataWrapper } from "../question/edit/EditQuestionDataWrapper";
 
 type QuestionTitleProps = {
   id: string;
@@ -29,55 +24,26 @@ type QuestionTitleProps = {
     }
 );
 
-function QuestionTitle({ id, name, ...props }: QuestionTitleProps) {
-  const questionPromise = getObject({
-    fileName: `questions/${id}/question.txt`,
-  });
+function QuestionTitle({ type, id, name }: QuestionTitleProps) {
+  // const editCodeQuestionPromise = Promise.all([
+  //   questionPromise,
+  //   starterCodePromise,
+  // ]);
 
-  const starterCodePromise = getObject({
-    fileName: `questions/${id}/starterCode.txt`,
-  });
-  const editCodeQuestionPromise = Promise.all([
-    questionPromise,
-    starterCodePromise,
-  ]);
-
-  const optionsPromise = getQuestionOptionsFromDb({ questionId: id });
-  const editSingleCorrectMcqQuestionPromise = Promise.all([
-    questionPromise,
-    optionsPromise,
-  ]);
-
-  const addEditQuestionSheetProps: ComponentProps<typeof AddEditQuestionSheet> =
-    {
-      mode: EnumFormMode.Edit,
-      id,
-      name,
-      ...(props.type === EnumQuestionType.Code
-        ? {
-            type: EnumQuestionType.Code,
-            editPromise: editCodeQuestionPromise,
-          }
-        : {
-            type: EnumQuestionType.SingleCorrectMcq,
-            editPromise: editSingleCorrectMcqQuestionPromise,
-          }),
-    };
+  // const optionsPromise = getQuestionOptionsFromDb({ questionId: id });
+  // const editSingleCorrectMcqQuestionPromise = Promise.all([
+  //   questionPromise,
+  //   optionsPromise,
+  // ]);
 
   return (
     <li className="flex flex-row items-center">
-      {props.type === EnumQuestionType.Code ? (
-        <Link href={props.href}>
-          <Button variant="link">{name}</Button>
-        </Link>
-      ) : (
-        <Button variant="link">{name}</Button>
-      )}
-      <AddEditQuestionSheet {...addEditQuestionSheetProps}>
+      <Button variant="link">{name}</Button>
+      <EditQuestionDataWrapper type={type} id={id}>
         <Button variant="ghost">
           <PencilIcon className="h-4 w-4" />
         </Button>
-      </AddEditQuestionSheet>
+      </EditQuestionDataWrapper>
     </li>
   );
 }

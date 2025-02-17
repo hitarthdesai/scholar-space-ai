@@ -30,7 +30,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import { type DefaultValues, useForm } from "react-hook-form";
-import { AddQuestionFormCommonFields } from "./AddQuestionFormCommonFields";
+import { QuestionFormCommonFields } from "./QuestionFormCommonFields";
 
 type AddCodeQuestionFormProps = {
   assignmentId: string;
@@ -87,10 +87,7 @@ export function AddCodeQuestionForm({
         onSubmit={form.handleSubmit(executeAsync)}
         className="flex h-full flex-col gap-4"
       >
-        <AddQuestionFormCommonFields
-          type={EnumQuestionType.SingleCorrectMcq}
-          form={form}
-        />
+        <QuestionFormCommonFields />
         <FormField
           control={form.control}
           name="starterCode"
