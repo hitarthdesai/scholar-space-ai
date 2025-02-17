@@ -5,13 +5,11 @@ import { getObject } from "@/utils/storage/s3/getObject";
 import { eq, and } from "drizzle-orm";
 import { unmergeMcqOptionsAndCorrectness } from "./unmergeMcqOptionsAndCorrectness";
 
-type GetSingleCorrectMcqByIdProps = {
+type GetMultiCorrectMcqByIdProps = {
   id: string;
 };
 
-export const getSingleCorrectMcqById = ({
-  id,
-}: GetSingleCorrectMcqByIdProps) => {
+export const getMultiCorrectMcqById = ({ id }: GetMultiCorrectMcqByIdProps) => {
   const questionPromise = db
     .select({
       questionName: questions.name,
@@ -24,7 +22,7 @@ export const getSingleCorrectMcqById = ({
     .where(
       and(
         eq(questions.id, id),
-        eq(questions.type, EnumQuestionType.SingleCorrectMcq)
+        eq(questions.type, EnumQuestionType.MultiCorrectMcq)
       )
     )
     .then((res) => {
@@ -40,7 +38,7 @@ export const getSingleCorrectMcqById = ({
       return {
         name: res[0].questionName,
         options: unmergedOptions,
-        correctOption: correctOptions[0],
+        correctOptions,
       };
     });
 
@@ -52,7 +50,7 @@ export const getSingleCorrectMcqById = ({
     ([question, questionText]) => ({
       id,
       ...question,
-      type: EnumQuestionType.SingleCorrectMcq,
+      type: EnumQuestionType.MultiCorrectMcq,
       question: questionText ?? "",
     })
   );

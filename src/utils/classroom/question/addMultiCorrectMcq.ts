@@ -39,15 +39,13 @@ export const addMultiCorrectMcq = async ({
       questionId: newQuestionId,
       name,
       assignmentId,
-      type: EnumQuestionType.SingleCorrectMcq,
+      type: EnumQuestionType.MultiCorrectMcq,
     });
 
     const mergedOptions = mergeMcqOptionsAndCorrectness({
       options,
       correctOptions,
     });
-
-    console.log("mergedOptions", mergedOptions);
 
     await db.insert(questionOptions).values(
       mergedOptions.map((option) => ({

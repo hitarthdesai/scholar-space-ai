@@ -91,6 +91,10 @@ export const addSingleCorrectMCQQuestionFormSchema =
     }
   );
 
+export type AddSingleCorrectMCQQuestionForm = z.infer<
+  typeof addSingleCorrectMCQQuestionFormSchema
+>;
+
 export const editSingleCorrectMcqFormSchema =
   unrefinedAddSingleCorrectMCQQuestionFormSchema
     .pick({
@@ -110,10 +114,6 @@ export type EditSingleCorrectMcqForm = z.infer<
   typeof editSingleCorrectMcqFormSchema
 >;
 
-export type AddSingleCorrectMCQQuestionForm = z.infer<
-  typeof addSingleCorrectMCQQuestionFormSchema
->;
-
 const unrefinedAddMultiCorrectMCQQuestionFormSchema = z.object({
   type: z.literal(EnumQuestionType.MultiCorrectMcq),
   assignmentId: z.string().min(1),
@@ -125,6 +125,7 @@ const unrefinedAddMultiCorrectMCQQuestionFormSchema = z.object({
   options: z.array(mcqOption).min(1),
   correctOptions: z.array(z.string()).min(1),
 });
+
 export const addMultiCorrectMCQQuestionFormSchema =
   unrefinedAddMultiCorrectMCQQuestionFormSchema.refine(
     (data) => {
@@ -137,6 +138,10 @@ export const addMultiCorrectMCQQuestionFormSchema =
       message: "Correct option must be among the list of options",
     }
   );
+
+export type AddMultiCorrectMCQQuestionForm = z.infer<
+  typeof addMultiCorrectMCQQuestionFormSchema
+>;
 
 export const editMultiCorrectMcqFormSchema =
   unrefinedAddMultiCorrectMCQQuestionFormSchema
@@ -153,8 +158,8 @@ export const editMultiCorrectMcqFormSchema =
       })
     );
 
-export type AddMultiCorrectMCQQuestionForm = z.infer<
-  typeof addMultiCorrectMCQQuestionFormSchema
+export type EditMultiCorrectMcqForm = z.infer<
+  typeof editMultiCorrectMcqFormSchema
 >;
 
 export const addQuestionFormSchema = z.union([
@@ -241,7 +246,7 @@ export const editQuestionSheetPropsSchema = z.union([
   }),
   z.object({
     type: z.literal(EnumQuestionType.MultiCorrectMcq),
-    editPromise: z.promise(z.undefined()),
+    editPromise: z.promise(editMultiCorrectMcqFormSchema),
   }),
 ]);
 
@@ -253,7 +258,7 @@ export const editPromiseSchema = z.promise(
   z.union([
     editCodeQuestionFormSchema,
     editSingleCorrectMcqFormSchema,
-    z.undefined(),
+    editMultiCorrectMcqFormSchema,
   ])
 );
 

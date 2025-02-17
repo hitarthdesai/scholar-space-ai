@@ -15,81 +15,140 @@ import {
   EnumQuestionType,
   MCQ_OPTIONS_MAX_LENGTH,
   MCQ_OPTIONS_MIN_LENGTH,
-  type McqOption,
-  type AddMultiCorrectMCQQuestionForm,
-  addMultiCorrectMCQQuestionFormSchema,
-  EnumAddQuestionResult,
+  type EditMultiCorrectMcqForm as EditMultiCorrectMcqFormType,
+  EnumDeleteQuestionResult,
+  editMultiCorrectMcqFormSchema,
+  EnumEditQuestionResult,
 } from "@/schemas/questionSchema";
 import { XIcon } from "lucide-react";
 import { type DefaultValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
-import { addQuestion } from "@/actions/addQuestion";
-import { toastDescriptionAddQuestion } from "@/utils/constants/toast";
+import {
+  toastDescriptionDeleteQuestion,
+  toastDescriptionEditQuestion,
+} from "@/utils/constants/toast";
 import { toast } from "@/components/ui/use-toast";
 import { SheetFooter } from "@/components/ui/sheet";
 import { FormIds } from "@/utils/constants/form";
-import { QuestionFormCommonFields } from "./QuestionFormCommonFields";
-import {
-  type WithCloseFormSheetMethod,
-  type WithCloseQuestionTypeDialogMethod,
-} from "@/utils/types";
+import { QuestionFormCommonFields } from "../add/QuestionFormCommonFields";
+import { type WithCloseFormSheetMethod } from "@/utils/types";
 import { Checkbox } from "@/components/ui/checkbox";
+import { deleteQuestion } from "@/actions/deleteQuestion";
+import { editQuestion } from "@/actions/editQuestion";
+import { LoadingButton } from "@/components/ui/loading-button";
 
-type AddSingleCorrectMcqFormProps = {
-  assignmentId: string;
-};
+type EditMultiCorrectMcqFormProps = Omit<EditMultiCorrectMcqFormType, "type">;
 
-const defaultOptions: McqOption[] = [
-  { value: "1", label: "" },
-  { value: "2", label: "" },
-];
-
-export function AddMultiCorrectMcqForm({
-  assignmentId,
+export function EditMultiCorrectMcqForm({
+  id,
+  name,
+  question,
+  options: defaultOptions,
+  correctOptions: defaultCorrectOptions,
   closeSheet,
-  closeQuestionTypeDialog,
-}: WithCloseQuestionTypeDialogMethod<
-  WithCloseFormSheetMethod<AddSingleCorrectMcqFormProps>
->) {
-  const defaultValues: DefaultValues<AddMultiCorrectMCQQuestionForm> = {
-    type: EnumQuestionType.MultiCorrectMcq,
-    assignmentId,
-    name: "",
-    question: "",
+}: WithCloseFormSheetMethod<EditMultiCorrectMcqFormProps>) {
+  const defaultValues: DefaultValues<EditMultiCorrectMcqFormType> = {
+    id,
+    name,
+    question,
     options: defaultOptions,
-    correctOptions: defaultOptions.map((o) => o.value),
+    correctOptions: defaultCorrectOptions,
+    type: EnumQuestionType.MultiCorrectMcq,
   };
 
-  const form = useForm<AddMultiCorrectMCQQuestionForm>({
-    resolver: zodResolver(addMultiCorrectMCQQuestionFormSchema),
+  const router = useRouter();
+  const form = useForm<EditMultiCorrectMcqFormType>({
+    resolver: zodResolver(editMultiCorrectMcqFormSchema),
     defaultValues,
   });
 
-  const router = useRouter();
-  const { executeAsync } = useAction(addQuestion, {
-    onSuccess({ data }) {
-      if (!data?.type) return;
+  const { executeAsync: executeEdit, isExecuting: isEditing } = useAction(
+    editQuestion,
+    {
+      onSuccess({ data }) {
+        if (!data?.type) return;
 
-      const isErroneous = data.type !== EnumAddQuestionResult.QuestionAdded;
+        const isErroneous = data.type !== EnumEditQuestionResult.QuestionEdited;
 
+        toast({
+          title: isErroneous
+            ? "Error in editing Question"
+            : "Question edited successfully",
+          description: toastDescriptionEditQuestion[data.type],
+          variant: isErroneous ? "destructive" : "default",
+        });
+
+        if (!isErroneous) {
+          form.reset();
+          closeSheet();
+          router.refresh();
+        }
+      },
+    }
+  );
+
+  const onSubmit = async (data: EditMultiCorrectMcqFormType) => {
+    const hasNameChanged = data.name !== defaultValues.name;
+    const hasQuestionChanged = data.question !== defaultValues.question;
+    const hasOptionsChanged =
+      JSON.stringify(data.options) !== JSON.stringify(defaultValues.options);
+    const hasCorrectOptionsChanged =
+      JSON.stringify(data.correctOptions) !==
+      JSON.stringify(defaultValues.correctOptions);
+
+    if (
+      !hasNameChanged &&
+      !hasQuestionChanged &&
+      !hasOptionsChanged &&
+      !hasCorrectOptionsChanged
+    ) {
       toast({
-        title: isErroneous
-          ? "Error in adding Question"
-          : "Question added successfully",
-        description: toastDescriptionAddQuestion[data.type],
-        variant: isErroneous ? "destructive" : "default",
+        title: "No changes detected",
+        description: "You haven't made any changes to the form.",
+        variant: "default",
       });
+      return;
+    }
 
-      if (!isErroneous) {
-        form.reset();
-        closeSheet();
-        closeQuestionTypeDialog();
-        router.refresh();
-      }
-    },
-  });
+    await executeEdit({
+      ...data,
+      name: hasNameChanged ? data.name : undefined,
+      question: hasQuestionChanged ? data.question : undefined,
+      options: hasOptionsChanged ? data.options : defaultOptions,
+      correctOptions: hasCorrectOptionsChanged
+        ? data.correctOptions
+        : defaultCorrectOptions,
+    });
+  };
+
+  const { executeAsync: executeDelete, isExecuting: isDeleting } = useAction(
+    deleteQuestion,
+    {
+      onSuccess({ data }) {
+        if (!data?.type) return;
+
+        const isErroneous =
+          data.type !== EnumDeleteQuestionResult.QuestionDeleted;
+
+        toast({
+          title: isErroneous
+            ? "Error in deleting Question"
+            : "Question deleted successfully",
+          description: toastDescriptionDeleteQuestion[data.type],
+          variant: isErroneous ? "destructive" : "default",
+        });
+
+        if (!isErroneous) {
+          closeSheet();
+          router.refresh();
+        }
+      },
+    }
+  );
+
+  const disableActions = isEditing || isDeleting;
 
   const options = form.watch("options");
   const correctOptions = form.watch("correctOptions");
@@ -126,8 +185,8 @@ export function AddMultiCorrectMcqForm({
   return (
     <Form {...form}>
       <form
-        id={FormIds.AddSingleCorrectMcq}
-        onSubmit={form.handleSubmit(executeAsync)}
+        id={FormIds.EditQuestion}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="flex h-full flex-col gap-4"
       >
         <QuestionFormCommonFields />
@@ -203,10 +262,27 @@ export function AddMultiCorrectMcqForm({
           />
         </div>
       </form>
-      <SheetFooter>
-        <Button type="submit" form={FormIds.AddSingleCorrectMcq}>
-          Add
-        </Button>
+      <SheetFooter className="flex w-full items-center justify-between">
+        <LoadingButton
+          disabled={disableActions}
+          isLoading={isDeleting}
+          variant="destructive"
+          onClick={async () =>
+            executeDelete({
+              questionId: id,
+            })
+          }
+        >
+          Delete
+        </LoadingButton>
+        <LoadingButton
+          disabled={disableActions}
+          isLoading={isEditing}
+          type="submit"
+          form={FormIds.EditQuestion}
+        >
+          Save
+        </LoadingButton>
       </SheetFooter>
     </Form>
   );

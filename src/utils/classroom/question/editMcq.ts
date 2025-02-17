@@ -1,4 +1,4 @@
-import { McqOption } from "@/schemas/questionSchema";
+import { type McqOption } from "@/schemas/questionSchema";
 import { mergeMcqOptionsAndCorrectness } from "./mergeMcqOptionsAndCorrectness";
 import { db } from "@/server/db";
 import { questionOptions } from "@/server/db/schema";
