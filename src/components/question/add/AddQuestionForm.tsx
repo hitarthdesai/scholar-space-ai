@@ -4,7 +4,11 @@ import { EnumQuestionType, type QuestionType } from "@/schemas/questionSchema";
 
 import { AddCodeQuestionForm } from "./AddCodeQuestionForm";
 
-import { type WithSheetOpenStateSetter } from "@/utils/types";
+import {
+  type WithCloseFormSheetMethod,
+  type WithCloseQuestionTypeDialogMethod,
+} from "@/utils/types";
+import { AddSingleCorrectMcqForm } from "./AddSingleCorrectMcqForm";
 
 type AddQuestionFormProps = {
   type: QuestionType;
@@ -13,15 +17,37 @@ type AddQuestionFormProps = {
 
 export const AddQuestionForm = ({
   type,
-  ...rest
-}: WithSheetOpenStateSetter<AddQuestionFormProps>) => {
+  assignmentId,
+  closeSheet,
+  closeQuestionTypeDialog,
+}: WithCloseQuestionTypeDialogMethod<
+  WithCloseFormSheetMethod<AddQuestionFormProps>
+>) => {
   switch (type) {
     case EnumQuestionType.Code:
-      return <AddCodeQuestionForm {...rest} />;
-    // case EnumQuestionType.SingleCorrectMcq:
-    //   return <AddSingleCorrectFormFields {...rest} />;
+      return (
+        <AddCodeQuestionForm
+          assignmentId={assignmentId}
+          closeSheet={closeSheet}
+          closeQuestionTypeDialog={closeQuestionTypeDialog}
+        />
+      );
+    case EnumQuestionType.SingleCorrectMcq:
+      return (
+        <AddSingleCorrectMcqForm
+          assignmentId={assignmentId}
+          closeSheet={closeSheet}
+          closeQuestionTypeDialog={closeQuestionTypeDialog}
+        />
+      );
     // case EnumQuestionType.MultiCorrectMcq:
-    //   return <AddSingleCorrectFormFields {...rest} />;
+    //   return (
+    //     <AddSingleCorrectFormFields
+    //       assignmentId={assignmentId}
+    //       closeSheet={closeSheet}
+    //       closeQuestionTypeDialog={closeQuestionTypeDialog}
+    //     />
+    //   );
     default:
       return null;
   }

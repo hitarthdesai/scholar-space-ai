@@ -40,7 +40,7 @@ export const questionOptions = sqliteTable("questionOption", {
     .notNull()
     .references(() => questions.id, { onDelete: "cascade" }),
   label: text("label").notNull(),
-  isCorrect: integer("isCorrect").notNull(),
+  isCorrect: integer("isCorrect", { mode: "boolean" }).notNull(),
 });
 
 export const classroomAssignments = sqliteTable("classroomAssignment", {

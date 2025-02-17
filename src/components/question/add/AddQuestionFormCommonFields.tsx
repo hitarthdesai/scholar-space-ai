@@ -48,7 +48,7 @@ export const AddQuestionFormCommonFields =
             <FormItem>
               <FormLabel>Type</FormLabel>
               <FormControl>
-                <Select {...field} onValueChange={field.onChange}>
+                <Select {...field} disabled>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>

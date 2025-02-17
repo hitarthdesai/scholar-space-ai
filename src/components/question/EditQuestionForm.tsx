@@ -18,12 +18,14 @@ import {
   toastDescriptionEditQuestion,
 } from "@/utils/constants/toast";
 import {
-  type EditFormDefaultValues,
-  editFormDefaultValuesSchema,
+  editCodeQuestionFormDefaultValuesSchema,
   editQuestionFormSchema,
   type EditQuestionForm as EditQuestionFormType,
+  editSingleCorrectMcqQuestionFormDefaultValuesSchema,
   EnumDeleteQuestionResult,
   EnumEditQuestionResult,
+  EnumQuestionType,
+  type QuestionType,
 } from "@/schemas/questionSchema";
 import { FormIds } from "@/utils/constants/form";
 import { editQuestion } from "@/actions/editQuestion";
@@ -36,23 +38,32 @@ import { LoadingButton } from "../ui/loading-button";
 import { deleteQuestion } from "@/actions/deleteQuestion";
 
 export type EditQuestionFormProps = {
-  editPromise: Promise<EditFormDefaultValues>;
+  id: string;
+  name: string;
+  type: QuestionType;
+  editPromise: Promise<unknown>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export const EditQuestionForm = ({
   setIsOpen,
+  id,
+  name,
+  type,
   editPromise,
 }: EditQuestionFormProps) => {
   const _editQuestionData = use(editPromise);
-  const { data, error } =
-    editFormDefaultValuesSchema.safeParse(_editQuestionData);
+  const { data, error } = (
+    type === EnumQuestionType.Code
+      ? editCodeQuestionFormDefaultValuesSchema
+      : editSingleCorrectMcqQuestionFormDefaultValuesSchema
+  ).safeParse(_editQuestionData);
 
   const editQuestionFormDefaultValues: EditQuestionFormType = {
-    questionId: data?.[0].id ?? "",
-    name: data?.[0]?.name ?? undefined,
-    question: data?.[1] ?? undefined,
-    starterCode: data?.[2] ?? undefined,
+    questionId: id,
+    name: name,
+    question: data?.[0] ?? undefined,
+    starterCode: "",
   };
 
   const router = useRouter();

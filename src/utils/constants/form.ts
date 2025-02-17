@@ -6,6 +6,8 @@ export const FormIds = {
   AddClassroom: "createClassroomForm",
   AddAssignment: "addAssignmentForm",
   AddCodeQuestion: "addCodeQuestionForm",
+  AddSingleCorrectMcq: "addSingleCorrectMcqForm",
+  AddMultiCorrectMcq: "addMultiCorrectMcqForm",
   AddFile: "addFileForm",
   EditFile: "editFileForm",
   EditClassroom: "editClassroomForm",

@@ -13,6 +13,7 @@ export async function getAssignmentQuestionsFromDb({
     .select({
       id: questions.id,
       name: questions.name,
+      type: questions.type,
     })
     .from(questions)
     .where(eq(questions.assignmentId, assignmentId));

@@ -5,7 +5,6 @@ import {
   type EnumQuestionType,
   type QuestionType,
 } from "@/schemas/questionSchema";
-import { type Dispatch, type SetStateAction } from "react";
 import { type z } from "zod";
 
 export type ExtractQuestionForm<T extends QuestionType> =
@@ -17,6 +16,10 @@ export type ExtractQuestionForm<T extends QuestionType> =
         ? z.infer<typeof addMultiCorrectMCQQuestionFormSchema>
         : never;
 
-export type WithSheetOpenStateSetter<T> = T & {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+export type WithCloseFormSheetMethod<T> = T & {
+  closeSheet: () => void;
+};
+
+export type WithCloseQuestionTypeDialogMethod<T> = T & {
+  closeQuestionTypeDialog: () => void;
 };

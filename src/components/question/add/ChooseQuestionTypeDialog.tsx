@@ -169,7 +169,8 @@ const ChooseQuestionTypeDialog = ({
                   <AddQuestionForm
                     type={questionType}
                     assignmentId={assignmentId}
-                    setIsOpen={setIsSheetOpen}
+                    closeSheet={() => setIsSheetOpen(false)}
+                    closeQuestionTypeDialog={() => setIsDialogOpen(false)}
                   />
                 </SheetContent>
               </Sheet>
