@@ -1,22 +1,26 @@
 "use server";
 
 import {
-  type AddCodeQuestionForm,
+  type AddMultiCorrectMCQQuestionForm,
   EnumAddQuestionResult,
   EnumQuestionType,
 } from "@/schemas/questionSchema";
+import { db } from "@/server/db";
+import { questionOptions } from "@/server/db/schema";
 import { addQuestionToDb } from "@/utils/classroom/addQuestionToDb";
 import { putObject } from "@/utils/storage/s3/putObject";
 import { randomUUID } from "crypto";
+import { mergeMcqOptionsAndCorrectness } from "./mergeMcqOptionsAndCorrectness";
 
-type AddCodeQuestionProps = AddCodeQuestionForm;
+type AddMultiCorrectMcqProps = AddMultiCorrectMCQQuestionForm;
 
-export const addCodeQuestion = async ({
+export const addMultiCorrectMcq = async ({
   question,
   name,
   assignmentId,
-  starterCode,
-}: AddCodeQuestionProps) => {
+  options,
+  correctOptions,
+}: AddMultiCorrectMcqProps) => {
   try {
     const newQuestionId = randomUUID();
     const questionTextFileName = `questions/${newQuestionId}/question.txt`;
@@ -31,24 +35,25 @@ export const addCodeQuestion = async ({
       return { type: EnumAddQuestionResult.NotUploaded };
     }
 
-    const starterCodeFileName = `questions/${newQuestionId}/starterCode.txt`;
-    const starterCodeBuffer = Buffer.from(starterCode, "utf-8");
-    const didStarterCodeUploadSucceed = await putObject({
-      body: starterCodeBuffer,
-      fileName: starterCodeFileName,
-      contentType: "text/plain",
-    });
-
-    if (!didStarterCodeUploadSucceed) {
-      return { type: EnumAddQuestionResult.NotUploaded };
-    }
-
     await addQuestionToDb({
       questionId: newQuestionId,
       name,
       assignmentId,
-      type: EnumQuestionType.Code,
+      type: EnumQuestionType.MultiCorrectMcq,
     });
+
+    const mergedOptions = mergeMcqOptionsAndCorrectness({
+      options,
+      correctOptions,
+    });
+
+    await db.insert(questionOptions).values(
+      mergedOptions.map((option) => ({
+        ...option,
+        questionId: newQuestionId,
+        optionId: randomUUID(),
+      }))
+    );
 
     return { type: EnumAddQuestionResult.QuestionAdded };
   } catch (e) {

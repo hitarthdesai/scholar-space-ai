@@ -34,6 +34,15 @@ export const questions = sqliteTable("question", {
     .default(EnumQuestionType.Code),
 });
 
+export const questionOptions = sqliteTable("questionOption", {
+  optionId: text("optionId").primaryKey().notNull(),
+  questionId: text("questionId")
+    .notNull()
+    .references(() => questions.id, { onDelete: "cascade" }),
+  label: text("label").notNull(),
+  isCorrect: integer("isCorrect", { mode: "boolean" }).notNull(),
+});
+
 export const classroomAssignments = sqliteTable("classroomAssignment", {
   classroomId: text("classroomId")
     .notNull()

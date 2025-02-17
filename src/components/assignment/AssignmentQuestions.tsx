@@ -1,53 +1,49 @@
 import { getAssignmentQuestionsFromDb } from "@/utils/classroom/getAssignmentQuestionsFromDb";
 import { AlertOctagonIcon, PencilIcon, ShieldQuestionIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import Link from "next/link";
 import { auth } from "@/utils/auth/config";
-import { db } from "@/server/db";
-import { questions } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
-import { getObject } from "@/utils/storage/s3/getObject";
-import { AddEditQuestionSheet } from "../question/AddEditQuestionSheet";
-import { EnumFormMode } from "@/schemas/formSchema";
 import assert from "assert";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
+import ChooseQuestionTypeDialog from "../question/add/ChooseQuestionTypeDialog";
+import { EnumQuestionType } from "@/schemas/questionSchema";
+import { EditQuestionDataWrapper } from "../question/edit/EditQuestionDataWrapper";
 
 type QuestionTitleProps = {
   id: string;
   name: string;
-  href: string;
-};
+} & (
+  | {
+      type: typeof EnumQuestionType.Code;
+      href: string;
+    }
+  | {
+      type:
+        | typeof EnumQuestionType.SingleCorrectMcq
+        | typeof EnumQuestionType.MultiCorrectMcq;
+    }
+);
 
-function QuestionTitle({ id, name, href }: QuestionTitleProps) {
-  const namePromise = db
-    .select({ name: questions.name, id: questions.id })
-    .from(questions)
-    .where(eq(questions.id, id))
-    .then((data) => data[0]);
-  const questionPromise = getObject({
-    fileName: `questions/${id}/question.txt`,
-  });
-  const starterCodePromise = getObject({
-    fileName: `questions/${id}/starterCode.txt`,
-  });
+function QuestionTitle({ type, id, name }: QuestionTitleProps) {
+  // const editCodeQuestionPromise = Promise.all([
+  //   questionPromise,
+  //   starterCodePromise,
+  // ]);
 
-  const editPromise = Promise.all([
-    namePromise,
-    questionPromise,
-    starterCodePromise,
-  ]);
+  // const optionsPromise = getQuestionOptionsFromDb({ questionId: id });
+  // const editSingleCorrectMcqQuestionPromise = Promise.all([
+  //   questionPromise,
+  //   optionsPromise,
+  // ]);
 
   return (
     <li className="flex flex-row items-center">
-      <Link href={href}>
-        <Button variant="link">{name}</Button>
-      </Link>
-      <AddEditQuestionSheet mode={EnumFormMode.Edit} editPromise={editPromise}>
+      <Button variant="link">{name}</Button>
+      <EditQuestionDataWrapper type={type} id={id}>
         <Button variant="ghost">
           <PencilIcon className="h-4 w-4" />
         </Button>
-      </AddEditQuestionSheet>
+      </EditQuestionDataWrapper>
     </li>
   );
 }
@@ -80,14 +76,11 @@ export async function AssignmentQuestions({
         <AlertOctagonIcon className="h-24 w-24" />
         <p>No questions found</p>
         {isAuthorizedToAddOrDelete && (
-          <AddEditQuestionSheet
-            mode={EnumFormMode.Add}
-            assignmentId={assignmentId}
-          >
+          <ChooseQuestionTypeDialog assignmentId={assignmentId}>
             <Button className="flex gap-2">
               Add a question <ShieldQuestionIcon />
             </Button>
-          </AddEditQuestionSheet>
+          </ChooseQuestionTypeDialog>
         )}
       </div>
     );
@@ -95,20 +88,29 @@ export async function AssignmentQuestions({
 
   return (
     <ol className="flex flex-col">
-      {questions.map(({ id, name }) => {
-        const href = `/classrooms/${classroomId}/assignments/${assignmentId}/questions/${id}`;
-        return <QuestionTitle key={id} id={id} href={href} name={name} />;
+      {questions.map(({ id, name, type }) => {
+        if (type === EnumQuestionType.Code) {
+          const href = `/classrooms/${classroomId}/assignments/${assignmentId}/questions/${id}`;
+          return (
+            <QuestionTitle
+              key={id}
+              id={id}
+              href={href}
+              name={name}
+              type={type}
+            />
+          );
+        }
+
+        return <QuestionTitle key={id} id={id} name={name} type={type} />;
       })}
       {isAuthorizedToAddOrDelete && (
         <li>
-          <AddEditQuestionSheet
-            mode={EnumFormMode.Add}
-            assignmentId={assignmentId}
-          >
+          <ChooseQuestionTypeDialog assignmentId={assignmentId}>
             <Button className="mt-2 flex gap-2">
               Add another question <ShieldQuestionIcon />
             </Button>
-          </AddEditQuestionSheet>
+          </ChooseQuestionTypeDialog>
         </li>
       )}
     </ol>
