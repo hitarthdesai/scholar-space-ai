@@ -1,0 +1,1 @@
+ALTER TABLE `question` ADD `type` text DEFAULT 'code' NOT NULL;

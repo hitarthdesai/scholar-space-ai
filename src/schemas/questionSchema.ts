@@ -9,6 +9,15 @@ const QUESTION_TEXT_MAX_LENGTH = 500;
 const STARTER_CODE_MIN_LENGTH = 10;
 const STARTER_CODE_MAX_LENGTH = 500;
 
+export const EnumQuestionType = {
+  Code: "code",
+  SingleCorrectMcq: "single",
+  MultiCorrectMcq: "multi",
+} as const;
+
+const questionTypeSchema = z.nativeEnum(EnumQuestionType);
+export type QuestionType = z.infer<typeof questionTypeSchema>;
+
 export const questionSchema = z.object({
   id: z.string().min(1),
   question: z.string().min(1),
@@ -53,8 +62,9 @@ export type AddEditQuestionSheetProps = z.infer<
   typeof addEditQuestionSheetPropsSchema
 >;
 
-export const addQuestionFormSchema = z.object({
+export const addCodeQuestionFormSchema = z.object({
   assignmentId: z.string().min(1),
+  type: z.literal(EnumQuestionType.Code),
   name: z.string().min(QUESTION_NAME_MIN_LENGTH).max(QUESTION_NAME_MAX_LENGTH),
   question: z
     .string()
@@ -65,6 +75,38 @@ export const addQuestionFormSchema = z.object({
     .min(STARTER_CODE_MIN_LENGTH)
     .max(STARTER_CODE_MAX_LENGTH),
 });
+
+export type AddCodeQuestionForm = z.infer<typeof addCodeQuestionFormSchema>;
+
+const addSingleCorrectMCQQuestionFormSchema = z.object({
+  assignmentId: z.string().min(1),
+  type: z.literal(EnumQuestionType.SingleCorrectMcq),
+  name: z.string().min(QUESTION_NAME_MIN_LENGTH).max(QUESTION_NAME_MAX_LENGTH),
+  question: z
+    .string()
+    .min(QUESTION_TEXT_MIN_LENGTH)
+    .max(QUESTION_TEXT_MAX_LENGTH),
+  options: z.array(z.string().min(1)),
+  correctOption: z.number(),
+});
+
+const addMultiCorrectMCQQuestionFormSchema = z.object({
+  assignmentId: z.string().min(1),
+  type: z.literal(EnumQuestionType.MultiCorrectMcq),
+  name: z.string().min(QUESTION_NAME_MIN_LENGTH).max(QUESTION_NAME_MAX_LENGTH),
+  question: z
+    .string()
+    .min(QUESTION_TEXT_MIN_LENGTH)
+    .max(QUESTION_TEXT_MAX_LENGTH),
+  options: z.array(z.string().min(1)),
+  correctOptions: z.array(z.number()),
+});
+
+export const addQuestionFormSchema = z.union([
+  addCodeQuestionFormSchema,
+  addSingleCorrectMCQQuestionFormSchema,
+  addMultiCorrectMCQQuestionFormSchema,
+]);
 
 export type AddQuestionForm = z.infer<typeof addQuestionFormSchema>;
 

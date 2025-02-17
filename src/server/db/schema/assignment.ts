@@ -4,6 +4,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { classrooms } from "./classroom";
 import { users } from "./auth";
 import { conversations } from "./chat";
+import { EnumQuestionType } from "@/schemas/questionSchema";
 
 export const assignments = sqliteTable("assignment", {
   id: text("id")
@@ -22,6 +23,15 @@ export const questions = sqliteTable("question", {
     .notNull()
     .references(() => assignments.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
+  type: text("type", {
+    enum: [
+      EnumQuestionType.Code,
+      EnumQuestionType.SingleCorrectMcq,
+      EnumQuestionType.MultiCorrectMcq,
+    ],
+  })
+    .notNull()
+    .default(EnumQuestionType.Code),
 });
 
 export const classroomAssignments = sqliteTable("classroomAssignment", {
