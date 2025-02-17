@@ -33,13 +33,9 @@ import { SheetFooter } from "../../ui/sheet";
 import { LoadingButton } from "../../ui/loading-button";
 import { deleteQuestion } from "@/actions/deleteQuestion";
 import { type WithCloseFormSheetMethod } from "@/utils/types";
+import { QuestionFormCommonFields } from "../add/QuestionFormCommonFields";
 
-export type EditQuestionFormProps = {
-  id: string;
-  name: string;
-  question: string;
-  starterCode: string;
-};
+type EditCodeQuestionFormProps = Omit<EditCodeQuestionFormType, "type">;
 
 export const EditCodeQuestionForm = ({
   id,
@@ -47,7 +43,7 @@ export const EditCodeQuestionForm = ({
   question,
   starterCode,
   closeSheet,
-}: WithCloseFormSheetMethod<EditQuestionFormProps>) => {
+}: WithCloseFormSheetMethod<EditCodeQuestionFormProps>) => {
   const defaultValues: DefaultValues<EditCodeQuestionFormType> = {
     id,
     name,
@@ -144,34 +140,7 @@ export const EditCodeQuestionForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex h-full flex-col gap-4"
       >
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input required {...field} />
-              </FormControl>
-              <FormDescription>Updated name of the question</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="question"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Question</FormLabel>
-              <FormControl>
-                <Textarea required {...field} />
-              </FormControl>
-              <FormDescription>Updated question text</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <QuestionFormCommonFields />
         <FormField
           control={form.control}
           name="starterCode"

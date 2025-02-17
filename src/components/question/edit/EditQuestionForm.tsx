@@ -4,6 +4,7 @@ import { EditCodeQuestionForm } from "./EditCodeQuestionForm";
 import { type EditPromise, EnumQuestionType } from "@/schemas/questionSchema";
 import { type WithCloseFormSheetMethod } from "@/utils/types";
 import { use } from "react";
+import { EditSingleCorrectMcqForm } from "./EditSingleCorrectMcqForm";
 
 type EditQuestionFormProps = {
   editPromise: EditPromise;
@@ -20,6 +21,11 @@ export function EditQuestionForm({
     case EnumQuestionType.Code: {
       return <EditCodeQuestionForm {...data} closeSheet={closeSheet} />;
     }
+
+    case EnumQuestionType.SingleCorrectMcq: {
+      return <EditSingleCorrectMcqForm {...data} closeSheet={closeSheet} />;
+    }
+
     default:
       return null;
   }
