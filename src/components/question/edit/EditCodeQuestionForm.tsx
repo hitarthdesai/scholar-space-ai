@@ -22,6 +22,7 @@ import {
   type EditCodeQuestionForm as EditCodeQuestionFormType,
   EnumDeleteQuestionResult,
   EnumEditQuestionResult,
+  EnumQuestionType,
 } from "@/schemas/questionSchema";
 import { FormIds } from "@/utils/constants/form";
 import { editQuestion } from "@/actions/editQuestion";
@@ -47,18 +48,18 @@ export const EditCodeQuestionForm = ({
   starterCode,
   closeSheet,
 }: WithCloseFormSheetMethod<EditQuestionFormProps>) => {
-  const editQuestionFormDefaultValues: DefaultValues<EditCodeQuestionFormType> =
-    {
-      questionId: id,
-      name,
-      question,
-      starterCode,
-    };
+  const defaultValues: DefaultValues<EditCodeQuestionFormType> = {
+    id,
+    name,
+    question,
+    starterCode,
+    type: EnumQuestionType.Code,
+  };
 
   const router = useRouter();
   const form = useForm<EditCodeQuestionFormType>({
     resolver: zodResolver(editCodeQuestionFormSchema),
-    defaultValues: editQuestionFormDefaultValues,
+    defaultValues,
   });
 
   const { executeAsync: executeEdit, isExecuting: isEditing } = useAction(
@@ -87,11 +88,10 @@ export const EditCodeQuestionForm = ({
   );
 
   const onSubmit = async (data: EditCodeQuestionFormType) => {
-    const hasNameChanged = data.name !== editQuestionFormDefaultValues.name;
-    const hasQuestionChanged =
-      data.question !== editQuestionFormDefaultValues.question;
+    const hasNameChanged = data.name !== defaultValues.name;
+    const hasQuestionChanged = data.question !== defaultValues.question;
     const hasStarterCodeChanged =
-      data.starterCode !== editQuestionFormDefaultValues.starterCode;
+      data.starterCode !== defaultValues.starterCode;
 
     if (!hasNameChanged && !hasQuestionChanged && !hasStarterCodeChanged) {
       toast({

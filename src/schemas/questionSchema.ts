@@ -160,7 +160,7 @@ const addQuestionResultSchema = z.nativeEnum(EnumAddQuestionResult);
 export type AddQuestionResult = z.infer<typeof addQuestionResultSchema>;
 
 export const editQuestionFormSchema = z.object({
-  questionId: z.string().min(1),
+  id: z.string().min(1),
   name: z
     .string()
     .min(QUESTION_NAME_MIN_LENGTH)

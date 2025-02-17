@@ -21,9 +21,9 @@ export const editQuestion = createSafeActionClient()
         return { type: EnumEditQuestionResult.NotAuthorized };
       }
 
-      const { question, name, questionId, starterCode } = parsedInput;
+      const { question, name, id, starterCode } = parsedInput;
       const isAuthorized = await canUserAccessQuestion({
-        questionId,
+        questionId: id,
         userId,
         accessType: EnumAccessType.Write,
       });
@@ -33,7 +33,7 @@ export const editQuestion = createSafeActionClient()
       }
 
       if (!!question && question.length > 0) {
-        const fileName = `questions/${questionId}/question.txt`;
+        const fileName = `questions/${id}/question.txt`;
         const buffer = Buffer.from(question, "utf-8");
         const didUploadSucceed = await putObject({
           body: buffer,
@@ -47,7 +47,7 @@ export const editQuestion = createSafeActionClient()
       }
 
       if (!!starterCode && starterCode.length > 0) {
-        const fileName = `questions/${questionId}/starterCode.txt`;
+        const fileName = `questions/${id}/starterCode.txt`;
         const buffer = Buffer.from(starterCode, "utf-8");
         const didUploadSucceed = await putObject({
           body: buffer,
@@ -63,7 +63,7 @@ export const editQuestion = createSafeActionClient()
       if (!!name) {
         await updateQuestionInDb({
           name,
-          questionId,
+          id,
         });
       }
 

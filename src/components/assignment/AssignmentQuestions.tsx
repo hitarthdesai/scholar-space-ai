@@ -2,12 +2,12 @@ import { getAssignmentQuestionsFromDb } from "@/utils/classroom/getAssignmentQue
 import { AlertOctagonIcon, PencilIcon, ShieldQuestionIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { auth } from "@/utils/auth/config";
-import { EditQuestion } from "../question/edit/EditQuestion";
 import assert from "assert";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import ChooseQuestionTypeDialog from "../question/add/ChooseQuestionTypeDialog";
 import { EnumQuestionType } from "@/schemas/questionSchema";
+import { EditQuestionDataWrapper } from "../question/edit/EditQuestionDataWrapper";
 
 type QuestionTitleProps = {
   id: string;
@@ -39,11 +39,11 @@ function QuestionTitle({ type, id, name }: QuestionTitleProps) {
   return (
     <li className="flex flex-row items-center">
       <Button variant="link">{name}</Button>
-      <EditQuestion type={type} id={id}>
+      <EditQuestionDataWrapper type={type} id={id}>
         <Button variant="ghost">
           <PencilIcon className="h-4 w-4" />
         </Button>
-      </EditQuestion>
+      </EditQuestionDataWrapper>
     </li>
   );
 }

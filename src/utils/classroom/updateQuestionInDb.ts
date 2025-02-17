@@ -3,18 +3,18 @@ import { questions } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 
 type UpdateQuestionInDbProps = {
-  questionId: string;
+  id: string;
   name: string;
 };
 
 export async function updateQuestionInDb({
+  id,
   name,
-  questionId,
 }: UpdateQuestionInDbProps) {
   return db
     .update(questions)
     .set({
       name,
     })
-    .where(eq(questions.id, questionId));
+    .where(eq(questions.id, id));
 }

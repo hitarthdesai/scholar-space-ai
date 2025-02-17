@@ -3,16 +3,16 @@ import { EnumQuestionType, type QuestionType } from "@/schemas/questionSchema";
 import { type PropsWithChildren } from "react";
 import { EditQuestionSheet } from "./EditQuestionSheet";
 
-export type EditQuestionProps = {
+export type EditQuestionDataWrapperProps = {
   type: QuestionType;
   id: string;
 };
 
-export function EditQuestion({
+export function EditQuestionDataWrapper({
   children,
   type,
   id,
-}: PropsWithChildren<EditQuestionProps>) {
+}: PropsWithChildren<EditQuestionDataWrapperProps>) {
   try {
     switch (type) {
       case EnumQuestionType.Code: {
