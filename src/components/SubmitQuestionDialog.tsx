@@ -21,10 +21,12 @@ import { toastDescriptionSubmitCode } from "@/utils/constants/toast";
 
 type SubmitQuestionDialogProps = {
   questionId: string;
+  disabledAfterSubmission: boolean;
 };
 
 export function SubmitQuestionDialog({
   children,
+  disabledAfterSubmission,
 }: PropsWithChildren<SubmitQuestionDialogProps>) {
   const { code, questionId } = useCodeContext();
   const [isOpen, setIsOpen] = useState(false);
@@ -43,6 +45,10 @@ export function SubmitQuestionDialog({
       });
 
       setIsOpen(false);
+
+      if (!isErroneous) {
+        window.location.reload();
+      }
     },
   });
 
@@ -64,7 +70,7 @@ export function SubmitQuestionDialog({
           <Button
             variant="outline"
             onClick={async () => await executeAsync({ questionId, code })}
-            disabled={isSubmitting}
+            disabled={isSubmitting || disabledAfterSubmission}
           >
             {isSubmitting ? (
               <Loader2 className="animate-spin p-0.5" />
