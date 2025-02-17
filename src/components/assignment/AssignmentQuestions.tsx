@@ -6,45 +6,58 @@ import assert from "assert";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import ChooseQuestionTypeDialog from "../question/add/ChooseQuestionTypeDialog";
-import { EnumQuestionType } from "@/schemas/questionSchema";
+import { type QuestionType } from "@/schemas/questionSchema";
 import { EditQuestionDataWrapper } from "../question/edit/EditQuestionDataWrapper";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { questionDisplayConfigByType } from "@/utils/constants/misc";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/utils/cn";
 
 type QuestionTitleProps = {
-  id: string;
+  classroomId: string;
+  assignmentId: string;
+  questionId: string;
   name: string;
-} & (
-  | {
-      type: typeof EnumQuestionType.Code;
-      href: string;
-    }
-  | {
-      type:
-        | typeof EnumQuestionType.SingleCorrectMcq
-        | typeof EnumQuestionType.MultiCorrectMcq;
-    }
-);
+  type: QuestionType;
+};
 
-function QuestionTitle({ type, id, name }: QuestionTitleProps) {
-  // const editCodeQuestionPromise = Promise.all([
-  //   questionPromise,
-  //   starterCodePromise,
-  // ]);
-
-  // const optionsPromise = getQuestionOptionsFromDb({ questionId: id });
-  // const editSingleCorrectMcqQuestionPromise = Promise.all([
-  //   questionPromise,
-  //   optionsPromise,
-  // ]);
+function QuestionTitle({ type, questionId, name }: QuestionTitleProps) {
+  const displayConfig = questionDisplayConfigByType[type];
 
   return (
-    <li className="flex flex-row items-center">
-      <Button variant="link">{name}</Button>
-      <EditQuestionDataWrapper type={type} id={id}>
-        <Button variant="ghost">
-          <PencilIcon className="h-4 w-4" />
-        </Button>
-      </EditQuestionDataWrapper>
-    </li>
+    <Accordion type="multiple" className="w-full border-x border-border">
+      <AccordionItem value={questionId}>
+        <div className="flex w-full items-center justify-between">
+          <div className="w-full">
+            <AccordionTrigger className="grow">
+              <div className="flex flex-col gap-2 pl-4">
+                <p>{name}</p>
+                <Badge
+                  className={cn(
+                    "flex items-center gap-2",
+                    displayConfig.badgeStyles
+                  )}
+                >
+                  {displayConfig.icon}
+                  {displayConfig.label}
+                </Badge>
+              </div>
+            </AccordionTrigger>
+          </div>
+          <EditQuestionDataWrapper type={type} id={questionId}>
+            <Button variant="ghost">
+              <PencilIcon className="h-4 w-4" />
+            </Button>
+          </EditQuestionDataWrapper>
+        </div>
+        <AccordionContent>Question Here</AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }
 
@@ -89,20 +102,17 @@ export async function AssignmentQuestions({
   return (
     <ol className="flex flex-col">
       {questions.map(({ id, name, type }) => {
-        if (type === EnumQuestionType.Code) {
-          const href = `/classrooms/${classroomId}/assignments/${assignmentId}/questions/${id}`;
-          return (
+        return (
+          <li className="flex flex-row items-center" key={id}>
             <QuestionTitle
-              key={id}
-              id={id}
-              href={href}
+              classroomId={classroomId}
+              assignmentId={assignmentId}
+              questionId={id}
               name={name}
               type={type}
             />
-          );
-        }
-
-        return <QuestionTitle key={id} id={id} name={name} type={type} />;
+          </li>
+        );
       })}
       {isAuthorizedToAddOrDelete && (
         <li>
