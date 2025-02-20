@@ -8,19 +8,19 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { DefaultValues, useForm } from "react-hook-form";
+import { type DefaultValues, useForm } from "react-hook-form";
 import { useAction } from "next-safe-action/hooks";
 import { saveMcqSelection } from "@/actions/saveMcqSelection";
 import {
   EnumQuestionType,
   EnumSaveMcqSelectionResult,
-  SaveMcqSelectionInput,
+  type SaveMcqSelectionInput,
   saveMcqSelectionInputSchema,
 } from "@/schemas/questionSchema";
 import { toast } from "@/components/ui/use-toast";
 import { toastDescriptionSaveMcqSelection } from "@/utils/constants/toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { getSingleCorrectMcqByIdForAttempt } from "@/utils/classroom/question/getSingleCorrectMcqByIdForAttempt";
+import { type getSingleCorrectMcqByIdForAttempt } from "@/utils/classroom/question/getSingleCorrectMcqByIdForAttempt";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -30,7 +30,6 @@ type ViewSingleCorrectMcqProps = {
 };
 
 export function ViewSingleCorrectMcq({
-  id,
   questionPromise,
 }: ViewSingleCorrectMcqProps) {
   const question = use(questionPromise);
