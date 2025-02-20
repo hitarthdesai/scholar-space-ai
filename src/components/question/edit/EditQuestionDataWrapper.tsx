@@ -2,8 +2,8 @@ import { getCodeQuestionById } from "@/utils/classroom/question/getCodeQuestionB
 import { EnumQuestionType, type QuestionType } from "@/schemas/questionSchema";
 import { type PropsWithChildren } from "react";
 import { EditQuestionSheet } from "./EditQuestionSheet";
-import { getSingleCorrectMcqById } from "@/utils/classroom/question/getSingleCorrectMcqById";
-import { getMultiCorrectMcqById } from "@/utils/classroom/question/getMultiCorrectMcqById";
+import { getSingleCorrectMcqByIdForEdit } from "@/utils/classroom/question/getSingleCorrectMcqByIdForEdit";
+import { getMultiCorrectMcqByIdForEdit } from "@/utils/classroom/question/getMultiCorrectMcqByIdForEdit";
 
 export type EditQuestionDataWrapperProps = {
   type: QuestionType;
@@ -29,7 +29,9 @@ export function EditQuestionDataWrapper({
     }
 
     case EnumQuestionType.SingleCorrectMcq: {
-      const editPromise = getSingleCorrectMcqById({ id });
+      const editPromise = getSingleCorrectMcqByIdForEdit({
+        id,
+      });
       return (
         <EditQuestionSheet
           type={EnumQuestionType.SingleCorrectMcq}
@@ -41,7 +43,7 @@ export function EditQuestionDataWrapper({
     }
 
     case EnumQuestionType.MultiCorrectMcq: {
-      const editPromise = getMultiCorrectMcqById({ id });
+      const editPromise = getMultiCorrectMcqByIdForEdit({ id });
       return (
         <EditQuestionSheet
           type={EnumQuestionType.MultiCorrectMcq}

@@ -1,52 +1,13 @@
 import { getAssignmentQuestionsFromDb } from "@/utils/classroom/getAssignmentQuestionsFromDb";
-import { AlertOctagonIcon, PencilIcon, ShieldQuestionIcon } from "lucide-react";
+import { AlertOctagonIcon, ShieldQuestionIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import ChooseQuestionTypeDialog from "../question/add/ChooseQuestionTypeDialog";
-import { EnumQuestionType } from "@/schemas/questionSchema";
-import { EditQuestionDataWrapper } from "../question/edit/EditQuestionDataWrapper";
-
-type QuestionTitleProps = {
-  id: string;
-  name: string;
-} & (
-  | {
-      type: typeof EnumQuestionType.Code;
-      href: string;
-    }
-  | {
-      type:
-        | typeof EnumQuestionType.SingleCorrectMcq
-        | typeof EnumQuestionType.MultiCorrectMcq;
-    }
-);
-
-function QuestionTitle({ type, id, name }: QuestionTitleProps) {
-  // const editCodeQuestionPromise = Promise.all([
-  //   questionPromise,
-  //   starterCodePromise,
-  // ]);
-
-  // const optionsPromise = getQuestionOptionsFromDb({ questionId: id });
-  // const editSingleCorrectMcqQuestionPromise = Promise.all([
-  //   questionPromise,
-  //   optionsPromise,
-  // ]);
-
-  return (
-    <li className="flex flex-row items-center">
-      <Button variant="link">{name}</Button>
-      <EditQuestionDataWrapper type={type} id={id}>
-        <Button variant="ghost">
-          <PencilIcon className="h-4 w-4" />
-        </Button>
-      </EditQuestionDataWrapper>
-    </li>
-  );
-}
+import { QuestionTitle } from "./QuestionTitle";
+import { Accordion } from "@/components/ui/accordion";
 
 type AssignmentQuestionsProps = {
   classroomId: string;
@@ -87,27 +48,32 @@ export async function AssignmentQuestions({
   }
 
   return (
-    <ol className="flex flex-col">
-      {questions.map(({ id, name, type }) => {
-        if (type === EnumQuestionType.Code) {
-          const href = `/classrooms/${classroomId}/assignments/${assignmentId}/questions/${id}`;
+    <ol className="flex max-w-6xl flex-col gap-3 px-2 sm:px-0">
+      <Accordion
+        type="multiple"
+        className="w-full border-x border-t border-border"
+        defaultValue={[questions.map(({ id }) => id)[1]]}
+      >
+        {questions.map(({ id, name, type }) => {
           return (
-            <QuestionTitle
-              key={id}
-              id={id}
-              href={href}
-              name={name}
-              type={type}
-            />
+            <li className="flex flex-row items-center" key={id}>
+              <QuestionTitle
+                isAuthorizedToAddOrDelete={isAuthorizedToAddOrDelete}
+                userId={userId}
+                classroomId={classroomId}
+                assignmentId={assignmentId}
+                questionId={id}
+                name={name}
+                type={type}
+              />
+            </li>
           );
-        }
-
-        return <QuestionTitle key={id} id={id} name={name} type={type} />;
-      })}
+        })}
+      </Accordion>
       {isAuthorizedToAddOrDelete && (
         <li>
           <ChooseQuestionTypeDialog assignmentId={assignmentId}>
-            <Button className="mt-2 flex gap-2">
+            <Button size="sm" className="mt-2 flex gap-2">
               Add another question <ShieldQuestionIcon />
             </Button>
           </ChooseQuestionTypeDialog>

@@ -332,3 +332,29 @@ export const EnumResetCodeResult = {
 
 const resetCodeResultSchema = z.nativeEnum(EnumResetCodeResult);
 export type ResetCodeResult = z.infer<typeof resetCodeResultSchema>;
+
+export const saveMcqSelectionInputSchema = z.union([
+  z.object({
+    type: z.literal(EnumQuestionType.SingleCorrectMcq),
+    questionId: z.string().min(1),
+    selectedOption: z.string().min(1),
+  }),
+  z.object({
+    type: z.literal(EnumQuestionType.MultiCorrectMcq),
+    questionId: z.string().min(1),
+    selectedOptions: z.array(z.string().min(1)).min(1),
+  }),
+]);
+
+export type SaveMcqSelectionInput = z.infer<typeof saveMcqSelectionInputSchema>;
+
+export const EnumSaveMcqSelectionResult = {
+  McqSelectionSaved: "mcqSelectionSaved",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+
+const saveMcqSelectionResultSchema = z.nativeEnum(EnumSaveMcqSelectionResult);
+export type SaveMcqSelectionResult = z.infer<
+  typeof saveMcqSelectionResultSchema
+>;
