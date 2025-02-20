@@ -9,7 +9,9 @@ type GetMultiCorrectMcqByIdProps = {
   id: string;
 };
 
-export const getMultiCorrectMcqById = ({ id }: GetMultiCorrectMcqByIdProps) => {
+export const getMultiCorrectMcqByIdForEdit = ({
+  id,
+}: GetMultiCorrectMcqByIdProps) => {
   const questionPromise = db
     .select({
       questionName: questions.name,
