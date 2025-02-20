@@ -18,17 +18,20 @@ import { EnumSubmitCodeResult } from "@/schemas/questionSchema";
 import { useCodeContext } from "@/contexts/CodeContext";
 import { toast } from "@/components/ui/use-toast";
 import { toastDescriptionSubmitCode } from "@/utils/constants/toast";
+import { useRouter } from "next/navigation";
 
 type SubmitQuestionDialogProps = {
   questionId: string;
+  disabled: boolean;
 };
 
 export function SubmitQuestionDialog({
   children,
+  disabled,
 }: PropsWithChildren<SubmitQuestionDialogProps>) {
   const { code, questionId } = useCodeContext();
   const [isOpen, setIsOpen] = useState(false);
-
+  const router = useRouter();
   const { executeAsync, isExecuting: isSubmitting } = useAction(submitCode, {
     onSuccess: ({ data }) => {
       if (!data?.type) return;
@@ -43,6 +46,10 @@ export function SubmitQuestionDialog({
       });
 
       setIsOpen(false);
+
+      if (!isErroneous) {
+        router.refresh();
+      }
     },
   });
 
@@ -64,7 +71,7 @@ export function SubmitQuestionDialog({
           <Button
             variant="outline"
             onClick={async () => await executeAsync({ questionId, code })}
-            disabled={isSubmitting}
+            disabled={isSubmitting || disabled}
           >
             {isSubmitting ? (
               <Loader2 className="animate-spin p-0.5" />

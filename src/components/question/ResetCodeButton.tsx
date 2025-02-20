@@ -9,7 +9,11 @@ import { EnumResetCodeResult } from "@/schemas/questionSchema";
 import { toast } from "../ui/use-toast";
 import { toastDescriptionResetCode } from "@/utils/constants/toast";
 
-export function ResetCodeButton() {
+type ResetCodeButtonProps = {
+  disabled: boolean;
+};
+
+export function ResetCodeButton({ disabled }: ResetCodeButtonProps) {
   const { questionId, updateCode } = useCodeContext();
   const { executeAsync } = useAction(resetCode, {
     onSettled({ result: { data } }) {
@@ -39,6 +43,7 @@ export function ResetCodeButton() {
       variant="outline"
       className="flex items-center justify-center gap-2"
       onClick={handleClick}
+      disabled={disabled}
     >
       Reset <RotateCcwIcon aria-hidden />
     </Button>

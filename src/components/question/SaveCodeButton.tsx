@@ -22,6 +22,10 @@ type ErrorAutoSavingCodeProps = {
   onDismiss: () => void;
 };
 
+type SaveCodeButtonProps = {
+  disabled: boolean;
+};
+
 function ErrorAutoSavingCode({ onDismiss }: ErrorAutoSavingCodeProps) {
   return (
     <Dialog
@@ -48,7 +52,7 @@ function ErrorAutoSavingCode({ onDismiss }: ErrorAutoSavingCodeProps) {
   );
 }
 
-export function SaveCodeButton() {
+export function SaveCodeButton({ disabled }: SaveCodeButtonProps) {
   const isMounted = useRef(false);
   const [dismissedErrorDialog, setDismissedErrorDialog] = useState(false);
   const handleDismissErrorDialog = useCallback(
@@ -78,7 +82,7 @@ export function SaveCodeButton() {
       variant="outline"
       className="flex h-8 w-24 items-center justify-center gap-2"
       onClick={async () => await executeAsync({ questionId, code })}
-      disabled={isExecuting}
+      disabled={isExecuting || disabled}
     >
       {isExecuting ? (
         <Loader2 className="animate-spin p-0.5" />
