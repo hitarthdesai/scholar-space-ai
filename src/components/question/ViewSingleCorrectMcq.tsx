@@ -25,7 +25,6 @@ import { CheckIcon } from "@radix-ui/react-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 type ViewSingleCorrectMcqProps = {
-  id: string;
   questionPromise: ReturnType<typeof getSingleCorrectMcqByIdForAttempt>;
 };
 
@@ -44,9 +43,8 @@ export function ViewSingleCorrectMcq({
     defaultValues,
   });
 
-  const { executeAsync } = useAction(saveMcqSelection, {
+  useAction(saveMcqSelection, {
     onSettled({ result: { data } }) {
-      console.log("data", data);
       if (!data) return;
 
       const isErroneous =
@@ -61,57 +59,57 @@ export function ViewSingleCorrectMcq({
     },
   });
 
+  // console.log("YOOOO");
+
+  // const values = form.watch();
+  // const debouncedValues = useDebounce(values, 500);
+  // const stringifiedValues = JSON.stringify(debouncedValues);
+  // useEffect(() => {
+  //   executeAsync(JSON.parse(stringifiedValues));
+  // }, [stringifiedValues]);
+
   return (
     <div className="flex p-4">
       <Form {...form}>
         <form className="flex flex-col gap-2">
           <div className="text-lg font-semibold">{question.question}</div>
-          <div className="">
-            <FormField
-              control={form.control}
-              name="selectedOption"
-              render={({ field }) => {
-                return (
-                  <FormItem>
-                    <FormControl>
-                      <RadioGroup
-                        {...field}
-                        onValueChange={async (v) => {
-                          field.onChange(v);
-                          await executeAsync({
-                            type: EnumQuestionType.SingleCorrectMcq,
-                            questionId: question.id,
-                            selectedOption: v,
-                          });
-                        }}
-                        defaultValue={question.selectedOption}
-                      >
-                        {question.options.map(({ value, label }) => {
-                          return (
-                            <FormItem
-                              key={value}
-                              className="flex items-center gap-2"
-                            >
-                              <FormControl>
-                                <RadioGroupItem
-                                  value={value}
-                                  indicator={
-                                    <CheckIcon className="h-3.5 w-3.5 fill-primary" />
-                                  }
-                                  className="!m-0"
-                                />
-                              </FormControl>
-                              <FormLabel className="!m-0">{label}</FormLabel>
-                            </FormItem>
-                          );
-                        })}
-                      </RadioGroup>
-                    </FormControl>
-                  </FormItem>
-                );
-              }}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="selectedOption"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormControl>
+                    <RadioGroup
+                      name={field.name}
+                      onValueChange={field.onChange}
+                      defaultValue={question.selectedOption}
+                    >
+                      {question.options.map(({ value, label }) => {
+                        return (
+                          <FormItem
+                            key={value}
+                            className="flex items-center gap-2"
+                          >
+                            <FormControl>
+                              <RadioGroupItem
+                                value={value}
+                                indicator={
+                                  <CheckIcon className="h-3.5 w-3.5 fill-primary" />
+                                }
+                                className="!m-0"
+                              />
+                            </FormControl>
+                            <FormLabel className="!m-0">{label}</FormLabel>
+                          </FormItem>
+                        );
+                      })}
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              );
+            }}
+          />
         </form>
       </Form>
     </div>

@@ -11,6 +11,10 @@ import { cn } from "@/utils/cn";
 import { SquareArrowOutUpRightIcon, PencilIcon } from "lucide-react";
 import { EditQuestionDataWrapper } from "@/components/question/edit/EditQuestionDataWrapper";
 import Link from "next/link";
+import { ViewSingleCorrectMcq } from "../question/ViewSingleCorrectMcq";
+import { getSingleCorrectMcqByIdForAttempt } from "@/utils/classroom/question/getSingleCorrectMcqByIdForAttempt";
+import { getMultiCorrectMcqByIdForAttempt } from "@/utils/classroom/question/getMultiCorrectMcqByIdForAttempt";
+import { ViewMultiCorrectMcq } from "../question/ViewMultiCorrectMcq";
 
 type QuestionTitleProps = {
   isAuthorizedToAddOrDelete: boolean;
@@ -24,6 +28,7 @@ type QuestionTitleProps = {
 
 export function QuestionTitle({
   type,
+  userId,
   classroomId,
   assignmentId,
   questionId,
@@ -49,22 +54,23 @@ export function QuestionTitle({
 
   const viewQuestion = () => {
     switch (type) {
-      // case EnumQuestionType.SingleCorrectMcq: {
-      //   const questionPromise = getSingleCorrectMcqByIdForAttempt({
-      //     id: questionId,
-      //     userId,
-      //   });
+      case EnumQuestionType.SingleCorrectMcq: {
+        const questionPromise = getSingleCorrectMcqByIdForAttempt({
+          id: questionId,
+          userId,
+        });
 
-      //   return (
-      //     <ViewSingleCorrectMcq
-      //       id={questionId}
-      //       questionPromise={questionPromise}
-      //     />
-      //   );
-      // }
+        return <ViewSingleCorrectMcq questionPromise={questionPromise} />;
+      }
 
-      // case EnumQuestionType.MultiCorrectMcq:
-      //   return <div>Multi Correct</div>;
+      case EnumQuestionType.MultiCorrectMcq:
+        const questionPromise = getMultiCorrectMcqByIdForAttempt({
+          id: questionId,
+          userId,
+        });
+
+        return <ViewMultiCorrectMcq questionPromise={questionPromise} />;
+
       default:
         return null;
     }

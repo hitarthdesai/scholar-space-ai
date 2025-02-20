@@ -52,6 +52,7 @@ export async function AssignmentQuestions({
       <Accordion
         type="multiple"
         className="w-full border-x border-t border-border"
+        defaultValue={[questions.map(({ id }) => id)[1]]}
       >
         {questions.map(({ id, name, type }) => {
           return (
