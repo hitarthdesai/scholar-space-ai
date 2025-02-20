@@ -27,11 +27,11 @@ export async function Question({ questionId }: QuestionProps) {
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
 
-  const isQuestionSubmitted = await getQuestionSubmission({
+  const questionSubmission = await getQuestionSubmission({
     userId,
     questionId,
   });
-  const notEdittable = isQuestionSubmitted.length > 0;
+  const isQuestionSubmitted = questionSubmission.length > 0;
   const question =
     (await getObject({ fileName: `questions/${questionId}/question.txt` })) ??
     "";
@@ -61,22 +61,22 @@ export async function Question({ questionId }: QuestionProps) {
             {question}
           </div>
           <div className="w-full grow">
-            <SolutionEditor notEdittable={notEdittable} />
+            <SolutionEditor editable={!isQuestionSubmitted} />
           </div>
           <div className="flex w-full items-center gap-2">
             <SubmitQuestionDialog
               questionId={questionId}
-              disabledAfterSubmission={notEdittable}
+              disabled={isQuestionSubmitted}
             >
               <Button
                 className="mr-auto flex items-center justify-center gap-2 bg-green-700 text-white hover:bg-green-300 hover:text-black"
-                disabled={notEdittable}
+                disabled={isQuestionSubmitted}
               >
                 Submit <SendHorizonalIcon aria-hidden />
               </Button>
             </SubmitQuestionDialog>
-            <ResetCodeButton disableAfterSubmission={notEdittable} />
-            <SaveCodeButton disableAfterSubmission={notEdittable} />
+            <ResetCodeButton disabled={isQuestionSubmitted} />
+            <SaveCodeButton disabled={isQuestionSubmitted} />
             <RunCodeButton />
           </div>
         </ResizablePanel>

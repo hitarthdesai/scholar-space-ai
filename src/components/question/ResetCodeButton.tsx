@@ -10,12 +10,10 @@ import { toast } from "../ui/use-toast";
 import { toastDescriptionResetCode } from "@/utils/constants/toast";
 
 type ResetCodeButtonProps = {
-  disableAfterSubmission: boolean;
+  disabled: boolean;
 };
 
-export function ResetCodeButton({
-  disableAfterSubmission,
-}: ResetCodeButtonProps) {
+export function ResetCodeButton({ disabled }: ResetCodeButtonProps) {
   const { questionId, updateCode } = useCodeContext();
   const { executeAsync } = useAction(resetCode, {
     onSettled({ result: { data } }) {
@@ -45,7 +43,7 @@ export function ResetCodeButton({
       variant="outline"
       className="flex items-center justify-center gap-2"
       onClick={handleClick}
-      disabled={disableAfterSubmission}
+      disabled={disabled}
     >
       Reset <RotateCcwIcon aria-hidden />
     </Button>

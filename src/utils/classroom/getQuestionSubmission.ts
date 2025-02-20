@@ -13,9 +13,7 @@ export async function getQuestionSubmission({
 }: getQuestionSubmissionProps) {
   return db
     .select({
-      userId: questionAttempts.userId,
-      questionId: questionAttempts.questionId,
-      submissionId: questionAttempts.submitted,
+      submitted: questionAttempts.submitted,
     })
     .from(questionAttempts)
     .where(

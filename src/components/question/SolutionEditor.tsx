@@ -4,15 +4,15 @@ import { useCodeContext } from "@/contexts/CodeContext";
 import { Editor } from "@monaco-editor/react";
 
 type SolutionEditorProps = {
-  notEdittable: boolean;
+  editable: boolean;
 };
 
-export function SolutionEditor({ notEdittable }: SolutionEditorProps) {
+export function SolutionEditor({ editable }: SolutionEditorProps) {
   const { code, updateCode } = useCodeContext();
   return (
     <Editor
       theme="vs-dark"
-      options={{ minimap: { enabled: false }, readOnly: !!notEdittable }}
+      options={{ minimap: { enabled: false }, readOnly: !editable }}
       defaultLanguage="python"
       value={code}
       onChange={(value) => value && updateCode(value)}
