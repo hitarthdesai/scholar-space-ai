@@ -23,6 +23,8 @@ export function saveMcqSelectionInDb({
         )
       );
 
+    if (selectedOptions.length === 0) return;
+
     const selections = selectedOptions.map((so) => ({
       questionId,
       userId,

@@ -15,6 +15,7 @@ import { ViewSingleCorrectMcq } from "../question/ViewSingleCorrectMcq";
 import { getSingleCorrectMcqByIdForAttempt } from "@/utils/classroom/question/getSingleCorrectMcqByIdForAttempt";
 import { getMultiCorrectMcqByIdForAttempt } from "@/utils/classroom/question/getMultiCorrectMcqByIdForAttempt";
 import { ViewMultiCorrectMcq } from "../question/ViewMultiCorrectMcq";
+import { Suspense } from "react";
 
 type QuestionTitleProps = {
   isAuthorizedToAddOrDelete: boolean;
@@ -114,7 +115,11 @@ export function QuestionTitle({
         )}
       </div>
       {type !== EnumQuestionType.Code && (
-        <AccordionContent>{viewQuestion()}</AccordionContent>
+        <AccordionContent>
+          <Suspense fallback={<div>Loading the question...</div>}>
+            {viewQuestion()}
+          </Suspense>
+        </AccordionContent>
       )}
     </AccordionItem>
   );
