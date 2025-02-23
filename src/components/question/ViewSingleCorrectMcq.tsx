@@ -75,9 +75,9 @@ export function ViewSingleCorrectMcq({
                     <RadioGroup
                       {...field}
                       name={field.name}
-                      onValueChange={(newValue) => {
+                      onValueChange={async (newValue) => {
                         field.onChange(newValue);
-                        form.handleSubmit(executeAsync)();
+                        await form.handleSubmit(executeAsync)();
                       }}
                       defaultValue={field.value}
                       value={field.value}

@@ -38,7 +38,7 @@ export function ViewMultiCorrectMcq({
   };
 
   const { executeAsync, isExecuting } = useAction(saveMcqSelection, {
-    onSettled({ result: { data, serverError, validationErrors } }) {
+    onSettled({ result: { data } }) {
       if (!data) return;
 
       const isErroneous =
@@ -60,12 +60,12 @@ export function ViewMultiCorrectMcq({
   });
 
   const selectedOptions = form.watch("selectedOptions");
-  const toggleSelectOption = (value: string) => {
+  const toggleSelectOption = async (value: string) => {
     const newSelectedOptions = selectedOptions.includes(value)
       ? selectedOptions.filter((o) => o !== value)
       : [...selectedOptions, value];
     form.setValue("selectedOptions", newSelectedOptions);
-    form.handleSubmit(executeAsync)();
+    await form.handleSubmit(executeAsync)();
   };
 
   return (
