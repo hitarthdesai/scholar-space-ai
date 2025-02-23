@@ -32,18 +32,13 @@ export function ViewSingleCorrectMcq({
   questionPromise,
 }: ViewSingleCorrectMcqProps) {
   const question = use(questionPromise);
-
   const defaultValues: DefaultValues<SaveMcqSelectionInput> = {
     type: EnumQuestionType.SingleCorrectMcq,
     questionId: question.id,
     selectedOption: question.selectedOption,
   };
-  const form = useForm<SaveMcqSelectionInput>({
-    resolver: zodResolver(saveMcqSelectionInputSchema),
-    defaultValues,
-  });
 
-  useAction(saveMcqSelection, {
+  const { executeAsync, isExecuting } = useAction(saveMcqSelection, {
     onSettled({ result: { data } }) {
       if (!data) return;
 
@@ -59,14 +54,11 @@ export function ViewSingleCorrectMcq({
     },
   });
 
-  // console.log("YOOOO");
-
-  // const values = form.watch();
-  // const debouncedValues = useDebounce(values, 500);
-  // const stringifiedValues = JSON.stringify(debouncedValues);
-  // useEffect(() => {
-  //   executeAsync(JSON.parse(stringifiedValues));
-  // }, [stringifiedValues]);
+  const form = useForm<SaveMcqSelectionInput>({
+    resolver: zodResolver(saveMcqSelectionInputSchema),
+    defaultValues,
+    disabled: isExecuting,
+  });
 
   return (
     <div className="flex p-4">
@@ -81,9 +73,14 @@ export function ViewSingleCorrectMcq({
                 <FormItem>
                   <FormControl>
                     <RadioGroup
+                      {...field}
                       name={field.name}
-                      onValueChange={field.onChange}
-                      defaultValue={question.selectedOption}
+                      onValueChange={(newValue) => {
+                        field.onChange(newValue);
+                        form.handleSubmit(executeAsync)();
+                      }}
+                      defaultValue={field.value}
+                      value={field.value}
                     >
                       {question.options.map(({ value, label }) => {
                         return (

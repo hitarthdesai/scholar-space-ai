@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect } from "react";
+import { use } from "react";
 import {
   Form,
   FormControl,
@@ -22,7 +22,6 @@ import { toastDescriptionSaveMcqSelection } from "@/utils/constants/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type getMultiCorrectMcqByIdForAttempt } from "@/utils/classroom/question/getMultiCorrectMcqByIdForAttempt";
 import { Checkbox } from "../ui/checkbox";
-import { useDebounce } from "@uidotdev/usehooks";
 
 type ViewSingleCorrectMcqProps = {
   questionPromise: ReturnType<typeof getMultiCorrectMcqByIdForAttempt>;
@@ -32,20 +31,14 @@ export function ViewMultiCorrectMcq({
   questionPromise,
 }: ViewSingleCorrectMcqProps) {
   const question = use(questionPromise);
-
   const defaultValues: DefaultValues<SaveMcqSelectionInput> = {
     type: EnumQuestionType.MultiCorrectMcq,
     questionId: question.id,
     selectedOptions: question.selectedOptions,
   };
-  const form = useForm<SaveMcqSelectionInput>({
-    resolver: zodResolver(saveMcqSelectionInputSchema),
-    defaultValues,
-  });
 
-  const { executeAsync } = useAction(saveMcqSelection, {
-    onSettled({ result: { data } }) {
-      console.log("data", data);
+  const { executeAsync, isExecuting } = useAction(saveMcqSelection, {
+    onSettled({ result: { data, serverError, validationErrors } }) {
       if (!data) return;
 
       const isErroneous =
@@ -60,19 +53,20 @@ export function ViewMultiCorrectMcq({
     },
   });
 
+  const form = useForm<SaveMcqSelectionInput>({
+    resolver: zodResolver(saveMcqSelectionInputSchema),
+    defaultValues,
+    disabled: isExecuting,
+  });
+
   const selectedOptions = form.watch("selectedOptions");
   const toggleSelectOption = (value: string) => {
     const newSelectedOptions = selectedOptions.includes(value)
       ? selectedOptions.filter((o) => o !== value)
       : [...selectedOptions, value];
     form.setValue("selectedOptions", newSelectedOptions);
+    form.handleSubmit(executeAsync)();
   };
-
-  const values = form.getValues();
-  const debouncedValues = useDebounce(values, 500);
-  useEffect(() => {
-    void executeAsync(debouncedValues);
-  }, [debouncedValues, executeAsync]);
 
   return (
     <div className="flex p-4">
