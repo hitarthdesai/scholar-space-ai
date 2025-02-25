@@ -15,6 +15,8 @@ type CodeContextState = {
   updateCode: (newCode: string) => void;
   output: string;
   setOutput: (newOutput: string) => void;
+  status: string;
+  setStatus: (newStatus: string) => void;
   questionId: string;
 };
 
@@ -23,6 +25,8 @@ const initialState: CodeContextState = {
   updateCode: () => undefined,
   output: "",
   setOutput: () => undefined,
+  status: "",
+  setStatus: () => undefined,
   questionId: "",
 };
 
@@ -40,6 +44,7 @@ export function CodeProvider({
 }: CodeProviderProps) {
   const [code, setCode] = useState(initialValue);
   const [output, setOutput] = useState("");
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     const storedCode = window.localStorage.getItem(questionId);
@@ -62,9 +67,11 @@ export function CodeProvider({
       updateCode,
       output,
       setOutput,
+      status,
+      setStatus,
       questionId,
     }),
-    [code, updateCode, output, setOutput, questionId]
+    [code, updateCode, output, setOutput, status, setStatus, questionId]
   );
 
   return (
