@@ -5,7 +5,8 @@ import { InfoIcon } from "lucide-react";
 import cn from "classnames";
 
 export function OutputSection() {
-  const { output, status } = useCodeContext();
+  const { result } = useCodeContext();
+  const { output, status } = result;
   const isThereAnyOutput = output.length > 0;
 
   const colorClass = cn({
