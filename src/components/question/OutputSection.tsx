@@ -2,7 +2,7 @@
 
 import { useCodeContext } from "@/contexts/CodeContext";
 import { InfoIcon } from "lucide-react";
-import cn from "classnames";
+import { cn } from "@/utils/cn";
 
 export function OutputSection() {
   const { result } = useCodeContext();
