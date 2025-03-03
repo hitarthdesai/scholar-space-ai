@@ -13,16 +13,16 @@ import React, {
 type CodeContextState = {
   code: string;
   updateCode: (newCode: string) => void;
-  output: string;
-  setOutput: (newOutput: string) => void;
+  result: { output: string; status: string };
+  setResult: (newResult: { output: string; status: string }) => void;
   questionId: string;
 };
 
 const initialState: CodeContextState = {
   code: "",
   updateCode: () => undefined,
-  output: "",
-  setOutput: () => undefined,
+  result: { output: "", status: "" },
+  setResult: () => undefined,
   questionId: "",
 };
 
@@ -39,7 +39,7 @@ export function CodeProvider({
   initialValue,
 }: CodeProviderProps) {
   const [code, setCode] = useState(initialValue);
-  const [output, setOutput] = useState("");
+  const [result, setResult] = useState({ output: "", status: "" });
 
   useEffect(() => {
     const storedCode = window.localStorage.getItem(questionId);
@@ -60,11 +60,11 @@ export function CodeProvider({
     () => ({
       code,
       updateCode,
-      output,
-      setOutput,
+      result,
+      setResult,
       questionId,
     }),
-    [code, updateCode, output, setOutput, questionId]
+    [code, updateCode, result, setResult, questionId]
   );
 
   return (

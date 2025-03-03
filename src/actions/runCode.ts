@@ -32,9 +32,12 @@ export const runCode = createSafeActionClient()
       const { status, output } = await getCodeOutput(code);
 
       if (status === 1) {
-        return { type: EnumRunCodeResult.CodeRanWithErrors, output };
+        return {
+          type: EnumRunCodeResult.CodeRanWithErrors,
+          output,
+          status: status.toString(),
+        };
       }
-
       const fileName = `questionAttempts/${questionId}/${userId}/output`;
       const buffer = Buffer.from(output ?? "", "utf-8");
       const didSaveSucceed = await putObject({
@@ -46,8 +49,11 @@ export const runCode = createSafeActionClient()
       if (!didSaveSucceed) {
         return { type: EnumRunCodeResult.Error };
       }
-
-      return { type: EnumRunCodeResult.CodeRanSuccessfully, output };
+      return {
+        type: EnumRunCodeResult.CodeRanSuccessfully,
+        output,
+        status: status.toString(),
+      };
     } catch (e) {
       console.error(e);
       return { type: EnumRunCodeResult.Error };

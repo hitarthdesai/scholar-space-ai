@@ -8,15 +8,17 @@ import { useCodeContext } from "@/contexts/CodeContext";
 import { useCallback } from "react";
 
 export function RunCodeButton() {
-  const { setOutput, questionId } = useCodeContext();
+  const { setResult, questionId } = useCodeContext();
   const { executeAsync } = useAction(runCode, {
     onSettled({ result: { data } }) {
       if (!data) return;
 
-      const { output } = data;
-      setOutput(
-        output ?? "There's a problem in running your code. Try again later."
-      );
+      const { output, status } = data;
+      setResult({
+        output:
+          output ?? "There's a problem in running your code. Try again later.",
+        status: status ?? "Unknown status",
+      });
     },
   });
 
