@@ -2,6 +2,7 @@ export const EnumPage = {
   Classroom: "Classroom",
   ClassroomParticipants: "ClassroomParticipants",
   ClassroomAssignments: "ClassroomAssignments",
+  ClassroomSubmissions: "ClassroomSubmissions",
   ClassroomFiles: "ClassroomFiles",
   ClassroomChats: "ClassroomChats",
   Assignment: "Assignment",
