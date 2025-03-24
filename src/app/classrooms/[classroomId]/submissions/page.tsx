@@ -1,18 +1,13 @@
-import { AddEditAssignmentSheet } from "@/components/assignment/AddEditAssignmentSheet";
-import { AssignmentCard } from "@/components/classroom/AssignmentCard";
 import { SubmissionCard } from "@/components/classroom/SubmissionCard";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
-import { Button } from "@/components/ui/button";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
-import { EnumFormMode } from "@/schemas/formSchema";
 import { auth } from "@/utils/auth/config";
 import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { canUserAccessClassroom } from "@/utils/classroom/canUserAccessClassroom";
 import { getClassroomAssignments } from "@/utils/classroom/getClassroomAssignments";
 import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
-import { BookPlus, BookPlusIcon } from "lucide-react";
 
 type PageProps = {
   params: {
@@ -48,7 +43,6 @@ export default async function Submissions({
   if (doesNotHaveAssignments) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-3">
-        <BookPlusIcon className="h-16 w-16" />
         <div className="flex max-w-60 text-center md:min-w-max">
           <p>There are no assignments for this classroom.</p>
         </div>
