@@ -42,7 +42,9 @@ export async function LoggedInHeader() {
       {/* <LogoutButton /> */}
       {/* </div> */}
       <div className="flex flex-row items-center justify-center gap-2">
-        <ThemeSwitcher />
+        <div className="border-r border-muted-foreground/30 pr-2">
+          <ThemeSwitcher />
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="flex flex-row items-center justify-center gap-1">
