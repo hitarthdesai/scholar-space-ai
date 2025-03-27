@@ -33,6 +33,7 @@ import { LoadingButton } from "../../ui/loading-button";
 import { deleteQuestion } from "@/actions/deleteQuestion";
 import { type WithCloseFormSheetMethod } from "@/utils/types";
 import { QuestionFormCommonFields } from "../add/QuestionFormCommonFields";
+import { StarterCodeEditor } from "../StarterCodeEditor";
 
 type EditCodeQuestionFormProps = Omit<EditCodeQuestionFormType, "type">;
 
@@ -156,7 +157,12 @@ export const EditCodeQuestionForm = ({
             <FormItem>
               <FormLabel>Starter code</FormLabel>
               <FormControl>
-                <Textarea required {...field} />
+                <div className="h-32 w-full grow">
+                  <StarterCodeEditor
+                    code={field.value}
+                    onChange={field.onChange}
+                  />
+                </div>
               </FormControl>
               <FormDescription>Updated starter code</FormDescription>
               <FormMessage />
