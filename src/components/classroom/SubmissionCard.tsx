@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ClipboardList } from "lucide-react";
 
-interface SubmissionCardProps {
+type SubmissionCardProps = {
   classroomId: string;
   assignment: {
     id: string;
     name: string;
     // submissionCount: number;
   };
-}
+};
 
 export function SubmissionCard({
   classroomId,

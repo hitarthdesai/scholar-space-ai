@@ -2,13 +2,13 @@ import { db } from "@/server/db";
 import { eq, and, isNotNull } from "drizzle-orm";
 import { questionAttempts, users } from "@/server/db/schema";
 
-type getQuestionSubmissionUsersProps = {
+type GetQuestionSubmissionUsersProps = {
   questionId: string;
 };
 
 export async function getQuestionSubmissionUsers({
   questionId,
-}: getQuestionSubmissionUsersProps) {
+}: GetQuestionSubmissionUsersProps) {
   return db
     .select({
       username: users.name,

@@ -5,7 +5,6 @@ import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { auth } from "@/utils/auth/config";
 import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
-import { canUserAccessClassroom } from "@/utils/classroom/canUserAccessClassroom";
 import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
 
@@ -22,16 +21,6 @@ export default async function SubmissionPage({
   const session = await auth();
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
-
-  const isAuthorizedToViewClassroom = await canUserAccessClassroom({
-    userId,
-    classroomId,
-    accessType: EnumAccessType.Read,
-  });
-
-  if (!isAuthorizedToViewClassroom) {
-    return <NotAuthorizedToViewPage />;
-  }
 
   const isAuthorizedToViewAssignment = await canUserAccessAssignment({
     assignmentId,
