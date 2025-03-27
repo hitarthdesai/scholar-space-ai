@@ -46,7 +46,7 @@ import {
   EnumDeleteQuestionResult,
   EnumEditQuestionResult,
   EnumResetCodeResult,
-  EnumSubmitCodeResult,
+  EnumSubmitAssignmentAttemptResult,
   EnumSaveMcqSelectionResult,
 } from "@/schemas/questionSchema";
 import {
@@ -316,11 +316,15 @@ export const toastDescriptionDeleteFile: Record<DeleteFileResult, string> = {
   [EnumDeleteFileResult.FileDeleted]: "Your file has been deleted successfully",
 };
 
-export const toastDescriptionSubmitCode: Record<SubmitCodeResult, string> = {
-  [EnumSubmitCodeResult.CodeSubmitted]: "The code was submitted successfully.",
-  [EnumSubmitCodeResult.NotAuthorized]:
+export const toastDescriptionSubmitAssignmentAttempt: Record<
+  SubmitCodeResult,
+  string
+> = {
+  [EnumSubmitAssignmentAttemptResult.Submitted]:
+    "The code was submitted successfully.",
+  [EnumSubmitAssignmentAttemptResult.NotAuthorized]:
     "You are not authorized to submit code.",
-  [EnumSubmitCodeResult.Error]:
+  [EnumSubmitAssignmentAttemptResult.Error]:
     "Unable to submit code. Please try again later.",
 };
 

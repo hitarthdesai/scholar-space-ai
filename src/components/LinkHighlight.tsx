@@ -12,5 +12,5 @@ export function LinkHighlight({ href }: LinkHighlightProps) {
 
   if (!isCurrentPathname) return null;
 
-  return <div className="w-full border-b-2 border-white" />;
+  return <div className="w-full border-b-2 border-black dark:border-white" />;
 }

@@ -7,7 +7,7 @@ import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { canUserAccessQuestion } from "@/utils/classroom/canUserAccessQuestion";
 import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
-import { getQuestionAttempts } from "@/utils/classroom/getQuestionAttempts";
+import { getQuestionInfoForUser } from "@/utils/classroom/getQuestionInfoForUser";
 import { addQuestionAttemptToDb } from "@/utils/classroom/addQuestionAttemptToDb";
 
 type PageProps = {
@@ -37,17 +37,16 @@ export default async function QuestionPage({
     return <NotAuthorizedToViewPage />;
   }
 
-  const attempts = await getQuestionAttempts({
+  const questionInfo = await getQuestionInfoForUser({
+    assignmentId,
     questionId,
     userId,
   });
-
-  const hasVisited = attempts.length > 0;
-
-  if (!hasVisited) {
+  if (!questionInfo) {
     await addQuestionAttemptToDb({ userId, questionId });
   }
 
+  const isAssignmentSubmitted = !!questionInfo?.isAssignmentSubmitted;
   const breadcrumbs = await getBreadcrumbsByPage({
     page: EnumPage.Question,
     questionId,
@@ -57,7 +56,10 @@ export default async function QuestionPage({
     <div className="flex h-full w-full flex-col gap-4">
       <PageBreadcrumbs breadcrumbs={breadcrumbs} />
       <main className="grow">
-        <Question questionId={questionId} />
+        <Question
+          questionId={questionId}
+          isAssignmentSubmitted={isAssignmentSubmitted}
+        />
       </main>
     </div>
   );

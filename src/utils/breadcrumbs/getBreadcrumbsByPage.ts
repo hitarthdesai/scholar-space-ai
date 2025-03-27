@@ -23,6 +23,10 @@ type GetBreadcrumbsByPageProps =
       classroomId: string;
     }
   | {
+      page: (typeof EnumPage)["ClassroomSubmissions"];
+      classroomId: string;
+    }
+  | {
       page: (typeof EnumPage)["ClassroomChats"];
       classroomId: string;
     }
@@ -32,6 +36,10 @@ type GetBreadcrumbsByPageProps =
     }
   | {
       page: (typeof EnumPage)["Assignment"];
+      assignmentId: string;
+    }
+  | {
+      page: (typeof EnumPage)["Submission"];
       assignmentId: string;
     }
   | {
@@ -47,6 +55,7 @@ export async function getBreadcrumbsByPage(
     case EnumPage.ClassroomParticipants:
     case EnumPage.ClassroomAssignments:
     case EnumPage.ClassroomFiles:
+    case EnumPage.ClassroomSubmissions:
     case EnumPage.ClassroomChats:
       const [{ classroomId, classroomName }] = await db
         .select({
@@ -80,6 +89,13 @@ export async function getBreadcrumbsByPage(
           breadcrumbs.push({
             label: "Assignments",
             href: `/classrooms/${classroomId}/assignments`,
+          });
+          return breadcrumbs;
+        }
+        case EnumPage.ClassroomSubmissions: {
+          breadcrumbs.push({
+            label: "Submissions",
+            href: `/classrooms/${classroomId}/submissions`,
           });
           return breadcrumbs;
         }
@@ -139,6 +155,48 @@ export async function getBreadcrumbsByPage(
         {
           label: assignmentName,
           href: `/classrooms/${classroomId}/assignments/${assignmentId}`,
+        },
+      ];
+    }
+    case EnumPage.Submission: {
+      const [{ classroomId, classroomName, assignmentId, assignmentName }] =
+        await db
+          .select({
+            classroomId: classroomAssignments.classroomId,
+            classroomName: classrooms.name,
+            assignmentId: assignments.id,
+            assignmentName: assignments.name,
+          })
+          .from(classroomAssignments)
+          .innerJoin(
+            classrooms,
+            eq(classroomAssignments.classroomId, classrooms.id)
+          )
+          .innerJoin(
+            assignments,
+            eq(classroomAssignments.assignmentId, props.assignmentId)
+          );
+
+      return [
+        {
+          label: "Classrooms",
+          href: "/classrooms",
+        },
+        {
+          label: classroomName,
+          href: `/classrooms/${classroomId}`,
+        },
+        {
+          label: "Assignments",
+          href: `/classrooms/${classroomId}/assignments`,
+        },
+        {
+          label: assignmentName,
+          href: `/classrooms/${classroomId}/assignments/${assignmentId}`,
+        },
+        {
+          label: "Submissions",
+          href: `/classrooms/${classroomId}/assignments/${assignmentId}/submissions`,
         },
       ];
     }

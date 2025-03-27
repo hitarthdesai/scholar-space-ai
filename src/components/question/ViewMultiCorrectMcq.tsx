@@ -24,10 +24,12 @@ import { type getMultiCorrectMcqByIdForAttempt } from "@/utils/classroom/questio
 import { Checkbox } from "../ui/checkbox";
 
 type ViewSingleCorrectMcqProps = {
+  disabled: boolean;
   questionPromise: ReturnType<typeof getMultiCorrectMcqByIdForAttempt>;
 };
 
 export function ViewMultiCorrectMcq({
+  disabled,
   questionPromise,
 }: ViewSingleCorrectMcqProps) {
   const question = use(questionPromise);
@@ -56,7 +58,7 @@ export function ViewMultiCorrectMcq({
   const form = useForm<SaveMcqSelectionInput>({
     resolver: zodResolver(saveMcqSelectionInputSchema),
     defaultValues,
-    disabled: isExecuting,
+    disabled: disabled || isExecuting,
   });
 
   const selectedOptions = form.watch("selectedOptions");
@@ -76,13 +78,14 @@ export function ViewMultiCorrectMcq({
           <FormField
             control={form.control}
             name="selectedOptions"
-            render={() => (
+            render={({ field }) => (
               <FormItem>
                 {question.options.map(({ value, label }) => {
                   return (
                     <FormItem key={value} className="flex items-center gap-2">
                       <FormControl>
                         <Checkbox
+                          disabled={!!field.disabled}
                           value={value}
                           checked={selectedOptions.includes(value)}
                           onCheckedChange={() => toggleSelectOption(value)}
