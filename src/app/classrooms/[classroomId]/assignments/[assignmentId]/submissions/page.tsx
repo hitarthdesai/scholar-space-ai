@@ -32,7 +32,7 @@ export default async function SubmissionPage({
     assignmentId,
     classroomId,
     userId,
-    accessType: EnumAccessType.Read,
+    accessType: EnumAccessType.Write,
   });
 
   if (!isAuthorizedToViewAssignment) {

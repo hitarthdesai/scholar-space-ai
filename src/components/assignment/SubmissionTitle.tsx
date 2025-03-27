@@ -59,7 +59,9 @@ export function SubmissionTitle({
           userId: userIds[0],
         });
 
-        return <ViewSingleCorrectMcq questionPromise={questionPromise} />;
+        return (
+          <ViewSingleCorrectMcq disabled questionPromise={questionPromise} />
+        );
       }
 
       case EnumQuestionType.MultiCorrectMcq: {
@@ -68,7 +70,9 @@ export function SubmissionTitle({
           userId: userIds[0],
         });
 
-        return <ViewMultiCorrectMcq questionPromise={questionPromise} />;
+        return (
+          <ViewMultiCorrectMcq disabled questionPromise={questionPromise} />
+        );
       }
 
       case EnumQuestionType.Code:
