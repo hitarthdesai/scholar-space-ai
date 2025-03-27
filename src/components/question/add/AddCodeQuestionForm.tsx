@@ -57,9 +57,6 @@ export function AddCodeQuestionForm({
     defaultValues,
   });
 
-  console.log("form", form);
-  console.log("form errors:", form.getValues("starterCode"));
-
   const router = useRouter();
   const { executeAsync } = useAction(addQuestion, {
     onSuccess({ data }) {
