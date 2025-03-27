@@ -41,6 +41,7 @@ export const EditCodeQuestionForm = ({
   id,
   name,
   question,
+  grade,
   starterCode,
   closeSheet,
 }: WithCloseFormSheetMethod<EditCodeQuestionFormProps>) => {
@@ -48,6 +49,7 @@ export const EditCodeQuestionForm = ({
     id,
     name,
     question,
+    grade,
     starterCode,
     type: EnumQuestionType.Code,
   };
@@ -86,10 +88,16 @@ export const EditCodeQuestionForm = ({
   const onSubmit = async (data: EditCodeQuestionFormType) => {
     const hasNameChanged = data.name !== defaultValues.name;
     const hasQuestionChanged = data.question !== defaultValues.question;
+    const hasGradeChanged = data.grade !== defaultValues.grade;
     const hasStarterCodeChanged =
       data.starterCode !== defaultValues.starterCode;
 
-    if (!hasNameChanged && !hasQuestionChanged && !hasStarterCodeChanged) {
+    if (
+      !hasNameChanged &&
+      !hasQuestionChanged &&
+      !hasStarterCodeChanged &&
+      !hasGradeChanged
+    ) {
       toast({
         title: "No changes detected",
         description: "You haven't made any changes to the form.",
@@ -102,6 +110,7 @@ export const EditCodeQuestionForm = ({
       ...data,
       name: hasNameChanged ? data.name : undefined,
       question: hasQuestionChanged ? data.question : undefined,
+      grade: hasGradeChanged ? data.grade : undefined,
       starterCode: hasStarterCodeChanged ? data.starterCode : undefined,
     });
   };

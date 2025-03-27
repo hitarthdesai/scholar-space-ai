@@ -49,6 +49,7 @@ export function AddCodeQuestionForm({
     assignmentId,
     name: "",
     question: "",
+    grade: 0,
     starterCode: "",
   };
 
@@ -80,6 +81,8 @@ export function AddCodeQuestionForm({
       }
     },
   });
+
+  console.log("grade", form.watch("grade"));
 
   return (
     <Form {...form}>

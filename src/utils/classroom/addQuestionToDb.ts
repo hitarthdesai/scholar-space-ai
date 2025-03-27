@@ -7,6 +7,7 @@ type AddQuestionToDbProps = {
   name: string;
   assignmentId: string;
   type: QuestionType;
+  grade: number;
 };
 
 export async function addQuestionToDb({
@@ -14,11 +15,13 @@ export async function addQuestionToDb({
   name,
   assignmentId,
   type,
+  grade,
 }: AddQuestionToDbProps) {
   return db.insert(questions).values({
     id: questionId,
     name,
     assignmentId,
     type,
+    grade,
   });
 }

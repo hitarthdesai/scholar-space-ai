@@ -17,6 +17,30 @@ export const assignments = sqliteTable("assignment", {
     .default(sql`(CURRENT_TIMESTAMP)`),
 });
 
+export const assignmentAttempts = sqliteTable("assignmentAttempt", {
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  assignmentId: text("assignmentId")
+    .notNull()
+    .references(() => assignments.id, { onDelete: "cascade" }),
+  submitted: integer("submitted", { mode: "timestamp_ms" }),
+});
+
+export const assignmentAttemptsRelations = relations(
+  assignmentAttempts,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [assignmentAttempts.userId],
+      references: [users.id],
+    }),
+    assignment: one(assignments, {
+      fields: [assignmentAttempts.assignmentId],
+      references: [assignments.id],
+    }),
+  })
+);
+
 export const questions = sqliteTable("question", {
   id: text("id").primaryKey().notNull(),
   assignmentId: text("assignmentId")
@@ -32,6 +56,7 @@ export const questions = sqliteTable("question", {
   })
     .notNull()
     .default(EnumQuestionType.Code),
+  grade: integer("grade").notNull().default(0),
 });
 
 export const questionOptions = sqliteTable("questionOption", {
@@ -116,9 +141,6 @@ export const questionAttempts = sqliteTable("questionAttempt", {
   conversationId: text("conversationId").references(() => conversations.id, {
     onDelete: "set null",
   }),
-  submitted: integer("submitted", { mode: "timestamp_ms" }),
-  // TODO: Remove this column. We store code in AWS S3 now.
-  answer: text("answer", { length: 255 }).notNull(),
 });
 
 export const questionAttemptsRelations = relations(

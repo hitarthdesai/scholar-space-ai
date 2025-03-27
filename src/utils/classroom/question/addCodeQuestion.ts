@@ -16,6 +16,7 @@ export const addCodeQuestion = async ({
   name,
   assignmentId,
   starterCode,
+  grade,
 }: AddCodeQuestionProps) => {
   try {
     const newQuestionId = randomUUID();
@@ -48,6 +49,7 @@ export const addCodeQuestion = async ({
       name,
       assignmentId,
       type: EnumQuestionType.Code,
+      grade,
     });
 
     return { type: EnumAddQuestionResult.QuestionAdded };

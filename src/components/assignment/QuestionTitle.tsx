@@ -16,15 +16,18 @@ import { getSingleCorrectMcqByIdForAttempt } from "@/utils/classroom/question/ge
 import { getMultiCorrectMcqByIdForAttempt } from "@/utils/classroom/question/getMultiCorrectMcqByIdForAttempt";
 import { ViewMultiCorrectMcq } from "../question/ViewMultiCorrectMcq";
 import { Suspense } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 type QuestionTitleProps = {
   isAuthorizedToAddOrDelete: boolean;
+  isViewOnly: boolean;
   userId: string;
   classroomId: string;
   assignmentId: string;
   questionId: string;
   name: string;
   type: QuestionType;
+  grade: number;
 };
 
 export function QuestionTitle({
@@ -34,34 +37,56 @@ export function QuestionTitle({
   assignmentId,
   questionId,
   name,
+  grade,
+  isViewOnly,
   isAuthorizedToAddOrDelete,
 }: QuestionTitleProps) {
   const displayConfig = questionDisplayConfigByType[type];
 
-  const title = () => (
-    <div className="flex flex-col gap-2 pl-4">
-      <p>{name}</p>
-      <Badge
-        className={cn(
-          "flex w-fit items-center gap-2",
-          displayConfig.badgeStyles
-        )}
-      >
-        {displayConfig.icon}
-        {displayConfig.label}
-      </Badge>
-    </div>
-  );
-
   const viewQuestion = () => {
     switch (type) {
+      case EnumQuestionType.Code:
+        return (
+          <div className="flex items-center justify-between pr-4">
+            <Link
+              href={`/classrooms/${classroomId}/assignments/${assignmentId}/questions/${questionId}`}
+              target="_blank"
+            >
+              <Button
+                size="sm"
+                className="flex max-w-32 items-center gap-2 sm:max-w-full"
+              >
+                <SquareArrowOutUpRightIcon className="h-4 w-4" />{" "}
+                {isViewOnly ? (
+                  <>
+                    <p className="hidden sm:block">View in the code editor</p>
+                    <p className="block sm:hidden">View</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="hidden sm:block">
+                      Attempt in the code editor
+                    </p>
+                    <p className="block sm:hidden">Attempt</p>
+                  </>
+                )}
+              </Button>
+            </Link>
+          </div>
+        );
+
       case EnumQuestionType.SingleCorrectMcq: {
         const questionPromise = getSingleCorrectMcqByIdForAttempt({
           id: questionId,
           userId,
         });
 
-        return <ViewSingleCorrectMcq questionPromise={questionPromise} />;
+        return (
+          <ViewSingleCorrectMcq
+            disabled={isViewOnly}
+            questionPromise={questionPromise}
+          />
+        );
       }
 
       case EnumQuestionType.MultiCorrectMcq:
@@ -70,7 +95,12 @@ export function QuestionTitle({
           userId,
         });
 
-        return <ViewMultiCorrectMcq questionPromise={questionPromise} />;
+        return (
+          <ViewMultiCorrectMcq
+            disabled={isViewOnly}
+            questionPromise={questionPromise}
+          />
+        );
 
       default:
         return null;
@@ -80,47 +110,46 @@ export function QuestionTitle({
   return (
     <AccordionItem value={questionId} className="w-full">
       <div className="flex w-full items-center justify-between">
-        <div className="w-full">
-          {type === EnumQuestionType.Code ? (
-            <div className="flex items-center justify-between pr-4">
-              <div className="pb-4 pt-2">{title()}</div>
-              <Link
-                href={`/classrooms/${classroomId}/assignments/${assignmentId}/questions/${questionId}`}
-                target="_blank"
-              >
-                <Button
-                  size="sm"
-                  className="flex max-w-32 items-center gap-2 sm:max-w-full"
+        <Card className="w-full border-none">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <AccordionTrigger
+              headerClassname="flex w-full items-center justify-between"
+              className="px-4 hover:bg-secondary hover:no-underline"
+            >
+              <CardTitle className="flex w-full flex-row items-center gap-2">
+                <Badge
+                  className={cn(
+                    "flex w-fit items-center gap-2",
+                    displayConfig.badgeStyles
+                  )}
                 >
-                  <SquareArrowOutUpRightIcon className="h-4 w-4" />{" "}
-                  <p className="hidden sm:block">Attempt in the code editor</p>
-                  <p className="block sm:hidden">Attempt</p>
-                </Button>
-              </Link>
-            </div>
-          ) : (
-            <AccordionTrigger className="grow pr-4 hover:bg-secondary hover:no-underline">
-              {title()}
+                  {displayConfig.icon}
+                </Badge>
+                {name}{" "}
+                <Badge variant="secondary">
+                  {grade} {grade === 1 ? "point" : "points"}
+                </Badge>
+              </CardTitle>
             </AccordionTrigger>
-          )}
-        </div>
-        {isAuthorizedToAddOrDelete && (
-          <div className="flex items-center">
-            <EditQuestionDataWrapper type={type} id={questionId}>
-              <Button variant="ghost">
-                <PencilIcon className="h-4 w-4" />
-              </Button>
-            </EditQuestionDataWrapper>
-          </div>
-        )}
+            {isAuthorizedToAddOrDelete && (
+              <div className="flex items-center">
+                <EditQuestionDataWrapper type={type} id={questionId}>
+                  <Button variant="ghost">
+                    <PencilIcon className="h-4 w-4" />
+                  </Button>
+                </EditQuestionDataWrapper>
+              </div>
+            )}
+          </CardHeader>
+          <CardContent>
+            <AccordionContent>
+              <Suspense fallback={<div>Loading the question...</div>}>
+                {viewQuestion()}
+              </Suspense>
+            </AccordionContent>
+          </CardContent>
+        </Card>
       </div>
-      {type !== EnumQuestionType.Code && (
-        <AccordionContent>
-          <Suspense fallback={<div>Loading the question...</div>}>
-            {viewQuestion()}
-          </Suspense>
-        </AccordionContent>
-      )}
     </AccordionItem>
   );
 }

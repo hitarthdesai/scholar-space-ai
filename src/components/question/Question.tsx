@@ -4,8 +4,6 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { SolutionEditor } from "./SolutionEditor";
-import { Button } from "../ui/button";
-import { SendHorizonalIcon } from "lucide-react";
 import { QuestionTabs } from "./QuestionTabs";
 import { RunCodeButton } from "./RunCodeButton";
 import { CodeProvider } from "@/contexts/CodeContext";
@@ -15,36 +13,44 @@ import { SaveCodeButton } from "./SaveCodeButton";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
 import { ResetCodeButton } from "./ResetCodeButton";
-import { SubmitQuestionDialog } from "../SubmitQuestionDialog";
-import { getQuestionSubmission } from "@/utils/classroom/getQuestionSubmission";
+import { getQuestionGradeById } from "@/utils/classroom/question/getQuestionGradeById";
+import { CardTitle } from "../ui/card";
 
 type QuestionProps = {
   questionId: string;
+  isAssignmentSubmitted: boolean;
 };
 
-export async function Question({ questionId }: QuestionProps) {
+export async function Question({
+  questionId,
+  isAssignmentSubmitted,
+}: QuestionProps) {
   const session = await auth();
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
 
-  const questionSubmission = await getQuestionSubmission({
-    userId,
-    questionId,
+  const questionDetailsPromise = getQuestionGradeById({
+    id: questionId,
   });
-  const isQuestionSubmitted = questionSubmission.length > 0;
-  const question =
-    (await getObject({ fileName: `questions/${questionId}/question.txt` })) ??
-    "";
-
-  let code = await getObject({
+  const questionPromise = getObject({
+    fileName: `questions/${questionId}/question.txt`,
+  });
+  const codePromise = getObject({
     fileName: `questionAttempts/${questionId}/${userId}/solution`,
   });
-  if (!code) {
-    code =
-      (await getObject({
-        fileName: `questions/${questionId}/starterCode.txt`,
-      })) ?? "";
-  }
+
+  const [{ name, grade }, question, attemptCode] = await Promise.all([
+    questionDetailsPromise,
+    questionPromise,
+    codePromise,
+  ]);
+
+  const code =
+    attemptCode ??
+    (await getObject({
+      fileName: `questions/${questionId}/starterCode.txt`,
+    })) ??
+    "";
 
   return (
     <CodeProvider questionId={questionId} initialValue={code}>
@@ -58,25 +64,20 @@ export async function Question({ questionId }: QuestionProps) {
           className="flex h-full w-full flex-col items-center justify-between gap-2"
         >
           <div className="min-h-20 w-full rounded-t-md border p-2">
-            {question}
+            <CardTitle className="mb-1 flex w-full flex-row items-center justify-between border-b pb-1">
+              <p className="text-lg">{name}</p>
+              <p className="text-muted-foreground">
+                {grade} {grade === 1 ? "point" : "points"}
+              </p>
+            </CardTitle>
+            <p>{question}</p>
           </div>
           <div className="w-full grow">
-            <SolutionEditor editable={!isQuestionSubmitted} />
+            <SolutionEditor editable={!isAssignmentSubmitted} />
           </div>
           <div className="flex w-full items-center gap-2">
-            <SubmitQuestionDialog
-              questionId={questionId}
-              disabled={isQuestionSubmitted}
-            >
-              <Button
-                className="mr-auto flex items-center justify-center gap-2 bg-green-700 text-white hover:bg-green-300 hover:text-black"
-                disabled={isQuestionSubmitted}
-              >
-                Submit <SendHorizonalIcon aria-hidden />
-              </Button>
-            </SubmitQuestionDialog>
-            <ResetCodeButton disabled={isQuestionSubmitted} />
-            <SaveCodeButton disabled={isQuestionSubmitted} />
+            <ResetCodeButton disabled={isAssignmentSubmitted} />
+            <SaveCodeButton disabled={isAssignmentSubmitted} />
             <RunCodeButton />
           </div>
         </ResizablePanel>

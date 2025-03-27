@@ -23,7 +23,7 @@ export const editQuestion = createSafeActionClient()
         return { type: EnumEditQuestionResult.NotAuthorized };
       }
 
-      const { question, name, id } = parsedInput;
+      const { question, name, id, grade } = parsedInput;
       const isAuthorized = await canUserAccessQuestion({
         questionId: id,
         userId,
@@ -34,12 +34,11 @@ export const editQuestion = createSafeActionClient()
         return { type: EnumEditQuestionResult.NotAuthorized };
       }
 
-      if (!!name) {
-        await updateQuestionInDb({
-          name,
-          id,
-        });
-      }
+      await updateQuestionInDb({
+        id,
+        name,
+        grade,
+      });
 
       if (!!question && question.length > 0) {
         const fileName = `questions/${id}/question.txt`;

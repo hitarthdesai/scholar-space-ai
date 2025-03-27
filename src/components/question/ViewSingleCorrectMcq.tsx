@@ -25,10 +25,12 @@ import { CheckIcon } from "@radix-ui/react-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 type ViewSingleCorrectMcqProps = {
+  disabled: boolean;
   questionPromise: ReturnType<typeof getSingleCorrectMcqByIdForAttempt>;
 };
 
 export function ViewSingleCorrectMcq({
+  disabled,
   questionPromise,
 }: ViewSingleCorrectMcqProps) {
   const question = use(questionPromise);
@@ -57,7 +59,7 @@ export function ViewSingleCorrectMcq({
   const form = useForm<SaveMcqSelectionInput>({
     resolver: zodResolver(saveMcqSelectionInputSchema),
     defaultValues,
-    disabled: isExecuting,
+    disabled: disabled || isExecuting,
   });
 
   return (
