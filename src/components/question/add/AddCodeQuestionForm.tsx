@@ -31,6 +31,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import { type DefaultValues, useForm } from "react-hook-form";
 import { QuestionFormCommonFields } from "./QuestionFormCommonFields";
+import { StarterCodeEditor } from "../StarterCodeEditor";
 
 type AddCodeQuestionFormProps = {
   assignmentId: string;
@@ -55,6 +56,9 @@ export function AddCodeQuestionForm({
     resolver: zodResolver(addQuestionFormSchema),
     defaultValues,
   });
+
+  console.log("form", form);
+  console.log("form errors:", form.getValues("starterCode"));
 
   const router = useRouter();
   const { executeAsync } = useAction(addQuestion, {
@@ -95,7 +99,12 @@ export function AddCodeQuestionForm({
             <FormItem>
               <FormLabel>Starter code</FormLabel>
               <FormControl>
-                <Textarea required {...field} />
+                <div className="h-32 w-full grow">
+                  <StarterCodeEditor
+                    code={field.value}
+                    onChange={field.onChange}
+                  />
+                </div>
               </FormControl>
               <FormDescription>
                 Stubbed code to assist the user in solving questions
