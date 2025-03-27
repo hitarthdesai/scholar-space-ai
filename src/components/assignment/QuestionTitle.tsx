@@ -19,6 +19,7 @@ import { Suspense } from "react";
 
 type QuestionTitleProps = {
   isAuthorizedToAddOrDelete: boolean;
+  isViewOnly: boolean;
   userId: string;
   classroomId: string;
   assignmentId: string;
@@ -34,6 +35,7 @@ export function QuestionTitle({
   assignmentId,
   questionId,
   name,
+  isViewOnly,
   isAuthorizedToAddOrDelete,
 }: QuestionTitleProps) {
   const displayConfig = questionDisplayConfigByType[type];
@@ -61,7 +63,12 @@ export function QuestionTitle({
           userId,
         });
 
-        return <ViewSingleCorrectMcq questionPromise={questionPromise} />;
+        return (
+          <ViewSingleCorrectMcq
+            disabled={isViewOnly}
+            questionPromise={questionPromise}
+          />
+        );
       }
 
       case EnumQuestionType.MultiCorrectMcq:
@@ -70,7 +77,12 @@ export function QuestionTitle({
           userId,
         });
 
-        return <ViewMultiCorrectMcq questionPromise={questionPromise} />;
+        return (
+          <ViewMultiCorrectMcq
+            disabled={isViewOnly}
+            questionPromise={questionPromise}
+          />
+        );
 
       default:
         return null;
@@ -93,8 +105,19 @@ export function QuestionTitle({
                   className="flex max-w-32 items-center gap-2 sm:max-w-full"
                 >
                   <SquareArrowOutUpRightIcon className="h-4 w-4" />{" "}
-                  <p className="hidden sm:block">Attempt in the code editor</p>
-                  <p className="block sm:hidden">Attempt</p>
+                  {isViewOnly ? (
+                    <>
+                      <p className="hidden sm:block">View in the code editor</p>
+                      <p className="block sm:hidden">View</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="hidden sm:block">
+                        Attempt in the code editor
+                      </p>
+                      <p className="block sm:hidden">Attempt</p>
+                    </>
+                  )}
                 </Button>
               </Link>
             </div>
