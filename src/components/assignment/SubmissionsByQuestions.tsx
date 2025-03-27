@@ -13,7 +13,7 @@ type QuestionSubmissionProps = {
   assignmentId: string;
 };
 
-export async function QuestionSubmissions({
+export async function SubmissionsByQuestions({
   classroomId,
   assignmentId,
 }: QuestionSubmissionProps) {
@@ -39,25 +39,24 @@ export async function QuestionSubmissions({
     );
   }
 
-  const questionsWithSubmissions = await Promise.all(
-    questions.map(async (question) => {
-      const submissions = await getQuestionSubmissionUsers({
-        questionId: question.id,
-      });
-      const usernames = submissions.map(
-        (submission: { username: string | null }) =>
-          submission.username ?? "Unknown"
-      );
-      return { ...question, usernames };
-    })
-  );
+  // const questionsWithSubmissions = await Promise.all(
+  //   questions.map(async (question) => {
+  //     const submissions = await getQuestionSubmissionUsers({
+  //       questionId: question.id,
+  //     });
+  //     const usernames = submissions.map(
+  //       (submission: { username: string | null }) =>
+  //         submission.username ?? "Unknown"
+  //     );
+  //     return { ...question, usernames };
+  //   })
+  // );
 
   return (
     <ol className="flex max-w-6xl flex-col gap-3 px-2 sm:px-0">
-      <Accordion
+      {/* <Accordion
         type="multiple"
         className="w-full border-x border-t border-border"
-        defaultValue={[questionsWithSubmissions.map(({ id }) => id)[1]]}
       >
         {questionsWithSubmissions.map(({ id, name, type, usernames }) => {
           return (
@@ -74,7 +73,7 @@ export async function QuestionSubmissions({
             </li>
           );
         })}
-      </Accordion>
+      </Accordion> */}
     </ol>
   );
 }

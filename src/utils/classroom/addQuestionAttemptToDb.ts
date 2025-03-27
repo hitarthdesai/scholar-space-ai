@@ -13,6 +13,5 @@ export async function addQuestionAttemptToDb({
   return db.insert(questionAttempts).values({
     userId: userId,
     questionId: questionId,
-    answer: "",
   });
 }

@@ -187,11 +187,15 @@ export async function getBreadcrumbsByPage(
           href: `/classrooms/${classroomId}`,
         },
         {
-          label: "Submissions",
-          href: `/classrooms/${classroomId}/submissions`,
+          label: "Assignments",
+          href: `/classrooms/${classroomId}/assignments`,
         },
         {
           label: assignmentName,
+          href: `/classrooms/${classroomId}/assignments/${assignmentId}`,
+        },
+        {
+          label: "Submissions",
           href: `/classrooms/${classroomId}/assignments/${assignmentId}/submissions`,
         },
       ];

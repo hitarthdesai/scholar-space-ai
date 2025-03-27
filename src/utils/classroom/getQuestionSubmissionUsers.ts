@@ -9,16 +9,16 @@ type GetQuestionSubmissionUsersProps = {
 export async function getQuestionSubmissionUsers({
   questionId,
 }: GetQuestionSubmissionUsersProps) {
-  return db
-    .select({
-      username: users.name,
-    })
-    .from(questionAttempts)
-    .innerJoin(users, eq(questionAttempts.userId, users.id))
-    .where(
-      and(
-        eq(questionAttempts.questionId, questionId),
-        isNotNull(questionAttempts.submitted)
-      )
-    );
+  // return db
+  //   .select({
+  //     username: users.name,
+  //   })
+  //   .from(questionAttempts)
+  //   .innerJoin(users, eq(questionAttempts.userId, users.id))
+  //   .where(
+  //     and(
+  //       eq(questionAttempts.questionId, questionId),
+  //       isNotNull(questionAttempts.submitted)
+  //     )
+  //   );
 }
