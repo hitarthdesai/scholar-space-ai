@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogoutButton } from "./LogoutButton";
 import { HeaderLinks } from "./HeaderLinks";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 export async function LoggedInHeader() {
   const session = await auth();
@@ -40,35 +41,40 @@ export async function LoggedInHeader() {
       {/* <Link href="/profile">View your profile</Link> */}
       {/* <LogoutButton /> */}
       {/* </div> */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <div className="flex flex-row items-center justify-center gap-1">
-            <div className="grid aspect-square h-6 place-items-center rounded-full bg-red-500 sm:h-8">
-              S
+      <div className="flex flex-row items-center justify-center gap-2">
+        <div className="border-r border-muted-foreground/30 pr-2">
+          <ThemeSwitcher />
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="flex flex-row items-center justify-center gap-1">
+              <div className="grid aspect-square h-6 place-items-center rounded-full bg-red-500 sm:h-8">
+                S
+              </div>
+              <ChevronDownIcon className="h-4 w-4" />
             </div>
-            <ChevronDownIcon className="h-4 w-4" />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Link href="/profile">Profile</Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            {navLinks.map((link, index) => (
-              <DropdownMenuItem key={index}>
-                <Link href={link.href}>{link.label}</Link>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <Link href="/profile">Profile</Link>
               </DropdownMenuItem>
-            ))}
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <LogoutButton />
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              {navLinks.map((link, index) => (
+                <DropdownMenuItem key={index}>
+                  <Link href={link.href}>{link.label}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <LogoutButton />
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
   );
 }
