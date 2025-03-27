@@ -7,6 +7,8 @@ const QUESTION_TEXT_MIN_LENGTH = 10;
 const QUESTION_TEXT_MAX_LENGTH = 500;
 const STARTER_CODE_MIN_LENGTH = 10;
 const STARTER_CODE_MAX_LENGTH = 500;
+const GRADE_MIN = 0;
+const GRADE_MAX = 100;
 
 export const MCQ_OPTIONS_MIN_LENGTH = 2;
 export const MCQ_OPTIONS_MAX_LENGTH = 5;
@@ -46,6 +48,7 @@ export const addCodeQuestionFormSchema = z.object({
     .string()
     .min(STARTER_CODE_MIN_LENGTH)
     .max(STARTER_CODE_MAX_LENGTH),
+  grade: z.number().min(GRADE_MIN).max(GRADE_MAX),
 });
 
 export type AddCodeQuestionForm = z.infer<typeof addCodeQuestionFormSchema>;
@@ -56,6 +59,7 @@ export const editCodeQuestionFormSchema = addCodeQuestionFormSchema
     name: true,
     question: true,
     starterCode: true,
+    grade: true,
   })
   .merge(
     z.object({
@@ -78,6 +82,7 @@ const unrefinedAddSingleCorrectMCQQuestionFormSchema = z.object({
     .min(MCQ_OPTIONS_MIN_LENGTH)
     .max(MCQ_OPTIONS_MAX_LENGTH),
   correctOption: z.string().min(1),
+  grade: z.number().min(GRADE_MIN).max(GRADE_MAX),
 });
 
 export const addSingleCorrectMCQQuestionFormSchema =
@@ -103,6 +108,7 @@ export const editSingleCorrectMcqFormSchema =
       question: true,
       options: true,
       correctOption: true,
+      grade: true,
     })
     .merge(
       z.object({
@@ -124,6 +130,7 @@ const unrefinedAddMultiCorrectMCQQuestionFormSchema = z.object({
     .max(QUESTION_TEXT_MAX_LENGTH),
   options: z.array(mcqOption).min(1),
   correctOptions: z.array(z.string()).min(1),
+  grade: z.number().min(GRADE_MIN).max(GRADE_MAX),
 });
 
 export const addMultiCorrectMCQQuestionFormSchema =
@@ -151,6 +158,7 @@ export const editMultiCorrectMcqFormSchema =
       question: true,
       options: true,
       correctOptions: true,
+      grade: true,
     })
     .merge(
       z.object({

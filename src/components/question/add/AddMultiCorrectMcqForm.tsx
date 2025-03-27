@@ -58,6 +58,7 @@ export function AddMultiCorrectMcqForm({
     assignmentId,
     name: "",
     question: "",
+    grade: 0,
     options: defaultOptions,
     correctOptions: defaultOptions.map((o) => o.value),
   };

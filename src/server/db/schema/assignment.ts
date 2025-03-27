@@ -56,6 +56,7 @@ export const questions = sqliteTable("question", {
   })
     .notNull()
     .default(EnumQuestionType.Code),
+  grade: integer("grade").notNull().default(0),
 });
 
 export const questionOptions = sqliteTable("questionOption", {

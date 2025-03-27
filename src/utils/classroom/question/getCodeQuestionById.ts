@@ -12,10 +12,11 @@ export const getCodeQuestionById = ({ id }: GetCodeQuestionByIdProps) => {
   const questionPromise = db
     .select({
       name: questions.name,
+      grade: questions.grade,
     })
     .from(questions)
     .where(and(eq(questions.id, id), eq(questions.type, EnumQuestionType.Code)))
-    .then((res) => res[0].name);
+    .then((res) => res[0]);
 
   const questionTextPromise = getObject({
     fileName: `questions/${id}/question.txt`,
@@ -29,9 +30,10 @@ export const getCodeQuestionById = ({ id }: GetCodeQuestionByIdProps) => {
     questionPromise,
     questionTextPromise,
     starterCodePromise,
-  ]).then(([name, question, starterCode]) => ({
+  ]).then(([{ name, grade }, question, starterCode]) => ({
     id,
     name,
+    grade,
     type: EnumQuestionType.Code,
     question: question ?? "",
     starterCode: starterCode ?? "",

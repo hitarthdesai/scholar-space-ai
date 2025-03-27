@@ -15,6 +15,7 @@ export const getMultiCorrectMcqByIdForEdit = ({
   const questionPromise = db
     .select({
       questionName: questions.name,
+      grade: questions.grade,
       value: questionOptions.optionId,
       label: questionOptions.label,
       isCorrect: questionOptions.isCorrect,
@@ -39,6 +40,7 @@ export const getMultiCorrectMcqByIdForEdit = ({
 
       return {
         name: res[0].questionName,
+        grade: res[0].grade,
         options: unmergedOptions,
         correctOptions,
       };

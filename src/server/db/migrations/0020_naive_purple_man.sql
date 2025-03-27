@@ -1,0 +1,1 @@
+ALTER TABLE `question` ADD `grade` integer DEFAULT 0 NOT NULL;

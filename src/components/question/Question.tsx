@@ -53,7 +53,8 @@ export async function Question({
           className="flex h-full w-full flex-col items-center justify-between gap-2"
         >
           <div className="min-h-20 w-full rounded-t-md border p-2">
-            {question}
+            <p>{question}</p>
+            <p>{}</p>
           </div>
           <div className="w-full grow">
             <SolutionEditor editable={!isAssignmentSubmitted} />

@@ -14,6 +14,7 @@ export async function getAssignmentQuestionsFromDb({
       id: questions.id,
       name: questions.name,
       type: questions.type,
+      grade: questions.grade,
     })
     .from(questions)
     .where(eq(questions.assignmentId, assignmentId));
