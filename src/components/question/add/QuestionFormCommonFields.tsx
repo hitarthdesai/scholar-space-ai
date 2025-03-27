@@ -76,6 +76,30 @@ export const QuestionFormCommonFields = () => {
           </FormItem>
         )}
       />
+
+      <FormField
+        name="grade"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Grade</FormLabel>
+            <FormControl>
+              <Input
+                type="number"
+                required
+                {...field}
+                onChange={(e) => {
+                  const value = e.target.valueAsNumber;
+                  field.onChange(isNaN(value) ? "" : value);
+                }}
+              />
+            </FormControl>
+            <FormDescription>
+              The maximum grade for the question
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </>
   );
 };

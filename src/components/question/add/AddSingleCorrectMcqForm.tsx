@@ -60,6 +60,7 @@ export function AddSingleCorrectMcqForm({
     assignmentId,
     name: "",
     question: "",
+    grade: 0,
     options: defaultOptions,
     correctOption: defaultOptions[0].value,
   };

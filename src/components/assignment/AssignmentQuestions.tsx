@@ -17,6 +17,7 @@ import { getAssignmentSubmissionForUserFromDb } from "@/utils/classroom/getAssig
 import { getUserRoleInClassroom } from "@/utils/classroom/getUserRoleInClassroom";
 import { EnumClassroomRole } from "@/schemas/classroomSchema";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { EnumQuestionType } from "@/schemas/questionSchema";
 
 type AssignmentQuestionsProps = {
   classroomId: string;
@@ -85,19 +86,23 @@ export async function AssignmentQuestions({
         <Accordion
           type="multiple"
           className="w-full border-x border-t border-border"
+          defaultValue={questions
+            .filter(({ type }) => type === EnumQuestionType.Code)
+            .map(({ id }) => id)}
         >
-          {questions.map(({ id, name, type }) => {
+          {questions.map(({ id, name, type, grade }) => {
             return (
               <li className="flex flex-row items-center" key={id}>
                 <QuestionTitle
                   isAuthorizedToAddOrDelete={isAuthorizedToAddOrDelete}
-                  isViewOnly={isAssignmentSubmitted || isStudent}
+                  isViewOnly={isAssignmentSubmitted || !isStudent}
                   userId={userId}
                   classroomId={classroomId}
                   assignmentId={assignmentId}
                   questionId={id}
                   name={name}
                   type={type}
+                  grade={grade}
                 />
               </li>
             );

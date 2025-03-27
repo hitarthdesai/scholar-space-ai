@@ -13,6 +13,8 @@ import { SaveCodeButton } from "./SaveCodeButton";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
 import { ResetCodeButton } from "./ResetCodeButton";
+import { getQuestionGradeById } from "@/utils/classroom/question/getQuestionGradeById";
+import { CardTitle } from "../ui/card";
 
 type QuestionProps = {
   questionId: string;
@@ -27,19 +29,28 @@ export async function Question({
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
 
-  const question =
-    (await getObject({ fileName: `questions/${questionId}/question.txt` })) ??
-    "";
-
-  let code = await getObject({
+  const questionDetailsPromise = getQuestionGradeById({
+    id: questionId,
+  });
+  const questionPromise = getObject({
+    fileName: `questions/${questionId}/question.txt`,
+  });
+  const codePromise = getObject({
     fileName: `questionAttempts/${questionId}/${userId}/solution`,
   });
-  if (!code) {
-    code =
-      (await getObject({
-        fileName: `questions/${questionId}/starterCode.txt`,
-      })) ?? "";
-  }
+
+  const [{ name, grade }, question, attemptCode] = await Promise.all([
+    questionDetailsPromise,
+    questionPromise,
+    codePromise,
+  ]);
+
+  const code =
+    attemptCode ??
+    (await getObject({
+      fileName: `questions/${questionId}/starterCode.txt`,
+    })) ??
+    "";
 
   return (
     <CodeProvider questionId={questionId} initialValue={code}>
@@ -53,7 +64,13 @@ export async function Question({
           className="flex h-full w-full flex-col items-center justify-between gap-2"
         >
           <div className="min-h-20 w-full rounded-t-md border p-2">
-            {question}
+            <CardTitle className="mb-1 flex w-full flex-row items-center justify-between border-b pb-1">
+              <p className="text-lg">{name}</p>
+              <p className="text-muted-foreground">
+                {grade} {grade === 1 ? "point" : "points"}
+              </p>
+            </CardTitle>
+            <p>{question}</p>
           </div>
           <div className="w-full grow">
             <SolutionEditor editable={!isAssignmentSubmitted} />

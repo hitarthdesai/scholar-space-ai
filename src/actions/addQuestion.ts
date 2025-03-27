@@ -38,7 +38,6 @@ export const addQuestion = createSafeActionClient()
         case EnumQuestionType.SingleCorrectMcq:
           return addSingleCorrectMcq(parsedInput);
         case EnumQuestionType.MultiCorrectMcq:
-          console.log("parsedInput", parsedInput);
           return addMultiCorrectMcq(parsedInput);
         default:
           return { type: EnumAddQuestionResult.Error };

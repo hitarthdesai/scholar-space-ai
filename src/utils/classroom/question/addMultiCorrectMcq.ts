@@ -20,6 +20,7 @@ export const addMultiCorrectMcq = async ({
   assignmentId,
   options,
   correctOptions,
+  grade,
 }: AddMultiCorrectMcqProps) => {
   try {
     const newQuestionId = randomUUID();
@@ -40,6 +41,7 @@ export const addMultiCorrectMcq = async ({
       name,
       assignmentId,
       type: EnumQuestionType.MultiCorrectMcq,
+      grade,
     });
 
     const mergedOptions = mergeMcqOptionsAndCorrectness({
