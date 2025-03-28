@@ -52,20 +52,23 @@ export default async function Assignments({
 
   if (doesNotHaveAssignments) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-3">
-        <BookPlusIcon className="h-16 w-16" />
-        <div className="flex max-w-60 text-center md:min-w-max">
-          <p>There are no assignments for this classroom.</p>
+      <>
+        <PageBreadcrumbs breadcrumbs={breadcrumbs} />
+        <div className="flex h-full flex-col items-center justify-center gap-3">
+          <BookPlusIcon className="h-16 w-16" />
+          <div className="flex max-w-60 text-center md:min-w-max">
+            <p>There are no assignments for this classroom.</p>
+          </div>
+          {isAuthorizedToCreateOrDeleteAssignment && (
+            <AddEditAssignmentSheet
+              mode={EnumFormMode.Add}
+              classroomId={classroomId}
+            >
+              <Button>Create an assignment</Button>
+            </AddEditAssignmentSheet>
+          )}
         </div>
-        {isAuthorizedToCreateOrDeleteAssignment && (
-          <AddEditAssignmentSheet
-            mode={EnumFormMode.Add}
-            classroomId={classroomId}
-          >
-            <Button>Create an assignment</Button>
-          </AddEditAssignmentSheet>
-        )}
-      </div>
+      </>
     );
   }
 
