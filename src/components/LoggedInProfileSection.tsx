@@ -41,7 +41,7 @@ export default async function LoggedInProfileSection() {
         <CardDescription>Enhance your learning experience</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center">
-        <div className="bg-dark flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-md">
+        <div className="bg-dark flex flex-col items-start space-y-4 rounded-lg border p-6 shadow-md">
           <ul className="space-y-2">
             {checklist.map((item, index) => (
               <li key={index} className="flex items-center gap-2">

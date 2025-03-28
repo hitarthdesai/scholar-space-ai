@@ -33,7 +33,7 @@ export default async function LoggedInClassroomSection() {
       <CardContent>
         {numberOfClassrooms > 0 ? (
           <div className="flex flex-row flex-wrap justify-center gap-2 sm:justify-start">
-            {classrooms.slice(0, 3).map((classroom) => (
+            {classrooms.slice(0, 4).map((classroom) => (
               <ClassroomCard key={classroom.id} classroom={classroom} />
             ))}
           </div>
@@ -44,8 +44,8 @@ export default async function LoggedInClassroomSection() {
                 className="h-24 w-24 text-gray-400"
                 aria-hidden
               />
-              <p className="max-w-48 text-center">
-                No classrooms found. Try using different filters.
+              <p className="max-w-56 text-center">
+                No classrooms found. Create or enroll into classrooms.
               </p>
             </div>
           </div>
