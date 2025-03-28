@@ -94,6 +94,7 @@ export function EditMultiCorrectMcqForm({
   const onSubmit = async (data: EditMultiCorrectMcqFormType) => {
     const hasNameChanged = data.name !== defaultValues.name;
     const hasQuestionChanged = data.question !== defaultValues.question;
+    const hasGradeChanged = data.grade !== defaultValues.grade;
     const hasOptionsChanged =
       JSON.stringify(data.options) !== JSON.stringify(defaultValues.options);
     const hasCorrectOptionsChanged =
@@ -103,6 +104,7 @@ export function EditMultiCorrectMcqForm({
     if (
       !hasNameChanged &&
       !hasQuestionChanged &&
+      !hasGradeChanged &&
       !hasOptionsChanged &&
       !hasCorrectOptionsChanged
     ) {

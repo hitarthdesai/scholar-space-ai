@@ -95,6 +95,7 @@ export const EditSingleCorrectMcqForm = ({
   const onSubmit = async (data: EditSingleCorrectMcqFormType) => {
     const hasNameChanged = data.name !== defaultValues.name;
     const hasQuestionChanged = data.question !== defaultValues.question;
+    const hasGradeChanged = data.grade !== defaultValues.grade;
     const hasOptionsChanged =
       JSON.stringify(data.options) !== JSON.stringify(defaultValues.options);
     const hasCorrectOptionChanged =
@@ -103,6 +104,7 @@ export const EditSingleCorrectMcqForm = ({
     if (
       !hasNameChanged &&
       !hasQuestionChanged &&
+      !hasGradeChanged &&
       !hasOptionsChanged &&
       !hasCorrectOptionChanged
     ) {
