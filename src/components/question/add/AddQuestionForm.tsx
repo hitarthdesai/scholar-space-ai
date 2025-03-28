@@ -24,7 +24,6 @@ export const AddQuestionForm = ({
 }: WithCloseQuestionTypeDialogMethod<
   WithCloseFormSheetMethod<AddQuestionFormProps>
 >) => {
-  console.log("type", type);
   switch (type) {
     case EnumQuestionType.Code:
       return (

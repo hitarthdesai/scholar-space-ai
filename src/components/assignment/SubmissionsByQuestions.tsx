@@ -11,9 +11,9 @@ import {
 import { getAllStudentsAndQuestionsForSubmission } from "@/utils/classroom/getAllStudentsAndQuestionsForSubmission";
 import { questionDisplayConfigByType } from "@/utils/constants/misc";
 import { cn } from "@/utils/cn";
-import { SubmissionRenderer } from "./SubmissionRenderer";
 import { getObject } from "@/utils/storage/s3/getObject";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { GradeAndFeedbackForm } from "./GradeAndFeedbackForm";
 
 type QuestionSubmissionProps = {
   classroomId: string;
@@ -150,7 +150,7 @@ export async function SubmissionsByQuestions({
                               </div>
                             </AccordionTrigger>
                             <AccordionContent>
-                              <SubmissionRenderer
+                              <GradeAndFeedbackForm
                                 type={type}
                                 questionId={questionId}
                                 studentId={studentId}

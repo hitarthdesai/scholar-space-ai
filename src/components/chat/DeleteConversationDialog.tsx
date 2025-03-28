@@ -59,7 +59,6 @@ export function DeleteConversationDialog({
         variant: isErroneous ? "destructive" : "default",
       });
       if (!isErroneous) {
-        console.log(pathname);
         setIsOpen(false);
         router.push(`/chat`);
         router.refresh();

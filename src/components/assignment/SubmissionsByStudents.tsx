@@ -1,21 +1,12 @@
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionItem } from "@/components/ui/accordion";
 import { getAllStudentsAndQuestionsForSubmission } from "@/utils/classroom/getAllStudentsAndQuestionsForSubmission";
-import { questionDisplayConfigByType } from "@/utils/constants/misc";
-import { cn } from "@/utils/cn";
-import { SubmissionRenderer } from "./SubmissionRenderer";
-import { getObject } from "@/utils/storage/s3/getObject";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { TriangleAlertIcon } from "lucide-react";
+import { GradeAndFeedbackForm } from "./GradeAndFeedbackForm";
 
 type StudentSubmissionProps = {
   classroomId: string;
@@ -129,54 +120,21 @@ export async function SubmissionsByStudents({
                       grade,
                       feedback,
                     }) => {
-                      const questionText = await getObject({
-                        fileName: `questions/${questionId}/question.txt`,
-                      });
-                      const displayConfig = questionDisplayConfigByType[type];
-                      const gradeDisplayValue =
-                        grade !== null ? grade.toString() : "-";
-
                       return (
                         <AccordionItem
                           key={`${studentId}-${questionId}`}
                           value={`${studentId}-${questionId}`}
                           disabled={!submissionDate}
                         >
-                          <AccordionTrigger className="hover:no-underline">
-                            <div className="flex w-full items-center justify-between pr-4">
-                              <div className="flex flex-row items-center gap-1">
-                                <Badge
-                                  className={cn(
-                                    "flex w-fit items-center gap-2",
-                                    displayConfig.badgeStyles
-                                  )}
-                                >
-                                  {displayConfig.icon}
-                                </Badge>
-                                {questionName}
-                              </div>
-                              <Badge className="ml-auto mr-4">
-                                {gradeDisplayValue}/{maxGrade}
-                              </Badge>
-                            </div>
-                          </AccordionTrigger>
-                          <AccordionContent className="flex flex-col gap-2">
-                            <div className="flex flex-col gap-1 rounded-md bg-muted p-2">
-                              <p className="text-sm font-medium text-muted-foreground">
-                                Question:{" "}
-                              </p>
-                              <p className="w-full text-sm">
-                                {questionText ?? ""}
-                              </p>
-                            </div>
-                            <SubmissionRenderer
-                              type={type}
-                              questionId={questionId}
-                              studentId={studentId}
-                              grade={grade ?? undefined}
-                              feedback={feedback ?? undefined}
-                            />
-                          </AccordionContent>
+                          <GradeAndFeedbackForm
+                            type={type}
+                            questionId={questionId}
+                            questionName={questionName}
+                            maxGrade={maxGrade}
+                            studentId={studentId}
+                            grade={grade ?? undefined}
+                            feedback={feedback ?? undefined}
+                          />
                         </AccordionItem>
                       );
                     }
