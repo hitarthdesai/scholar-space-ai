@@ -3,9 +3,11 @@ import {
   AlertOctagonIcon,
   SendHorizonalIcon,
   ShieldQuestionIcon,
+  Calculator,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { auth } from "@/utils/auth/config";
+import { Badge } from "../ui/badge";
 import assert from "assert";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
 import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
@@ -80,9 +82,24 @@ export async function AssignmentQuestions({
             </AlertDescription>
           </Alert>
         )}
-        <h2 className="text-lg font-semibold">
-          Questions ({questions.length})
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">
+            Questions ({questions.length})
+          </h2>
+          <Badge
+            variant="outline"
+            className="flex items-center gap-1.5 bg-primary/10 px-3 py-2 font-medium text-primary"
+          >
+            <Calculator className="h-4 w-4" />
+            Total Points:{" "}
+            {questions.reduce((acc, question) => {
+              if (question.grade) {
+                return acc + question.grade;
+              }
+              return acc;
+            }, 0)}
+          </Badge>
+        </div>
         <Accordion
           type="multiple"
           className="w-full border-x border-t border-border"
