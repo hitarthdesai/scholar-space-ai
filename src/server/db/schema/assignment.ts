@@ -160,3 +160,14 @@ export const questionAttemptsRelations = relations(
     }),
   })
 );
+
+export const questionFeedbacks = sqliteTable("questionFeedback", {
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  questionId: text("questionId")
+    .notNull()
+    .references(() => questions.id, { onDelete: "cascade" }),
+  grade: integer("grade").notNull(),
+  feedback: text("feedback").notNull(),
+});
