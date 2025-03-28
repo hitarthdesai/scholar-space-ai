@@ -4,7 +4,7 @@ import {
   EnumQuestionType,
   type GradeAndFeedbackForm,
 } from "@/schemas/questionSchema";
-import { CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { CheckCircle, XCircle, AlertCircle, SaveIcon } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { type UseFormReturn } from "react-hook-form";
 import { type ReactNode, use } from "react";
@@ -18,6 +18,8 @@ import {
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
 import { AccordionTrigger, AccordionContent } from "../ui/accordion";
+import { LoadingButton } from "../ui/loading-button";
+import { FormIds } from "@/utils/constants/form";
 
 export type GradeAndFeedbackDataPromiseType = Promise<
   | {
@@ -67,7 +69,7 @@ const FeedbackField = ({
             <FormLabel className="text-muted-foreground">Feedback:</FormLabel>
             <FormControl>
               <div className="w-full grow">
-                <Textarea {...field} />
+                <Textarea required {...field} />
               </div>
             </FormControl>
             <FormMessage />
@@ -224,37 +226,60 @@ export const SubmissionRenderer = ({
   const data = use(dataPromise);
   if (!data) return null;
 
+  const {
+    formState: { isSubmitting, disabled },
+    getValues,
+  } = form;
+
+  const { studentId, questionId } = getValues();
+
   return (
     <>
-      <AccordionTrigger className="flex flex-row items-center justify-between hover:no-underline">
-        {accordionTriggerTitle}
-        <FormField
-          control={form.control}
-          name="grade"
-          render={({ field }) => (
-            <FormItem className="flex flex-col items-end">
-              <FormControl>
-                <div className="flex max-w-24 flex-row items-center gap-1">
-                  <Input
-                    type="number"
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      const value = e.target.valueAsNumber;
-                      field.onChange(isNaN(value) ? "" : value);
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-right"
-                  />
-                  <p>/</p>
-                  <p>{maxGrade}</p>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </AccordionTrigger>
+      <div className="flex w-full items-center justify-between gap-4">
+        <AccordionTrigger
+          headerClassname="w-full"
+          className="flex w-full grow items-center justify-between hover:no-underline"
+        >
+          {accordionTriggerTitle}
+          <FormField
+            control={form.control}
+            name="grade"
+            render={({ field }) => (
+              <FormItem className="flex w-full flex-col items-end pr-4">
+                <FormControl>
+                  <div className="flex max-w-24 flex-row items-center gap-1">
+                    <Input
+                      type="number"
+                      required
+                      {...field}
+                      onChange={(e) => {
+                        const value = e.target.valueAsNumber;
+                        field.onChange(isNaN(value) ? "" : value);
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-right"
+                    />
+                    <p>/</p>
+                    <p>{maxGrade}</p>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </AccordionTrigger>
+        <LoadingButton
+          type="submit"
+          form={`${FormIds.GradeAndFeedback}-${studentId}-${questionId}`}
+          onClick={(e) => e.stopPropagation()}
+          disabled={disabled}
+          isLoading={isSubmitting}
+          size="icon"
+          variant="ghost"
+        >
+          <SaveIcon />
+        </LoadingButton>
+      </div>
       <AccordionContent className="flex flex-col gap-2">
         {accordionContentDescription}
         <SubmissionRendererByType form={form} data={data} />

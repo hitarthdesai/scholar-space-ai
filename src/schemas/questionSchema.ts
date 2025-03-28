@@ -376,21 +376,19 @@ export const gradeAndFeedbackFormSchema = z.object({
   questionId: z.string().min(1),
   studentId: z.string().min(1),
   grade: z.number().min(GRADE_MIN),
-  feedback: z
-    .string()
-    .min(FEEDBACK_MIN_LENGTH)
-    .max(FEEDBACK_MAX_LENGTH)
-    .optional(),
+  feedback: z.string().min(FEEDBACK_MIN_LENGTH).max(FEEDBACK_MAX_LENGTH),
 });
 
 export type GradeAndFeedbackForm = z.infer<typeof gradeAndFeedbackFormSchema>;
 
-export const EnumGradeAndFeedbackResult = {
+export const EnumEditGradeAndFeedbackResult = {
   GradedSuccessfully: "gradedSuccessfully",
-  Unauthorized: "unauthorized",
+  NotAuthorized: "notAuthorized",
   Error: "error",
 } as const;
-const gradeAndFeedbackResultSchema = z.nativeEnum(EnumGradeAndFeedbackResult);
+const gradeAndFeedbackResultSchema = z.nativeEnum(
+  EnumEditGradeAndFeedbackResult
+);
 export type GradeAndFeedbackResult = z.infer<
   typeof gradeAndFeedbackResultSchema
 >;

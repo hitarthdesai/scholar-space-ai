@@ -52,7 +52,10 @@ export const getAllStudentsAndQuestionsForSubmission = async ({
       )
       .leftJoin(
         questionFeedbacks,
-        eq(questions.id, questionFeedbacks.questionId)
+        and(
+          eq(questions.id, questionFeedbacks.questionId),
+          eq(questionFeedbacks.userId, classroomParticpants.userId)
+        )
       )
       .where(
         and(

@@ -134,6 +134,7 @@ export async function SubmissionsByStudents({
                           key={`${studentId}-${questionId}`}
                           value={`${studentId}-${questionId}`}
                           disabled={!submissionDate}
+                          className="w-full"
                         >
                           <GradeAndFeedbackForm
                             type={type}
@@ -144,7 +145,7 @@ export async function SubmissionsByStudents({
                             grade={grade ?? undefined}
                             feedback={feedback ?? undefined}
                             accordionTriggerTitle={
-                              <div className="flex grow flex-row items-center gap-1">
+                              <div className="flex w-full grow flex-row items-center gap-1">
                                 <Badge
                                   className={cn(
                                     "flex w-fit items-center gap-2",

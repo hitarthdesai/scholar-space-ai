@@ -1,15 +1,15 @@
 "use client";
 
-import { addQuestion } from "@/actions/addQuestion";
+import { editGradeAndFeedback } from "@/actions/editGradeAndFeedback";
 import { Form } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import {
   gradeAndFeedbackFormSchema,
-  EnumGradeAndFeedbackResult,
+  EnumEditGradeAndFeedbackResult,
   type GradeAndFeedbackForm as GradeAndFeedbackFormType,
 } from "@/schemas/questionSchema";
 import { FormIds } from "@/utils/constants/form";
-import { toastDescriptionAddQuestion } from "@/utils/constants/toast";
+import { toastDescriptionEditGradeAndFeedback } from "@/utils/constants/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
@@ -35,7 +35,7 @@ export const GradeAndFeedbackFormInner = (
     questionId,
     studentId,
     grade: grade ?? undefined,
-    feedback: feedback ?? undefined,
+    feedback: feedback ?? "",
   };
 
   const gradeAndFeedbackFormSchemaWithMaxGrade =
@@ -52,18 +52,18 @@ export const GradeAndFeedbackFormInner = (
   });
 
   const router = useRouter();
-  const { executeAsync } = useAction(addQuestion, {
+  const { executeAsync } = useAction(editGradeAndFeedback, {
     onSuccess({ data }) {
       if (!data?.type) return;
 
       const isErroneous =
-        data.type !== EnumGradeAndFeedbackResult.GradedSuccessfully;
+        data.type !== EnumEditGradeAndFeedbackResult.GradedSuccessfully;
 
       toast({
         title: isErroneous
-          ? "Error in adding Question"
-          : "Question added successfully",
-        description: toastDescriptionAddQuestion[data.type],
+          ? "Error in editing grade and feedback"
+          : "Grade and feedback edited successfully",
+        description: toastDescriptionEditGradeAndFeedback[data.type],
         variant: isErroneous ? "destructive" : "default",
       });
 
@@ -77,9 +77,9 @@ export const GradeAndFeedbackFormInner = (
   return (
     <Form {...form}>
       <form
-        id={FormIds.GradeAndFeedback}
+        id={`${FormIds.GradeAndFeedback}-${studentId}-${questionId}`}
         onSubmit={form.handleSubmit(executeAsync)}
-        className="flex h-full flex-col"
+        className="flex h-full w-full flex-col"
       >
         <Suspense fallback={<p>Loading...</p>}>
           <SubmissionRenderer {...rest} form={form} />
