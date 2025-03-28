@@ -6,6 +6,8 @@ import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { canUserAccessClassroom } from "@/utils/classroom/canUserAccessClassroom";
 import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
+import { ClassroomDashboardGridNav } from "@/components/classroom/ClassroomDashboardGridNav";
+import { getUserRoleInClassroom } from "@/utils/classroom/getUserRoleInClassroom";
 
 type PageProps = {
   params: {
@@ -33,13 +35,14 @@ export default async function ClassroomPage({
     page: EnumPage.Classroom,
     classroomId,
   });
-
+  const userRole = await getUserRoleInClassroom({ userId, classroomId });
   return (
     <div className="flex h-full w-full flex-col gap-4">
       <PageBreadcrumbs breadcrumbs={breadcrumbs} />
-      <main className="flex h-full w-full grow flex-col items-center justify-center">
-        Classroom Home Page
-      </main>
+      <ClassroomDashboardGridNav
+        userRole={userRole}
+        classroomId={classroomId}
+      />
     </div>
   );
 }
