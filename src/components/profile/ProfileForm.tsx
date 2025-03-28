@@ -1,6 +1,4 @@
 "use client";
-
-import React from "react";
 import { useState } from "react";
 import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
@@ -15,6 +13,7 @@ import {
   FormItem,
   FormLabel,
   FormControl,
+  FormMessage,
 } from "@/components/ui/form";
 import {
   updateUserInformationFormSchema,
@@ -23,9 +22,10 @@ import {
 } from "@/schemas/userSchema";
 import { updateUserInformation } from "@/actions/updateUserInformation";
 import { Textarea } from "@/components/ui/textarea";
-import { User } from "lucide-react";
+import { User, Mail, FileText, Save, X, Edit } from "lucide-react";
 import { toastDescriptionUpdateUserInformation } from "@/utils/constants/toast";
 import { cn } from "@/utils/cn";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export type ProfileData = {
   email: string;
@@ -50,6 +50,7 @@ export default function ProfileForm({
   const [clickedButton, setClickedButton] = useState<"save" | "cancel" | null>(
     null
   );
+
   const updateUserInformationDefaultValues: EditProfileFormType = {
     email: initialProfileData.email,
     userId: userId,
@@ -100,108 +101,148 @@ export default function ProfileForm({
     setClickedButton(null);
   };
 
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2);
+  };
+
   return (
-    <Form {...form}>
-      <form
-        onSubmit={handleSave}
-        className="flex flex-col gap-8 p-8 md:flex-row"
-      >
-        <div className="flex flex-col gap-3 md:w-1/3">
-          <User className="mb-4 h-40 w-40 rounded-full bg-white object-cover text-slate-900" />
-
-          <FormField
-            control={form.control}
-            name="newName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name:</FormLabel>
-                <FormControl>
-                  <Input
-                    autoComplete="off"
-                    {...field}
-                    className="bg-slate-900 text-white disabled:cursor-default disabled:opacity-100"
-                    disabled={!isEditing}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email:</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    className={cn(
-                      "disabled:cursor-default disabled:bg-slate-900 disabled:opacity-100",
-                      isEditing &&
-                        "disabled:cursor-not-allowed disabled:opacity-50"
-                    )}
-                    disabled
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
-          {isEditing && (
-            <div className="flex flex-row gap-2">
-              <LoadingButton
-                type="submit"
-                className="w-20 rounded bg-green-800 text-white"
-                isLoading={isExecuting && clickedButton === "save"}
-                disabled={isExecuting && clickedButton === "cancel"}
-              >
-                Save
-              </LoadingButton>
-              <LoadingButton
-                type="button"
-                className="w-20 rounded bg-red-800 text-white"
-                isLoading={isExecuting && clickedButton === "cancel"}
-                disabled={isExecuting && clickedButton === "save"}
-                onClick={handleCancel}
-              >
-                Cancel
-              </LoadingButton>
-            </div>
-          )}
-
+    <div className="container max-w-5xl py-8">
+      <Card className="border-border bg-card text-card-foreground shadow-md">
+        <CardHeader className="flex flex-row items-center justify-between border-b border-border pb-6">
+          <CardTitle className="text-2xl font-bold">
+            Profile Information
+          </CardTitle>
           {!isEditing && isUserAllowedToEdit && (
             <LoadingButton
               type="button"
-              className="w-20 rounded bg-blue-500 text-white"
+              variant="outline"
+              className="flex items-center gap-2"
               isLoading={isExecuting}
               onClick={() => setIsEditing(true)}
             >
-              Edit
+              <Edit className="h-4 w-4" />
+              Edit Profile
             </LoadingButton>
           )}
-        </div>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <Form {...form}>
+            <form onSubmit={handleSave} className="space-y-8">
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+                <div className="flex flex-col items-center space-y-6 md:items-start">
+                  <div className="flex h-32 w-32 items-center justify-center rounded-full border-4 border-primary/10 bg-primary/10 text-2xl font-bold text-primary">
+                    {getInitials(initialProfileData.name)}
+                  </div>
 
-        <div className="md:w-2/3">
-          <FormField
-            control={form.control}
-            name="userDescription"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>About Me:</FormLabel>
-                <FormControl>
-                  <Textarea
-                    autoComplete="off"
-                    {...field}
-                    className="w-full rounded border bg-slate-900 text-white disabled:cursor-default disabled:opacity-100"
-                    disabled={!isEditing}
+                  <div className="w-full space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="newName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center gap-2">
+                            <User className="h-4 w-4 text-muted-foreground" />
+                            Name
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              autoComplete="off"
+                              {...field}
+                              className="bg-background disabled:cursor-default disabled:opacity-100"
+                              disabled={!isEditing}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center gap-2">
+                            <Mail className="h-4 w-4 text-muted-foreground" />
+                            Email
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              className={cn(
+                                "bg-background disabled:cursor-default disabled:opacity-100",
+                                isEditing &&
+                                  "disabled:cursor-not-allowed disabled:opacity-50"
+                              )}
+                              disabled
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="md:col-span-2">
+                  <FormField
+                    control={form.control}
+                    name="userDescription"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center gap-2">
+                          <FileText className="h-4 w-4 text-muted-foreground" />
+                          About Me
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            autoComplete="off"
+                            {...field}
+                            className="min-h-[200px] resize-none bg-background disabled:cursor-default disabled:opacity-100"
+                            disabled={!isEditing}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </div>
-      </form>
-    </Form>
+                </div>
+              </div>
+
+              {isEditing && (
+                <div className="flex justify-end gap-3 pt-4">
+                  <LoadingButton
+                    type="button"
+                    variant="outline"
+                    className="flex items-center gap-2"
+                    isLoading={isExecuting && clickedButton === "cancel"}
+                    disabled={isExecuting && clickedButton === "save"}
+                    onClick={handleCancel}
+                  >
+                    <X className="h-4 w-4" />
+                    Cancel
+                  </LoadingButton>
+                  <LoadingButton
+                    type="submit"
+                    variant="default"
+                    className="flex items-center gap-2"
+                    isLoading={isExecuting && clickedButton === "save"}
+                    disabled={isExecuting && clickedButton === "cancel"}
+                  >
+                    <Save className="h-4 w-4" />
+                    Save Changes
+                  </LoadingButton>
+                </div>
+              )}
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
