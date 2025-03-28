@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function CTASection() {
+export function CTASection() {
   return (
     <section className="flex w-full justify-center bg-primary py-12 text-primary-foreground md:py-24 lg:py-32">
       <div className="w-full max-w-4xl px-4 text-center">

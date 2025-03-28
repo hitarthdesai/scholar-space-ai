@@ -31,29 +31,25 @@ export default async function LoggedInClassroomSection() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {numberOfClassrooms > 0 ? (
-            <div className="flex flex-row flex-wrap justify-center gap-4 sm:justify-start">
-              {classrooms.slice(0, 3).map((classroom) => {
-                return (
-                  <ClassroomCard key={classroom.id} classroom={classroom} />
-                );
-              })}
+        {numberOfClassrooms > 0 ? (
+          <div className="flex flex-row flex-wrap justify-center gap-2 sm:justify-start">
+            {classrooms.slice(0, 3).map((classroom) => (
+              <ClassroomCard key={classroom.id} classroom={classroom} />
+            ))}
+          </div>
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-6">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <ComponentNoneIcon
+                className="h-24 w-24 text-gray-400"
+                aria-hidden
+              />
+              <p className="max-w-48 text-center">
+                No classrooms found. Try using different filters.
+              </p>
             </div>
-          ) : (
-            <div className="flex h-full w-full flex-col items-center justify-center gap-6">
-              <div className="flex flex-col items-center justify-center gap-2">
-                <ComponentNoneIcon
-                  className="h-24 w-24 text-gray-400"
-                  aria-hidden
-                />
-                <p className="max-w-48 text-center">
-                  No classrooms found. Try using different filters.
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </CardContent>
       <CardFooter>
         <Button variant="outline" asChild>

@@ -8,30 +8,30 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { auth } from "@/utils/auth/config";
+import assert from "assert";
+import { getUserProfileData } from "@/utils/profile/getUserProfileData";
+import Link from "next/link";
 
-interface LoggedInProfileSecionProps {
-  name: string | null;
-  description: string | null;
-  profilePhoto: string | null;
-}
+export default async function LoggedInProfileSection() {
+  const session = await auth();
+  const userId = session?.user?.id;
+  assert(!!userId, "User must be logged in to view this page");
 
-export default function LoggedInProfileSection({
-  name,
-  description,
-  profilePhoto,
-}: LoggedInProfileSecionProps) {
-  const isDescriptionIncomplete = (value: string | null) =>
+  const userData = userId ? await getUserProfileData({ userId }) : null;
+
+  const isDescriptionIncomplete = (value: string | undefined) =>
     !value || value === "No information has been added yet.";
-  const isValidUsername = (value: string | null) =>
+  const isValidUsername = (value: string | undefined) =>
     !value || value === "Username";
 
   const checklist = [
-    { label: "Add your name", completed: !isValidUsername(name) },
+    { label: "Add your name", completed: !isValidUsername(userData?.name) },
     {
       label: "Write a short description",
-      completed: !isDescriptionIncomplete(description),
+      completed: !isDescriptionIncomplete(userData?.aboutMe),
     },
-    { label: "Upload a profile photo", completed: !!profilePhoto },
+    { label: "Upload a profile photo", completed: !!userData?.image },
   ];
 
   return (
@@ -60,7 +60,9 @@ export default function LoggedInProfileSection({
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">Update Profile</Button>
+        <Button className="w-full" asChild>
+          <Link href="/profile">Update Profile</Link>
+        </Button>
       </CardFooter>
     </Card>
   );
