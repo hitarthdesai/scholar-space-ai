@@ -51,7 +51,7 @@ export function ClassroomDashboardGridNav({
           </Link>
 
           <Link
-            href={`/classrooms/${classroomId}/chat`}
+            href={`/classrooms/${classroomId}/chats`}
             className="flex h-[120px] flex-col items-center justify-center rounded-lg border border-border bg-purple-600 p-6 transition-colors hover:bg-purple-700"
           >
             <MessageSquare className="mb-3 h-8 w-8 text-purple-200" />
@@ -99,7 +99,7 @@ export function ClassroomDashboardGridNav({
           </Link>
 
           <Link
-            href={`/classrooms/${classroomId}/chat`}
+            href={`/classrooms/${classroomId}/chats`}
             className="flex h-[120px] flex-col items-center justify-center rounded-lg border border-border bg-purple-600 p-6 transition-colors hover:bg-purple-700"
           >
             <MessageSquare className="mb-3 h-8 w-8 text-purple-200" />
