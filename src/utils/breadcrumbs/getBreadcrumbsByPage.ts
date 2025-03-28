@@ -136,8 +136,9 @@ export async function getBreadcrumbsByPage(
           )
           .innerJoin(
             assignments,
-            eq(classroomAssignments.assignmentId, props.assignmentId)
-          );
+            eq(assignments.id, classroomAssignments.assignmentId)
+          )
+          .where(eq(assignments.id, props.assignmentId));
 
       return [
         {
