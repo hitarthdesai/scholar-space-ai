@@ -18,6 +18,7 @@ export async function getUserProfileData({ userId }: GetUserProfileDataProps) {
     name: userInfoFromDb.name ?? "Username",
     email: userInfoFromDb.email,
     aboutMe: userDescription,
+    image: userInfoFromDb.image ?? "",
   };
   return profileData;
 }
