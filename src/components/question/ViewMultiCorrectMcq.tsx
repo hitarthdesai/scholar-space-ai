@@ -74,7 +74,7 @@ export function ViewMultiCorrectMcq({
     <div className="flex p-4">
       <Form {...form}>
         <form className="flex flex-col gap-2">
-          <div className="text-lg font-semibold">{question.question}</div>
+          <div className="text-lg font-semibold">{question.questionText}</div>
           <FormField
             control={form.control}
             name="selectedOptions"
