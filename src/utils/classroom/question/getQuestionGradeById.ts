@@ -10,6 +10,7 @@ export const getQuestionGradeById = ({ id }: GetQuestionGradeByIdProps) => {
   return db
     .select({
       name: questions.name,
+      type: questions.type,
       grade: questions.grade,
     })
     .from(questions)

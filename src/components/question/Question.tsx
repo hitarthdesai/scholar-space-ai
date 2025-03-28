@@ -13,8 +13,8 @@ import { SaveCodeButton } from "./SaveCodeButton";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
 import { ResetCodeButton } from "./ResetCodeButton";
-import { getQuestionGradeById } from "@/utils/classroom/question/getQuestionGradeById";
 import { CardTitle } from "../ui/card";
+import { getCodeQuestionAttemptById } from "@/utils/classroom/question/getCodeQuestionAttemptById";
 
 type QuestionProps = {
   questionId: string;
@@ -29,21 +29,11 @@ export async function Question({
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
 
-  const questionDetailsPromise = getQuestionGradeById({
-    id: questionId,
-  });
-  const questionPromise = getObject({
-    fileName: `questions/${questionId}/question.txt`,
-  });
-  const codePromise = getObject({
-    fileName: `questionAttempts/${questionId}/${userId}/solution`,
-  });
-
-  const [{ name, grade }, question, attemptCode] = await Promise.all([
-    questionDetailsPromise,
-    questionPromise,
-    codePromise,
-  ]);
+  const { name, grade, question, attemptCode } =
+    await getCodeQuestionAttemptById({
+      questionId,
+      userId,
+    });
 
   const code =
     attemptCode ??

@@ -148,6 +148,13 @@
       "when": 1743049757761,
       "tag": "0020_naive_purple_man",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "6",
+      "when": 1743112010476,
+      "tag": "0021_fluffy_longshot",
+      "breakpoints": true
     }
   ]
 }

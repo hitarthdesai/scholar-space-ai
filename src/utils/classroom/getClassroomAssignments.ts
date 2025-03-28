@@ -1,6 +1,10 @@
 import { db } from "@/server/db";
-import { assignments, classroomAssignments } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import {
+  assignmentAttempts,
+  assignments,
+  classroomAssignments,
+} from "@/server/db/schema";
+import { and, count, eq, isNotNull } from "drizzle-orm";
 
 type GetClassroomAssignmentsProps = {
   classroomId: string;
@@ -9,18 +13,27 @@ type GetClassroomAssignmentsProps = {
 /**
  * Gets all assignments for a particular classroom
  */
-export function getClassroomAssignments({
+export async function getClassroomAssignments({
   classroomId,
 }: GetClassroomAssignmentsProps) {
   return db
     .select({
       id: assignments.id,
       name: assignments.name,
+      submissionCount: count(assignmentAttempts.userId),
     })
     .from(assignments)
     .innerJoin(
       classroomAssignments,
       eq(assignments.id, classroomAssignments.assignmentId)
     )
-    .where(eq(classroomAssignments.classroomId, classroomId));
+    .leftJoin(
+      assignmentAttempts,
+      and(
+        eq(assignments.id, assignmentAttempts.assignmentId),
+        isNotNull(assignmentAttempts.submitted)
+      )
+    )
+    .where(eq(classroomAssignments.classroomId, classroomId))
+    .groupBy(assignments.id);
 }

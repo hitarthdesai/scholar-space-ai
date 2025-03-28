@@ -49,3 +49,11 @@ export const questionDisplayConfigByType: Record<
     badgeStyles: "bg-yellow-500",
   },
 };
+
+export const EnumSubmissionsViewMode = {
+  ByQuestion: "byQuestion",
+  ByStudent: "byStudent",
+} as const;
+
+export type SubmissionsViewMode =
+  (typeof EnumSubmissionsViewMode)[keyof typeof EnumSubmissionsViewMode];

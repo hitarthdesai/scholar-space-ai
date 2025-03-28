@@ -1,12 +1,18 @@
-import { getAssignmentQuestionsFromDb } from "@/utils/classroom/getAssignmentQuestionsFromDb";
-import { getQuestionSubmissionUsers } from "@/utils/classroom/getQuestionSubmissionUsers";
-import { AlertOctagonIcon } from "lucide-react";
 import { auth } from "@/utils/auth/config";
 import assert from "assert";
-import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
-import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
-import { SubmissionTitle } from "./SubmissionTitle";
-import { Accordion } from "@/components/ui/accordion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { getAllStudentsAndQuestionsForSubmission } from "@/utils/classroom/getAllStudentsAndQuestionsForSubmission";
+import { questionDisplayConfigByType } from "@/utils/constants/misc";
+import { cn } from "@/utils/cn";
+import { SubmissionRenderer } from "./SubmissionRenderer";
+import { getObject } from "@/utils/storage/s3/getObject";
 
 type QuestionSubmissionProps = {
   classroomId: string;
@@ -20,60 +26,136 @@ export async function SubmissionsByQuestions({
   const session = await auth();
   const userId = session?.user?.id;
   assert(!!userId, "User must be logged in to view this page");
-  const isAuthorizedToAddOrDelete = await canUserAccessAssignment({
-    assignmentId,
-    userId,
-    accessType: EnumAccessType.Write,
-  });
 
-  const questions = await getAssignmentQuestionsFromDb({
+  const data = await getAllStudentsAndQuestionsForSubmission({
+    classroomId,
     assignmentId,
   });
 
-  if (!questions || questions.length === 0) {
-    return (
-      <div className="flex h-full w-full flex-col items-center justify-center gap-3">
-        <AlertOctagonIcon className="h-24 w-24" />
-        <p>No questions found</p>
-      </div>
-    );
-  }
+  const groupedSubmissions: (Omit<(typeof data)[0], "attempt"> & {
+    attempts: (typeof data)[0]["attempt"][];
+  })[] = [];
 
-  // const questionsWithSubmissions = await Promise.all(
-  //   questions.map(async (question) => {
-  //     const submissions = await getQuestionSubmissionUsers({
-  //       questionId: question.id,
-  //     });
-  //     const usernames = submissions.map(
-  //       (submission: { username: string | null }) =>
-  //         submission.username ?? "Unknown"
-  //     );
-  //     return { ...question, usernames };
-  //   })
-  // );
+  data.reduce((acc, question) => {
+    const { id, name, type, maxGrade, attempt } = question;
+
+    const grouped_q = acc.find((q) => q.id === id);
+    if (!grouped_q) {
+      acc.push({
+        id,
+        name,
+        type,
+        maxGrade,
+        attempts: [attempt],
+      });
+    } else {
+      grouped_q.attempts.push(attempt);
+    }
+
+    return acc;
+  }, groupedSubmissions);
 
   return (
-    <ol className="flex max-w-6xl flex-col gap-3 px-2 sm:px-0">
-      {/* <Accordion
-        type="multiple"
-        className="w-full border-x border-t border-border"
-      >
-        {questionsWithSubmissions.map(({ id, name, type, usernames }) => {
+    <div className="flex w-full flex-col gap-4">
+      {groupedSubmissions.map(
+        async ({ name, type, maxGrade, attempts, id: questionId }) => {
+          const questionText = await getObject({
+            fileName: `questions/${questionId}/question.txt`,
+          });
+
+          const displayConfig = questionDisplayConfigByType[type];
+
           return (
-            <li className="flex flex-row items-center" key={id}>
-              <SubmissionTitle
-                isAuthorizedToAddOrDelete={isAuthorizedToAddOrDelete}
-                userIds={usernames}
-                classroomId={classroomId}
-                assignmentId={assignmentId}
-                questionId={id}
-                name={name}
-                type={type}
-              />
-            </li>
+            <Card key={questionId}>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="flex w-full flex-row items-center gap-2">
+                  <Badge
+                    className={cn(
+                      "flex w-fit items-center gap-2",
+                      displayConfig.badgeStyles
+                    )}
+                  >
+                    {displayConfig.icon}
+                  </Badge>
+                  {name}{" "}
+                  <Badge variant="secondary">
+                    {maxGrade} {maxGrade === 1 ? "point" : "points"}
+                  </Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col gap-1 rounded-md bg-muted p-2">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Question:{" "}
+                  </p>
+                  <p className="w-full text-sm">{questionText}</p>
+                </div>
+                <Accordion type="multiple" className="w-full">
+                  {attempts.map(
+                    ({
+                      id: studentId,
+                      name,
+                      grade,
+                      feedback,
+                      submissionDate,
+                    }) => {
+                      const gradeDisplayValue = !!grade
+                        ? grade.toString()
+                        : "-";
+
+                      return (
+                        <AccordionItem
+                          key={`${questionId}-${studentId}`}
+                          value={`${questionId}-${studentId}`}
+                          disabled={!submissionDate}
+                        >
+                          <AccordionTrigger className="hover:no-underline">
+                            <div className="flex w-full items-center justify-between pr-4">
+                              <div className="flex flex-col gap-1">
+                                <span>{name}</span>
+                                <span className="text-sm text-muted-foreground">
+                                  {submissionDate ? (
+                                    `submitted ${new Date(
+                                      submissionDate
+                                    ).toLocaleString(undefined, {
+                                      weekday: "short",
+                                      day: "numeric",
+                                      month: "long",
+                                      year: "numeric",
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}`
+                                  ) : (
+                                    <p className="text-yellow-700">
+                                      No submission
+                                    </p>
+                                  )}
+                                </span>
+                              </div>
+                              <Badge className="ml-auto mr-4">
+                                {gradeDisplayValue}/{maxGrade}
+                              </Badge>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <SubmissionRenderer
+                              type={type}
+                              questionId={questionId}
+                              studentId={studentId}
+                              grade={grade ?? undefined}
+                              feedback={feedback ?? undefined}
+                            />
+                          </AccordionContent>
+                        </AccordionItem>
+                      );
+                    }
+                  )}
+                </Accordion>
+              </CardContent>
+            </Card>
           );
-        })}
-      </Accordion> */}
-    </ol>
+        }
+      )}
+    </div>
   );
 }

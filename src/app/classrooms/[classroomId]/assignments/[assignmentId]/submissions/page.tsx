@@ -1,4 +1,5 @@
 import { SubmissionsByQuestions } from "@/components/assignment/SubmissionsByQuestions";
+import { SubmissionsByStudents } from "@/components/assignment/SubmissionsByStudents";
 import { NotAuthorizedToViewPage } from "@/components/NotAuthorizedToViewPage";
 import { PageBreadcrumbs } from "@/components/PageBreadcrumbs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,13 +7,9 @@ import { EnumAccessType } from "@/schemas/dbTableAccessSchema";
 import { auth } from "@/utils/auth/config";
 import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { canUserAccessAssignment } from "@/utils/classroom/canUserAccessAssignment";
+import { EnumSubmissionsViewMode } from "@/utils/constants/misc";
 import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
-
-const SubmissionsViewMode = {
-  ByQuestion: "byQuestion",
-  ByStudent: "byStudent",
-} as const;
 
 type PageProps = {
   params: {
@@ -32,7 +29,7 @@ export default async function SubmissionPage({
     assignmentId,
     classroomId,
     userId,
-    accessType: EnumAccessType.Read,
+    accessType: EnumAccessType.Write,
   });
 
   if (!isAuthorizedToViewAssignment) {
@@ -49,26 +46,29 @@ export default async function SubmissionPage({
       <PageBreadcrumbs breadcrumbs={breadcrumbs} />
       <main className="flex h-full grow flex-col">
         <div>
-          <Tabs defaultValue={SubmissionsViewMode.ByQuestion}>
+          <Tabs defaultValue={EnumSubmissionsViewMode.ByStudent}>
             <div className="flex items-center gap-4">
               <h2 className="text-2xl font-bold">Submissions</h2>
               <TabsList className="grid grid-cols-2">
-                <TabsTrigger value={SubmissionsViewMode.ByQuestion}>
+                <TabsTrigger value={EnumSubmissionsViewMode.ByQuestion}>
                   View by Question
                 </TabsTrigger>
-                <TabsTrigger value={SubmissionsViewMode.ByStudent}>
-                  View by Submission
+                <TabsTrigger value={EnumSubmissionsViewMode.ByStudent}>
+                  View by Student
                 </TabsTrigger>
               </TabsList>
             </div>
-            <TabsContent value={SubmissionsViewMode.ByQuestion}>
+            <TabsContent value={EnumSubmissionsViewMode.ByQuestion}>
               <SubmissionsByQuestions
                 classroomId={classroomId}
                 assignmentId={assignmentId}
               />
             </TabsContent>
-            <TabsContent value={SubmissionsViewMode.ByStudent}>
-              BY STUDENT
+            <TabsContent value={EnumSubmissionsViewMode.ByStudent}>
+              <SubmissionsByStudents
+                classroomId={classroomId}
+                assignmentId={assignmentId}
+              />
             </TabsContent>
           </Tabs>
         </div>
