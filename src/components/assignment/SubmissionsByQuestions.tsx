@@ -2,12 +2,7 @@ import { auth } from "@/utils/auth/config";
 import assert from "assert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionItem } from "@/components/ui/accordion";
 import { getAllStudentsAndQuestionsForSubmission } from "@/utils/classroom/getAllStudentsAndQuestionsForSubmission";
 import { questionDisplayConfigByType } from "@/utils/constants/misc";
 import { cn } from "@/utils/cn";
@@ -106,58 +101,51 @@ export async function SubmissionsByQuestions({
                     {attempts.map(
                       ({
                         id: studentId,
-                        name,
+                        name: studentName,
                         grade,
                         feedback,
                         submissionDate,
                       }) => {
-                        const gradeDisplayValue = !!grade
-                          ? grade.toString()
-                          : "-";
-
                         return (
                           <AccordionItem
                             key={`${questionId}-${studentId}`}
                             value={`${questionId}-${studentId}`}
                             disabled={!submissionDate}
                           >
-                            <AccordionTrigger className="hover:no-underline">
-                              <div className="flex w-full items-center justify-between pr-4">
-                                <div className="flex flex-col gap-1">
-                                  <span>{name}</span>
-                                  <span className="text-sm text-muted-foreground">
-                                    {submissionDate ? (
-                                      `submitted ${new Date(
-                                        submissionDate
-                                      ).toLocaleString(undefined, {
-                                        weekday: "short",
-                                        day: "numeric",
-                                        month: "long",
-                                        year: "numeric",
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                      })}`
-                                    ) : (
-                                      <p className="text-yellow-700">
-                                        No submission
-                                      </p>
-                                    )}
-                                  </span>
+                            <GradeAndFeedbackForm
+                              type={type}
+                              questionId={questionId}
+                              questionName={name}
+                              maxGrade={maxGrade}
+                              studentId={studentId}
+                              grade={grade ?? undefined}
+                              feedback={feedback ?? undefined}
+                              accordionTriggerTitle={
+                                <div className="flex w-full items-center justify-between pr-4">
+                                  <div className="flex flex-col gap-1">
+                                    <span>{studentName}</span>
+                                    <span className="text-sm text-muted-foreground">
+                                      {submissionDate ? (
+                                        `submitted ${new Date(
+                                          submissionDate
+                                        ).toLocaleString(undefined, {
+                                          weekday: "short",
+                                          day: "numeric",
+                                          month: "long",
+                                          year: "numeric",
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                        })}`
+                                      ) : (
+                                        <p className="text-yellow-700">
+                                          No submission
+                                        </p>
+                                      )}
+                                    </span>
+                                  </div>
                                 </div>
-                                <Badge className="ml-auto mr-4">
-                                  {gradeDisplayValue}/{maxGrade}
-                                </Badge>
-                              </div>
-                            </AccordionTrigger>
-                            <AccordionContent>
-                              <GradeAndFeedbackForm
-                                type={type}
-                                questionId={questionId}
-                                studentId={studentId}
-                                grade={grade ?? undefined}
-                                feedback={feedback ?? undefined}
-                              />
-                            </AccordionContent>
+                              }
+                            />
                           </AccordionItem>
                         );
                       }

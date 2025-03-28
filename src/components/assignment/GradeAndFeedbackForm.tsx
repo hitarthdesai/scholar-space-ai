@@ -1,18 +1,17 @@
-import { QuestionType, EnumQuestionType } from "@/schemas/questionSchema";
+import { type QuestionType, EnumQuestionType } from "@/schemas/questionSchema";
 import { getObject } from "@/utils/storage/s3/getObject";
 import { getSingleCorrectMcqByIdForGrading } from "@/utils/classroom/question/getSingleCorrectMcqByIdForGrading";
 import { getMultiCorrectMcqByIdForGrading } from "@/utils/classroom/question/getMultiCorrectMcqByIdForGrading";
 import { GradeAndFeedbackFormInner } from "./GradeAndFeedbackFormInner";
+import { type SubmissionRendererProps } from "./SubmissionRenderer";
 
 type GradeAndFeedbackFormProps = {
   type: QuestionType;
   questionId: string;
-  questionName: string;
-  maxGrade: number;
   studentId: string;
   grade: number | undefined;
   feedback: string | undefined;
-};
+} & Omit<SubmissionRendererProps, "form" | "dataPromise">;
 
 const getDataPromiseByQuestionType = (
   type: QuestionType,
@@ -55,23 +54,9 @@ const getDataPromiseByQuestionType = (
   }
 };
 
-export const GradeAndFeedbackForm = async (
-  props: GradeAndFeedbackFormProps
-) => {
+export const GradeAndFeedbackForm = (props: GradeAndFeedbackFormProps) => {
   const { type, questionId, studentId } = props;
-  const questionTextPromise = getObject({
-    fileName: `questions/${questionId}/question.txt`,
-  });
   const dataPromise = getDataPromiseByQuestionType(type, questionId, studentId);
 
-  const combinedPromsise = Promise.all([questionTextPromise, dataPromise]).then(
-    ([questionText, data]) => ({
-      ...data,
-      questionText: questionText ?? "",
-    })
-  );
-
-  return (
-    <GradeAndFeedbackFormInner {...props} dataPromise={combinedPromsise} />
-  );
+  return <GradeAndFeedbackFormInner {...props} dataPromise={dataPromise} />;
 };

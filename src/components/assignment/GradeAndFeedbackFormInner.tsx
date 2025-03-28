@@ -16,19 +16,16 @@ import { useRouter } from "next/navigation";
 import { type DefaultValues, useForm } from "react-hook-form";
 import {
   SubmissionRenderer,
-  type GradeAndFeedbackDataPromiseType,
+  type SubmissionRendererProps,
 } from "./SubmissionRenderer";
 import { Suspense } from "react";
 
 type GradeAndFeedbackFormInnerProps = {
   questionId: string;
-  questionName: string;
-  maxGrade: number;
   studentId: string;
   grade: number | undefined;
   feedback: string | undefined;
-  dataPromise: GradeAndFeedbackDataPromiseType;
-};
+} & Omit<SubmissionRendererProps, "form">;
 
 export const GradeAndFeedbackFormInner = (
   props: GradeAndFeedbackFormInnerProps
@@ -82,7 +79,7 @@ export const GradeAndFeedbackFormInner = (
       <form
         id={FormIds.GradeAndFeedback}
         onSubmit={form.handleSubmit(executeAsync)}
-        className="flex h-full flex-col gap-4"
+        className="flex h-full flex-col"
       >
         <Suspense fallback={<p>Loading...</p>}>
           <SubmissionRenderer {...rest} form={form} />

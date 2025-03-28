@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { DeleteIcon } from "lucide-react";
 import { type ReactNode, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { deleteConversation } from "@/actions/deleteConversation";
 import { EnumDeleteConversationResult } from "@/schemas/chatSchema";
@@ -42,8 +42,6 @@ export function DeleteConversationDialog({
   const [isOpen, setIsOpen] = useState(false);
 
   const router = useRouter();
-  const pathname = usePathname();
-
   const { executeAsync } = useAction(deleteConversation, {
     onSuccess({ data }) {
       if (!data?.type) return;

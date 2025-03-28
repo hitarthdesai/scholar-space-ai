@@ -7,6 +7,10 @@ import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { TriangleAlertIcon } from "lucide-react";
 import { GradeAndFeedbackForm } from "./GradeAndFeedbackForm";
+import { Badge } from "../ui/badge";
+import { cn } from "@/utils/cn";
+import { questionDisplayConfigByType } from "@/utils/constants/misc";
+import { getObject } from "@/utils/storage/s3/getObject";
 
 type StudentSubmissionProps = {
   classroomId: string;
@@ -120,6 +124,11 @@ export async function SubmissionsByStudents({
                       grade,
                       feedback,
                     }) => {
+                      const displayConfig = questionDisplayConfigByType[type];
+                      const questionText = await getObject({
+                        fileName: `questions/${questionId}/question.txt`,
+                      });
+
                       return (
                         <AccordionItem
                           key={`${studentId}-${questionId}`}
@@ -134,6 +143,27 @@ export async function SubmissionsByStudents({
                             studentId={studentId}
                             grade={grade ?? undefined}
                             feedback={feedback ?? undefined}
+                            accordionTriggerTitle={
+                              <div className="flex grow flex-row items-center gap-1">
+                                <Badge
+                                  className={cn(
+                                    "flex w-fit items-center gap-2",
+                                    displayConfig.badgeStyles
+                                  )}
+                                >
+                                  {displayConfig.icon}
+                                </Badge>
+                                {questionName}
+                              </div>
+                            }
+                            accordionContentDescription={
+                              <div className="flex flex-col gap-1 rounded-md bg-muted p-2">
+                                <p className="text-sm font-medium text-muted-foreground">
+                                  Question:{" "}
+                                </p>
+                                <p className="w-full text-sm">{questionText}</p>
+                              </div>
+                            }
                           />
                         </AccordionItem>
                       );
