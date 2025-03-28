@@ -1,8 +1,10 @@
-import { BookAIcon, PencilIcon } from "lucide-react";
+import { BookAIcon, PencilIcon, Calculator } from "lucide-react";
+import { Badge } from "../ui/badge";
 import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { EnumFormMode } from "@/schemas/formSchema";
 import { AddEditAssignmentSheet } from "../assignment/AddEditAssignmentSheet";
+import { getAssignmentQuestionsFromDb } from "@/utils/classroom/getAssignmentQuestionsFromDb";
 import Link from "next/link";
 
 type AssignmentCardProps = {
@@ -14,15 +16,30 @@ type AssignmentCardProps = {
   isAuthorizedToEditAssignment: boolean;
 };
 
-export function AssignmentCard({
+export async function AssignmentCard({
   classroomId,
   assignment,
   isAuthorizedToEditAssignment,
 }: AssignmentCardProps) {
+  const questions = await getAssignmentQuestionsFromDb({
+    assignmentId: assignment.id,
+  });
+  const totalPoints =
+    questions?.reduce((acc, question) => acc + (question.grade || 0), 0) || 0;
+
   return (
     <Card className="flex h-full w-full flex-col justify-between">
       <CardHeader>
-        <CardTitle>{assignment.name}</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle>{assignment.name}</CardTitle>
+          <Badge
+            variant="outline"
+            className="flex items-center gap-1.5 bg-primary/10 px-3 py-1 font-medium text-primary"
+          >
+            <Calculator className="h-4 w-4" />
+            Total Points: {totalPoints}
+          </Badge>
+        </div>
       </CardHeader>
       <CardFooter className="flex items-center gap-2">
         <Link
