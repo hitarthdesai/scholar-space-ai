@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Users, FileCode } from "lucide-react";
 
 export function HeroSection() {
   return (
@@ -11,12 +10,12 @@ export function HeroSection() {
           <div className="flex flex-col justify-center space-y-4">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                Learn to Code with India's Best Tutors
+                Revolutionizing Coding Education with AI
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                ScholarSpace AI combines expert tutoring with AI-powered
-                learning tools to help you master coding skills that matter in
-                today's tech industry.
+                Empower students and teachers with AI-driven tools for
+                interactive learning, automated grading, and real-time coding
+                assistance—all in one seamless platform.
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -25,11 +24,11 @@ export function HeroSection() {
               </Button>
             </div>
           </div>
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center pr-10">
             <Image
-              src="/placeholder.svg?height=400&width=400"
-              width={400}
-              height={400}
+              src="/images/hero_image.jpg"
+              width={800}
+              height={800}
               alt="Coding students collaborating"
               className="rounded-lg object-cover"
             />

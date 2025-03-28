@@ -1,13 +1,10 @@
 import { CheckCircle } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export function UserSections() {
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
         <div className="grid items-start gap-12 text-center md:grid-cols-2 md:text-left">
-          {/* For Tutors Section */}
           <div className="flex flex-col space-y-4">
             <div className="inline-block self-center rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary md:self-start">
               For Tutors
@@ -35,7 +32,6 @@ export function UserSections() {
             </ul>
           </div>
 
-          {/* For Students Section */}
           <div className="flex flex-col space-y-4">
             <div className="inline-block self-center rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary md:self-start">
               For Students
