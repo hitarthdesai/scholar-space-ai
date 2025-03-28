@@ -8,13 +8,14 @@ import {
   Users,
   ClipboardCheck,
 } from "lucide-react";
+import { EnumClassroomRole } from "@/schemas/classroomSchema";
 
 type ClassroomDashboardGridNavProps = {
   userRole: string;
   classroomId: string;
 };
 
-export default function ClassroomDashboardGridNav({
+export function ClassroomDashboardGridNav({
   userRole,
   classroomId,
 }: ClassroomDashboardGridNavProps) {
@@ -26,7 +27,8 @@ export default function ClassroomDashboardGridNav({
         </h1>
       </div>
 
-      {userRole === "teacher" || userRole === "admin" ? (
+      {userRole === EnumClassroomRole.Teacher ||
+      userRole === EnumClassroomRole.Admin ? (
         <div className="grid grid-cols-2 gap-4">
           <Link
             href={`/classrooms/${classroomId}/assignments`}

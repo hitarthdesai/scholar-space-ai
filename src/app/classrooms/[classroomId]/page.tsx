@@ -6,7 +6,7 @@ import { getBreadcrumbsByPage } from "@/utils/breadcrumbs/getBreadcrumbsByPage";
 import { canUserAccessClassroom } from "@/utils/classroom/canUserAccessClassroom";
 import { EnumPage } from "@/utils/constants/page";
 import assert from "assert";
-import ClassroomDashboardGridNav from "@/components/classroom/ClassroomDashboardGridNav";
+import { ClassroomDashboardGridNav } from "@/components/classroom/ClassroomDashboardGridNav";
 import { getUserRoleInClassroom } from "@/utils/classroom/getUserRoleInClassroom";
 
 type PageProps = {
