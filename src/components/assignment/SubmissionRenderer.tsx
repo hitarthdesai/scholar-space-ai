@@ -1,4 +1,4 @@
-import { EnumQuestionType, QuestionType } from "@/schemas/questionSchema";
+import { EnumQuestionType, type QuestionType } from "@/schemas/questionSchema";
 import { getSingleCorrectMcqByIdForGrading } from "@/utils/classroom/question/getSingleCorrectMcqByIdForGrading";
 import { CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { getObject } from "@/utils/storage/s3/getObject";

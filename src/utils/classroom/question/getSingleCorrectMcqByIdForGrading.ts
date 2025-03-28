@@ -6,7 +6,7 @@ import {
   questionSelectedOptions,
 } from "@/server/db/schema";
 import { getObject } from "@/utils/storage/s3/getObject";
-import { eq, and, or, isNull } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 type GetSingleCorrectMcqByIdForGradingProps = {
   id: string;

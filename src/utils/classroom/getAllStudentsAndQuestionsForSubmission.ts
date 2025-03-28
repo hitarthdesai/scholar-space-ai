@@ -12,7 +12,6 @@ import {
   EnumClassroomParticpantStatus,
   EnumClassroomRole,
 } from "@/schemas/classroomSchema";
-import { SubmissionsViewMode } from "../constants/misc";
 
 type GetAllStudentsAndQuestionsForSubmissionProps = {
   classroomId: string;

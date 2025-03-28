@@ -9,10 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { getAllStudentsAndQuestionsForSubmission } from "@/utils/classroom/getAllStudentsAndQuestionsForSubmission";
-import {
-  EnumSubmissionsViewMode,
-  questionDisplayConfigByType,
-} from "@/utils/constants/misc";
+import { questionDisplayConfigByType } from "@/utils/constants/misc";
 import { cn } from "@/utils/cn";
 import { SubmissionRenderer } from "./SubmissionRenderer";
 import { getObject } from "@/utils/storage/s3/getObject";
