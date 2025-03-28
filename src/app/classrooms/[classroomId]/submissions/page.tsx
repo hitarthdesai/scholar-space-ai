@@ -42,11 +42,14 @@ export default async function Submissions({
 
   if (doesNotHaveAssignments) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-3">
-        <div className="flex max-w-60 text-center md:min-w-max">
-          <p>There are no assignments for this classroom.</p>
+      <>
+        <PageBreadcrumbs breadcrumbs={breadcrumbs} />
+        <div className="flex h-full flex-col items-center justify-center gap-3">
+          <div className="flex max-w-60 text-center md:min-w-max">
+            <p>There are no assignments for this classroom.</p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 

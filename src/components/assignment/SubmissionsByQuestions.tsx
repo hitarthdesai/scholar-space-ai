@@ -52,10 +52,7 @@ export async function SubmissionsByQuestions({
   }, groupedSubmissions);
 
   return (
-    <Tabs
-      defaultValue={groupedSubmissions[0].id}
-      className="flex w-full flex-col gap-4"
-    >
+    <Tabs className="flex w-full flex-col gap-4">
       <TabsList className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7">
         {groupedSubmissions.map(({ id, name }) => (
           <TabsTrigger key={id} value={id}>

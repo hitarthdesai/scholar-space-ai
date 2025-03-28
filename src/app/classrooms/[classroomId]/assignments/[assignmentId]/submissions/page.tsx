@@ -46,7 +46,7 @@ export default async function SubmissionPage({
       <PageBreadcrumbs breadcrumbs={breadcrumbs} />
       <main className="flex h-full grow flex-col">
         <div>
-          <Tabs defaultValue={EnumSubmissionsViewMode.ByQuestion}>
+          <Tabs defaultValue={EnumSubmissionsViewMode.ByStudent}>
             <div className="flex items-center gap-4">
               <h2 className="text-2xl font-bold">Submissions</h2>
               <TabsList className="grid grid-cols-2">

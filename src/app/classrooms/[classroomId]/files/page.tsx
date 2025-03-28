@@ -50,17 +50,20 @@ export default async function Files({ params: { classroomId } }: PageProps) {
 
   if (doesNotHaveFiles) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-3">
-        <FilePlusIcon className="h-16 w-16" />
-        <div className="flex max-w-60 text-center md:min-w-max">
-          <p>There are no files for this classroom.</p>
+      <>
+        <PageBreadcrumbs breadcrumbs={breadcrumbs} />
+        <div className="flex h-full flex-col items-center justify-center gap-3">
+          <FilePlusIcon className="h-16 w-16" />
+          <div className="flex max-w-60 text-center md:min-w-max">
+            <p>There are no files for this classroom.</p>
+          </div>
+          {isAuthorizedToCreateOrDeleteFiles && (
+            <AddEditFileSheet mode={EnumFormMode.Add} classroomId={classroomId}>
+              <Button>Add a file</Button>
+            </AddEditFileSheet>
+          )}
         </div>
-        {isAuthorizedToCreateOrDeleteFiles && (
-          <AddEditFileSheet mode={EnumFormMode.Add} classroomId={classroomId}>
-            <Button>Add a file</Button>
-          </AddEditFileSheet>
-        )}
-      </div>
+      </>
     );
   }
 
