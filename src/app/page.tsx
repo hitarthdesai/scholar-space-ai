@@ -1,4 +1,4 @@
-import LoggedInSections from "@/components/LoggedInSections";
+import { LoggedInSections } from "@/components/LoggedInSections";
 import CTASection from "@/components/LoggedOutCTASection";
 import { FeaturesSection } from "@/components/LoggedOutFeaturesSection";
 import { HeroSection } from "@/components/LoggedOutHeroSection";
