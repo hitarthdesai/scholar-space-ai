@@ -81,8 +81,6 @@ export function AddCodeQuestionForm({
     },
   });
 
-  console.log("grade", form.watch("grade"));
-
   return (
     <Form {...form}>
       <form

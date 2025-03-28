@@ -14,4 +14,5 @@ export const FormIds = {
   EditAssignment: "editAssignmentForm",
   EditQuestion: "editQuestionForm",
   RenameConversation: "renameConversationForm",
+  GradeAndFeedback: "gradeAndFeedbackForm",
 } as const;

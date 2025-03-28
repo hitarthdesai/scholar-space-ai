@@ -45,7 +45,6 @@ export const continueConversation = createSafeActionClient()
   .schema(continueConversationInputSchema)
   .action(async ({ parsedInput }): Promise<ContinueConversationOutput> => {
     {
-      console.log("continueConversation", parsedInput);
       const session = await auth();
       const userId = session?.user?.id;
       if (!userId) {

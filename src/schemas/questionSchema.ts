@@ -9,6 +9,8 @@ const STARTER_CODE_MIN_LENGTH = 10;
 const STARTER_CODE_MAX_LENGTH = 500;
 const GRADE_MIN = 0;
 const GRADE_MAX = 100;
+const FEEDBACK_MIN_LENGTH = 0;
+const FEEDBACK_MAX_LENGTH = 200;
 
 export const MCQ_OPTIONS_MIN_LENGTH = 2;
 export const MCQ_OPTIONS_MAX_LENGTH = 5;
@@ -368,4 +370,25 @@ export const EnumSaveMcqSelectionResult = {
 const saveMcqSelectionResultSchema = z.nativeEnum(EnumSaveMcqSelectionResult);
 export type SaveMcqSelectionResult = z.infer<
   typeof saveMcqSelectionResultSchema
+>;
+
+export const gradeAndFeedbackFormSchema = z.object({
+  questionId: z.string().min(1),
+  studentId: z.string().min(1),
+  grade: z.number().min(GRADE_MIN),
+  feedback: z.string().min(FEEDBACK_MIN_LENGTH).max(FEEDBACK_MAX_LENGTH),
+});
+
+export type GradeAndFeedbackForm = z.infer<typeof gradeAndFeedbackFormSchema>;
+
+export const EnumEditGradeAndFeedbackResult = {
+  GradedSuccessfully: "gradedSuccessfully",
+  NotAuthorized: "notAuthorized",
+  Error: "error",
+} as const;
+const gradeAndFeedbackResultSchema = z.nativeEnum(
+  EnumEditGradeAndFeedbackResult
+);
+export type GradeAndFeedbackResult = z.infer<
+  typeof gradeAndFeedbackResultSchema
 >;

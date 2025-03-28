@@ -42,12 +42,14 @@ import {
   type ResetCodeResult,
   type SubmitCodeResult,
   type SaveMcqSelectionResult,
+  type GradeAndFeedbackResult,
   EnumAddQuestionResult,
   EnumDeleteQuestionResult,
   EnumEditQuestionResult,
   EnumResetCodeResult,
   EnumSubmitAssignmentAttemptResult,
   EnumSaveMcqSelectionResult,
+  EnumEditGradeAndFeedbackResult,
 } from "@/schemas/questionSchema";
 import {
   type UpdateUserInformationResult,
@@ -338,4 +340,16 @@ export const toastDescriptionSaveMcqSelection: Record<
     "You are not authorized to save MCQ selections.",
   [EnumSaveMcqSelectionResult.Error]:
     "Unable to save MCQ selection. Please try again later.",
+};
+
+export const toastDescriptionEditGradeAndFeedback: Record<
+  GradeAndFeedbackResult,
+  string
+> = {
+  [EnumEditGradeAndFeedbackResult.GradedSuccessfully]:
+    "The grade and feedback were added successfully.",
+  [EnumEditGradeAndFeedbackResult.NotAuthorized]:
+    "You are not authorized to add grade and feedback.",
+  [EnumEditGradeAndFeedbackResult.Error]:
+    "Unable to add grade and feedback. Please try again later.",
 };

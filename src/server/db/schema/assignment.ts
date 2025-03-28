@@ -1,6 +1,11 @@
 import { randomUUID } from "crypto";
 import { relations, sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+  integer,
+  primaryKey,
+  sqliteTable,
+  text,
+} from "drizzle-orm/sqlite-core";
 import { classrooms } from "./classroom";
 import { users } from "./auth";
 import { conversations } from "./chat";
@@ -161,13 +166,17 @@ export const questionAttemptsRelations = relations(
   })
 );
 
-export const questionFeedbacks = sqliteTable("questionFeedback", {
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  questionId: text("questionId")
-    .notNull()
-    .references(() => questions.id, { onDelete: "cascade" }),
-  grade: integer("grade").notNull(),
-  feedback: text("feedback").notNull(),
-});
+export const questionFeedbacks = sqliteTable(
+  "questionFeedback",
+  {
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    questionId: text("questionId")
+      .notNull()
+      .references(() => questions.id, { onDelete: "cascade" }),
+    grade: integer("grade").notNull(),
+    feedback: text("feedback").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.questionId] })]
+);
