@@ -12,7 +12,7 @@ import {
   EnumClassroomParticpantStatus,
   EnumClassroomRole,
 } from "@/schemas/classroomSchema";
-import { z } from "zod";
+import { SubmissionsViewMode } from "../constants/misc";
 
 type GetAllStudentsAndQuestionsForSubmissionProps = {
   classroomId: string;
@@ -24,7 +24,7 @@ export const getAllStudentsAndQuestionsForSubmission = async ({
   assignmentId,
 }: GetAllStudentsAndQuestionsForSubmissionProps) => {
   try {
-    const _questions = await db
+    return db
       .select({
         id: questions.id,
         name: questions.name,
@@ -67,31 +67,6 @@ export const getAllStudentsAndQuestionsForSubmission = async ({
         )
       )
       .orderBy(sql`${questions.id} ASC NULLS FIRST`);
-
-    const groupedQuestions: (Omit<(typeof _questions)[0], "attempt"> & {
-      attempts: (typeof _questions)[0]["attempt"][];
-    })[] = [];
-
-    _questions.reduce((acc, question) => {
-      const { id, name, type, maxGrade, attempt } = question;
-
-      const grouped_q = acc.find((q) => q.id === id);
-      if (!grouped_q) {
-        acc.push({
-          id,
-          name,
-          type,
-          maxGrade,
-          attempts: [attempt],
-        });
-      } else {
-        grouped_q.attempts.push(attempt);
-      }
-
-      return acc;
-    }, groupedQuestions);
-
-    return groupedQuestions;
   } catch (error) {
     console.error("Error getting students and questions for submission", error);
     return [];
