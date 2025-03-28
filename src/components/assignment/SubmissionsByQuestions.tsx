@@ -13,6 +13,7 @@ import { questionDisplayConfigByType } from "@/utils/constants/misc";
 import { cn } from "@/utils/cn";
 import { SubmissionRenderer } from "./SubmissionRenderer";
 import { getObject } from "@/utils/storage/s3/getObject";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 type QuestionSubmissionProps = {
   classroomId: string;
@@ -56,7 +57,17 @@ export async function SubmissionsByQuestions({
   }, groupedSubmissions);
 
   return (
-    <div className="flex w-full flex-col gap-4">
+    <Tabs
+      defaultValue={groupedSubmissions[0].id}
+      className="flex w-full flex-col gap-4"
+    >
+      <TabsList className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7">
+        {groupedSubmissions.map(({ id, name }) => (
+          <TabsTrigger key={id} value={id}>
+            {name}
+          </TabsTrigger>
+        ))}
+      </TabsList>
       {groupedSubmissions.map(
         async ({ name, type, maxGrade, attempts, id: questionId }) => {
           const questionText = await getObject({
@@ -66,96 +77,98 @@ export async function SubmissionsByQuestions({
           const displayConfig = questionDisplayConfigByType[type];
 
           return (
-            <Card key={questionId}>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="flex w-full flex-row items-center gap-2">
-                  <Badge
-                    className={cn(
-                      "flex w-fit items-center gap-2",
-                      displayConfig.badgeStyles
-                    )}
-                  >
-                    {displayConfig.icon}
-                  </Badge>
-                  {name}{" "}
-                  <Badge variant="secondary">
-                    {maxGrade} {maxGrade === 1 ? "point" : "points"}
-                  </Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col gap-1 rounded-md bg-muted p-2">
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Question:{" "}
-                  </p>
-                  <p className="w-full text-sm">{questionText}</p>
-                </div>
-                <Accordion type="multiple" className="w-full">
-                  {attempts.map(
-                    ({
-                      id: studentId,
-                      name,
-                      grade,
-                      feedback,
-                      submissionDate,
-                    }) => {
-                      const gradeDisplayValue = !!grade
-                        ? grade.toString()
-                        : "-";
+            <TabsContent key={questionId} value={questionId}>
+              <Card key={questionId}>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="flex w-full flex-row items-center gap-2">
+                    <Badge
+                      className={cn(
+                        "flex w-fit items-center gap-2",
+                        displayConfig.badgeStyles
+                      )}
+                    >
+                      {displayConfig.icon}
+                    </Badge>
+                    {name}{" "}
+                    <Badge variant="secondary">
+                      {maxGrade} {maxGrade === 1 ? "point" : "points"}
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col gap-1 rounded-md bg-muted p-2">
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Question:{" "}
+                    </p>
+                    <p className="w-full text-sm">{questionText}</p>
+                  </div>
+                  <Accordion type="multiple" className="w-full">
+                    {attempts.map(
+                      ({
+                        id: studentId,
+                        name,
+                        grade,
+                        feedback,
+                        submissionDate,
+                      }) => {
+                        const gradeDisplayValue = !!grade
+                          ? grade.toString()
+                          : "-";
 
-                      return (
-                        <AccordionItem
-                          key={`${questionId}-${studentId}`}
-                          value={`${questionId}-${studentId}`}
-                          disabled={!submissionDate}
-                        >
-                          <AccordionTrigger className="hover:no-underline">
-                            <div className="flex w-full items-center justify-between pr-4">
-                              <div className="flex flex-col gap-1">
-                                <span>{name}</span>
-                                <span className="text-sm text-muted-foreground">
-                                  {submissionDate ? (
-                                    `submitted ${new Date(
-                                      submissionDate
-                                    ).toLocaleString(undefined, {
-                                      weekday: "short",
-                                      day: "numeric",
-                                      month: "long",
-                                      year: "numeric",
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                    })}`
-                                  ) : (
-                                    <p className="text-yellow-700">
-                                      No submission
-                                    </p>
-                                  )}
-                                </span>
+                        return (
+                          <AccordionItem
+                            key={`${questionId}-${studentId}`}
+                            value={`${questionId}-${studentId}`}
+                            disabled={!submissionDate}
+                          >
+                            <AccordionTrigger className="hover:no-underline">
+                              <div className="flex w-full items-center justify-between pr-4">
+                                <div className="flex flex-col gap-1">
+                                  <span>{name}</span>
+                                  <span className="text-sm text-muted-foreground">
+                                    {submissionDate ? (
+                                      `submitted ${new Date(
+                                        submissionDate
+                                      ).toLocaleString(undefined, {
+                                        weekday: "short",
+                                        day: "numeric",
+                                        month: "long",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}`
+                                    ) : (
+                                      <p className="text-yellow-700">
+                                        No submission
+                                      </p>
+                                    )}
+                                  </span>
+                                </div>
+                                <Badge className="ml-auto mr-4">
+                                  {gradeDisplayValue}/{maxGrade}
+                                </Badge>
                               </div>
-                              <Badge className="ml-auto mr-4">
-                                {gradeDisplayValue}/{maxGrade}
-                              </Badge>
-                            </div>
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            <SubmissionRenderer
-                              type={type}
-                              questionId={questionId}
-                              studentId={studentId}
-                              grade={grade ?? undefined}
-                              feedback={feedback ?? undefined}
-                            />
-                          </AccordionContent>
-                        </AccordionItem>
-                      );
-                    }
-                  )}
-                </Accordion>
-              </CardContent>
-            </Card>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <SubmissionRenderer
+                                type={type}
+                                questionId={questionId}
+                                studentId={studentId}
+                                grade={grade ?? undefined}
+                                feedback={feedback ?? undefined}
+                              />
+                            </AccordionContent>
+                          </AccordionItem>
+                        );
+                      }
+                    )}
+                  </Accordion>
+                </CardContent>
+              </Card>
+            </TabsContent>
           );
         }
       )}
-    </div>
+    </Tabs>
   );
 }
