@@ -26,7 +26,7 @@ export function HeroSection() {
           </div>
           <div className="flex items-center justify-center pr-10">
             <Image
-              src="/images/hero_image.jpg"
+              src="/images/hero_image.webp"
               width={800}
               height={800}
               alt="Coding students collaborating"

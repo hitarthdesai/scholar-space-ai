@@ -10,7 +10,7 @@ export default function CTASection() {
             Ready to Start Teaching or Learning?
           </h2>
           <p className="mx-auto max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-            Join India's most innovative coding education platform today.
+            Join our coding education platform today!
           </p>
         </div>
         <Button asChild size="lg" variant="secondary">
