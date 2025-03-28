@@ -31,6 +31,7 @@ export type ProfileData = {
   email: string;
   name: string;
   aboutMe: string;
+  image: string;
 };
 
 type ProfileFormProps = {

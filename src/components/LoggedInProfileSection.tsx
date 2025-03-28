@@ -20,9 +20,17 @@ export default function LoggedInProfileSection({
   description,
   profilePhoto,
 }: LoggedInProfileSecionProps) {
+  const isDescriptionIncomplete = (value: string | null) =>
+    !value || value === "No information has been added yet.";
+  const isValidUsername = (value: string | null) =>
+    !value || value === "Username";
+
   const checklist = [
-    { label: "Add your name", completed: !!name },
-    { label: "Write a short description", completed: !!description },
+    { label: "Add your name", completed: !isValidUsername(name) },
+    {
+      label: "Write a short description",
+      completed: !isDescriptionIncomplete(description),
+    },
     { label: "Upload a profile photo", completed: !!profilePhoto },
   ];
 
