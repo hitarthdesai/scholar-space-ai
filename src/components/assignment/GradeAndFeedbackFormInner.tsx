@@ -31,6 +31,7 @@ export const GradeAndFeedbackFormInner = (
   props: GradeAndFeedbackFormInnerProps
 ) => {
   const { questionId, studentId, grade, feedback, ...rest } = props;
+  console.log("IN FORM INNER", { feedback, grade });
   const defaultValues: DefaultValues<GradeAndFeedbackFormType> = {
     questionId,
     studentId,
@@ -68,7 +69,6 @@ export const GradeAndFeedbackFormInner = (
       });
 
       if (!isErroneous) {
-        form.reset();
         router.refresh();
       }
     },

@@ -231,7 +231,8 @@ export const SubmissionRenderer = ({
     getValues,
   } = form;
 
-  const { studentId, questionId } = getValues();
+  const { studentId, questionId, feedback, grade } = getValues();
+  console.log("IN SUBMISSION RENDERER", { feedback, grade });
 
   return (
     <>
