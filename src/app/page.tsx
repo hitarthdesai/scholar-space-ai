@@ -1,3 +1,4 @@
+import LoggedInSections from "@/components/LoggedInSections";
 import CTASection from "@/components/LoggedOutCTASection";
 import { FeaturesSection } from "@/components/LoggedOutFeaturesSection";
 import { HeroSection } from "@/components/LoggedOutHeroSection";
@@ -10,7 +11,7 @@ export default async function Home() {
   return (
     <main className="grid h-full w-full place-items-center">
       {isLoggedIn ? (
-        "Logged-in User Content"
+        <LoggedInSections />
       ) : (
         <>
           <HeroSection />
