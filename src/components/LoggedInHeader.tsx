@@ -13,12 +13,22 @@ import {
 import { LogoutButton } from "./LogoutButton";
 import { HeaderLinks } from "./HeaderLinks";
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import { getUserProfileData } from "@/utils/profile/getUserProfileData";
 
 export async function LoggedInHeader() {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) return null;
 
+  const userData = await getUserProfileData({ userId });
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2);
+  };
   return (
     <div className="flex h-14 w-full items-center justify-between px-4 sm:px-8">
       <div>
@@ -48,8 +58,8 @@ export async function LoggedInHeader() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="flex flex-row items-center justify-center gap-1">
-              <div className="grid aspect-square h-6 place-items-center rounded-full bg-red-500 sm:h-8">
-                S
+              <div className="grid aspect-square h-6 place-items-center rounded-full bg-red-500 text-xs sm:h-8 sm:text-sm">
+                {getInitials(userData.name)}
               </div>
               <ChevronDownIcon className="h-4 w-4" />
             </div>
