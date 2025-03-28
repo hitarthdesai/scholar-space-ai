@@ -6,7 +6,7 @@ import {
   questionSelectedOptions,
 } from "@/server/db/schema";
 import { getObject } from "@/utils/storage/s3/getObject";
-import { eq, and, or, isNull } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 type GetSingleCorrectMcqByIdForAttemptProps = {
   id: string;
@@ -17,63 +17,55 @@ export const getSingleCorrectMcqByIdForAttempt = ({
   id,
   userId,
 }: GetSingleCorrectMcqByIdForAttemptProps) => {
-  const questionPromise = db
+  const questionOptionsPromise = db
     .select({
-      questionName: questions.name,
       value: questionOptions.optionId,
       label: questionOptions.label,
-      isSelected: questionSelectedOptions.optionId,
     })
-    .from(questions)
-    .innerJoin(questionOptions, eq(questions.id, questionOptions.questionId))
-    .leftJoin(
-      questionSelectedOptions,
-      eq(questionOptions.optionId, questionSelectedOptions.optionId)
-    )
+    .from(questionOptions)
+    .where(eq(questionOptions.questionId, id));
+
+  const questionSelectedOptionsPromise = db
+    .select({
+      value: questionSelectedOptions.optionId,
+    })
+    .from(questionSelectedOptions)
     .where(
       and(
-        eq(questions.id, id),
-        eq(questions.type, EnumQuestionType.SingleCorrectMcq),
-        or(
-          isNull(questionSelectedOptions.userId),
-          eq(questionSelectedOptions.userId, userId)
-        )
+        eq(questionSelectedOptions.questionId, id),
+        eq(questionSelectedOptions.userId, userId)
       )
-    )
-    .then((res) => {
-      const ret: {
-        name: string;
-        options: { value: string; label: string }[];
-        selectedOption: string;
-      } = {
-        name: res[0].questionName,
-        options: [],
-        selectedOption: "",
-      };
+    );
 
-      const options = res.reduce((acc, { value, label, isSelected }) => {
-        acc.options.push({ value, label });
-        if (isSelected) {
-          acc.selectedOption = value;
-        }
-        return acc;
-      }, ret);
-
-      return options;
-    });
+  const questionNamePromise = db
+    .select({
+      name: questions.name,
+    })
+    .from(questions)
+    .where(eq(questions.id, id));
 
   const questionTextPromise = getObject({
     fileName: `questions/${id}/question.txt`,
   });
 
-  const promise = Promise.all([questionPromise, questionTextPromise]).then(
-    ([question, questionText]) => ({
+  const promise = Promise.all([
+    questionOptionsPromise,
+    questionSelectedOptionsPromise,
+    questionNamePromise,
+    questionTextPromise,
+  ]).then(([options, selectedOptions, questionName, questionText]) => {
+    return {
       id,
-      ...question,
       type: EnumQuestionType.SingleCorrectMcq,
-      question: questionText ?? "",
-    })
-  );
+      name: questionName[0].name,
+      questionText,
+      options: options.map((option) => ({
+        value: option.value,
+        label: option.label,
+      })),
+      selectedOption: selectedOptions.map((option) => option.value)[0] ?? "",
+    };
+  });
 
   return promise;
 };
